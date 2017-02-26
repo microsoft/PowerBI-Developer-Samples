@@ -8,14 +8,17 @@ you need to register an application in [https://dev.powerbi.com/apps]https://dev
 
 #### integrate-dashboard-web-app
 Redirect URL  - http://localhost:13526/Redirect
+
 Home Page URL - http://localhost:13526/
 
 #### integrate-report-web-app
 Redirect URL  - http://localhost:13526/
+
 Home Page URL - http://localhost:13526/
 
 #### integrate-tile-web-app
 Redirect URL  - http://localhost:13526/
+
 Home Page URL - http://localhost:13526/
 
 Registration Example:
