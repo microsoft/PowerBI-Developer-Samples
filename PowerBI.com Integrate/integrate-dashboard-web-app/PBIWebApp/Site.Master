@@ -1,0 +1,84 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="PBIWebApp.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <title>Power BI - Dashboard Embed Sample</title>
+    <link rel="stylesheet" href="/css/master.css" type="text/css" />
+    <script type="text/javascript" src="scripts/powerbi.js"></script>
+
+    <script type="text/javascript">
+
+        window.onload = function () {
+            // client side click to embed a selected dashboard.
+            var el = document.getElementById("bEmbedDashboardAction");
+            if (el.addEventListener) {
+                el.addEventListener("click", updateEmbedDashboard, false);
+            } else {
+                el.attachEvent('onclick', updateEmbedDashboard);
+            }
+
+            // handle server side post backs, optimize for reload scenarios
+            // show embedded dashboard if all fields were filled in.
+            var accessTokenElement = document.getElementById('MainContent_accessTokenTextbox');
+            if (accessTokenElement !== null) {
+                var accessToken = accessTokenElement.value;
+                if (accessToken !== "")
+                    updateEmbedDashboard();
+            }
+        };
+
+        // update embed dashboard
+        function updateEmbedDashboard() {
+
+            // check if the embed url was selected
+            var embedUrl = document.getElementById('tb_EmbedURL').value;
+            if (embedUrl === "")
+                return;
+
+            // get the access token.
+            accessToken = document.getElementById('MainContent_accessTokenTextbox').value;
+
+            // Embed configuration used to describe the what and how to embed.
+            // This object is used when calling powerbi.embed.
+            // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+            var config = {
+                type: 'dashboard',
+                accessToken: accessToken,
+                embedUrl: embedUrl
+            };
+
+            // Grab the reference to the div HTML element that will host the dashboard.
+            var dashboardContainer = document.getElementById('dashboardContainer');
+
+            // Embed the dashboard and display it within the div container.
+            var dashboard = powerbi.embed(dashboardContainer, config);
+
+            // dashboard.on will add an event handler which prints to Log window.
+            dashboard.on("tileClicked", function (event) {
+                var logView = document.getElementById('logView');
+                logView.innerHTML = logView.innerHTML + "Tile Clicked<br/>";
+                logView.innerHTML = logView.innerHTML + JSON.stringify(event.detail, null, "  ") + "<br/>";
+                logView.innerHTML = logView.innerHTML + "---------<br/>";
+            });
+
+            // dashboard.on will add an event handler which prints to Log window.
+            dashboard.on("error", function (event) {
+                var logView = document.getElementById('logView');
+                logView.innerHTML = logView.innerHTML + "Error<br/>";
+                logView.innerHTML = logView.innerHTML + JSON.stringify(event.detail, null, "  ") + "<br/>";
+                logView.innerHTML = logView.innerHTML + "---------<br/>";
+            });
+        }
+    </script>
+</head>
+<body>
+    <form runat="server">
+        <div>
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html>
