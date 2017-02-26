@@ -1,0 +1,13 @@
+﻿h1
+{
+    font: 18px arial, verdana;
+}
+p, table
+{
+     font: 14px arial, verdana;
+}
+.step
+{
+    font: 16px arial, verdana;
+    font-weight: bold;
+}

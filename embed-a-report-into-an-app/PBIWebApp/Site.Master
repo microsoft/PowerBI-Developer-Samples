@@ -1,0 +1,105 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="PBIWebApp.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <title>Power BI - Web application</title>
+    <script type="text/javascript">
+
+        window.onload = function () {
+            // client side click to embed a selected report.
+            var el = document.getElementById("bEmbedReportAction");
+                if (el.addEventListener) {
+                    el.addEventListener("click", updateEmbedReport, false);
+                } else {
+                    el.attachEvent('onclick', updateEmbedReport);
+                }
+
+            // listen for message to receive message from embedded report.
+            if (window.addEventListener) {
+                window.addEventListener("message", receiveMessage, false);
+            } else {
+                window.attachEvent("onmessage", receiveMessage);
+            }
+
+            // handle server side post backs, optimize for reload scenarios
+            // show embedded report if all fields were filled in.
+            var accessTokenElement = document.getElementById('MainContent_accessTokenTextbox');
+            if(null !== accessTokenElement){
+                var accessToken = accessTokenElement.value;
+                if ("" !== accessToken)
+                    updateEmbedReport();
+            }
+        };
+
+        // The embedded report posts message for errors to parent window.  listen and handle as appropriate
+        function receiveMessage(event)
+        {
+            if (event.data) {
+                try {
+                    messageData = JSON.parse(event.data);
+                    if (messageData.event === "reportPageLoaded")
+                    {
+                    }
+                }
+                catch (e) {
+                    // do something smart
+                }
+            }
+        }
+
+        var valB = false;
+
+        // update embed report
+        function updateEmbedReport() {
+
+            // check if the embed url was selected
+            var embedUrl = document.getElementById('tb_EmbedURL').value;
+            if ("" === embedUrl)
+                return;
+
+            // to load a report do the following:
+            // 1: set the url
+            // 2: add a onload handler to submit the auth token
+            iframe = document.getElementById('iFrameEmbedReport');
+            iframe.src = embedUrl;
+            iframe.onload = postActionLoadReport;
+        }
+
+        
+        // post the auth token to the iFrame. 
+        function postActionLoadReport() {
+
+            // get the access token.
+            accessToken = document.getElementById('MainContent_accessTokenTextbox').value;
+
+            // return if no a
+            if ("" === accessToken)
+                return;
+
+            // construct the push message structure
+            // this structure also supports setting the reportId, groupId, height, and width.
+            // when using a report in a group, you must provide the groupId on the iFrame SRC
+            var m = { action: "loadReport", accessToken: accessToken};
+            message = JSON.stringify(m);
+
+            // push the message.
+            iframe = document.getElementById('iFrameEmbedReport');
+            iframe.contentWindow.postMessage(message, "*");;
+        }
+
+    </script>
+</head>
+<body>
+    <form runat="server">
+        <div>
+            <asp:ContentPlaceHolder ID="Stylesheets" runat="server">
+                <link rel="stylesheet" href="/css/master.css" type="text/css" />
+            </asp:ContentPlaceHolder>
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html>

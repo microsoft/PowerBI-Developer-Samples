@@ -1,0 +1,121 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="PBIWebApp.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <title>Power BI - Web application</title>
+    <script type="text/javascript">
+
+        window.onload = function () {
+            // client side click to embed a selected tile.
+            var el = document.getElementById("bEmbedTileAction");
+                if (el.addEventListener) {
+                    el.addEventListener("click", updateEmbedTile, false);
+                } else {
+                    el.attachEvent('onclick', updateEmbedTile);
+                }
+
+            //How to navigate from a Power BI Tile to the dashboard
+            // listen for message to receive tile click messages.
+            if (window.addEventListener) {
+                window.addEventListener("message", receiveMessage, false);
+            } else {
+                window.attachEvent("onmessage", receiveMessage);
+            }
+
+            //How to handle server side post backs
+            // handle server side post backs, optimize for reload scenarios
+            // show embedded tile if all fields were filled in.
+            var accessTokenElement = document.getElementById('MainContent_accessTokenTextbox');
+            if(null !== accessTokenElement){
+                var accessToken = accessTokenElement.value;
+                if ("" !== accessToken)
+                    updateEmbedTile();
+            }
+        };
+
+        var width = 500;
+        var height = 500;
+
+        //How to navigate from a Power BI Tile to the dashboard
+        // The embedded tile posts message for click to parent window.  
+        // Listen and handle as appropriate
+        // The sample shows how to open the tile source.
+        function receiveMessage(event)
+        {
+            if (event.data) {
+                try {
+                    messageData = JSON.parse(event.data);
+                    if (messageData.event === "tileClicked")
+                    {
+                        //Get IFrame source and construct dashboard url
+                        iFrameSrc = document.getElementById(event.srcElement.iframe.id).src;
+
+                        //Split IFrame source to get dashboard id
+                        var dashboardId = iFrameSrc.split("dashboardId=")[1].split("&")[0];
+
+                        //Get PowerBI service url
+                        urlVal = iFrameSrc.split("/embed")[0] + "/dashboards/{0}";
+                        urlVal = urlVal.replace("{0}", dashboardId);
+
+                        window.open(urlVal);
+                    }
+                }
+                catch (e) {
+                    // In a production app, handle exception
+                }
+            }
+        }
+
+        // update embed tile
+        function updateEmbedTile() {
+            // check if the embed url was selected
+            var embedTileUrl = document.getElementById('tb_EmbedURL').value;
+            if ("" === embedTileUrl)
+                return;
+
+            // to load a tile do the following:
+            // 1: set the url, include size.
+            // 2: add a onload handler to submit the auth token
+            iframe = document.getElementById('iFrameEmbedTile');
+            iframe.src =  embedTileUrl + "&width=" + width + "&height=" + height;
+            iframe.onload = postActionLoadTile;
+        }
+
+        
+        // post the auth token to the iFrame. 
+        function postActionLoadTile() {
+            // get the access token.
+            accessToken = document.getElementById('MainContent_accessTokenTextbox').value;
+
+            // return if no a
+            if ("" === accessToken)
+                return;
+
+            var h = height;
+            var w = width; 
+
+            // construct the push message structure
+            var m = { action: "loadTile", accessToken: accessToken, height: h, width: w};
+            message = JSON.stringify(m);
+
+            // push the message.
+            iframe = document.getElementById('iFrameEmbedTile');
+            iframe.contentWindow.postMessage(message, "*");;
+        }
+
+    </script>
+</head>
+<body>
+    <form runat="server">
+        <div>
+            <asp:ContentPlaceHolder ID="Stylesheets" runat="server">
+                <link rel="stylesheet" href="/css/master.css" type="text/css" />
+            </asp:ContentPlaceHolder>
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html>
