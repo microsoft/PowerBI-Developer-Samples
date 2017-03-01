@@ -3,7 +3,7 @@
 Pleaes follow these steps to run PowerBI.com Integrate samples:
 ## Step 1 - App Registration
 you need to register an application in
-[]https://dev.powerbi.com/apps
+https://dev.powerbi.com/apps
 
 ### Registration parameters per sample
 
