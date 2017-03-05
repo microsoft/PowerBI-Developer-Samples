@@ -32,7 +32,7 @@ namespace PBIWebApp
                     Request.Params.GetValues("code")[0],
                     Settings.Default.ClientID,
                     Settings.Default.ClientSecret,
-                    Settings.Default.RedirectUri);
+                    Settings.Default.RedirectUrl);
 
                 //Redirect again to get rid of code=
                 Response.Redirect("/Default.aspx");
@@ -119,7 +119,7 @@ namespace PBIWebApp
 
                 //After app authenticates, Azure AD will redirect back to the web app. In this sample, Azure AD redirects back
                 //to Default page (Default.aspx).
-                { "redirect_uri", Settings.Default.RedirectUri}
+                { "redirect_uri", Settings.Default.RedirectUrl}
             };
 
             //Create sign-in query string

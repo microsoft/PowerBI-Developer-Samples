@@ -25,37 +25,10 @@ namespace PBIWebApp.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:13526/")]
-        public string RedirectUri {
-            get {
-                return ((string)(this["RedirectUri"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("{Enter your app ClientID}")]
         public string ClientID {
             get {
                 return ((string)(this["ClientID"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{Enter your app Secret}")]
-        public string ClientSecret {
-            get {
-                return ((string)(this["ClientSecret"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://login.windows.net/common/oauth2/authorize")]
-        public string AADAuthorityUri {
-            get {
-                return ((string)(this["AADAuthorityUri"]));
             }
         }
         
@@ -70,10 +43,37 @@ namespace PBIWebApp.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://api.powerbi.com/beta/myorg/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{Enter your app SecretKey}")]
+        public string ClientSecret {
+            get {
+                return ((string)(this["ClientSecret"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://login.windows.net/common/oauth2/authorize/")]
+        public string AADAuthorityUri {
+            get {
+                return ((string)(this["AADAuthorityUri"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://api.powerbi.com/v1.0/myorg/")]
         public string PowerBiDataset {
             get {
                 return ((string)(this["PowerBiDataset"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:13526/")]
+        public string RedirectUrl {
+            get {
+                return ((string)(this["RedirectUrl"]));
             }
         }
     }
