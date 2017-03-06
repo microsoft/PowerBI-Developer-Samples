@@ -67,5 +67,14 @@ namespace PBIWebApp.Properties {
                 return ((string)(this["PowerBiDataset"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:13526/")]
+        public string RedirectUrl {
+            get {
+                return ((string)(this["RedirectUrl"]));
+            }
+        }
     }
 }
