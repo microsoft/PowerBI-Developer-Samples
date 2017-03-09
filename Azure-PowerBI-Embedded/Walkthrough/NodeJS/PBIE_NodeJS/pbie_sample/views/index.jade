@@ -1,0 +1,27 @@
+extends layout
+block content
+
+  #welcome.jumbotron
+    script(src='/javascripts/powerbi-client/dist/powerbi.js')
+        
+    h3 Hello <u><b>#{user[0].value}</b></u>, Welcome to Power BI Embedded NodeJS Sample Application
+    p.lead.
+      <br/>
+    if error
+      .alert.alert-dismissable.alert-danger.login-fail
+        button.close(type='button',data-dismiss='alert')
+        p.
+          #{error}
+    div#iFrameEmbedReport
+          
+    script.
+      var embedConfiguration = {
+        type: 'report',
+        accessToken: '!{pbiReportDetails.jwt}',
+        id: '!{pbiReportDetails.report.id}',
+        embedUrl: 'https://embedded.powerbi.com/appTokenReportEmbed'
+      };
+
+      var reportContainer = document.getElementById('iFrameEmbedReport');
+      console.log(reportContainer);
+      var report = powerbi.embed(reportContainer, embedConfiguration);

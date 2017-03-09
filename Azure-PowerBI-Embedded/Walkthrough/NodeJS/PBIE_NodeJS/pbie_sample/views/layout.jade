@@ -1,0 +1,22 @@
+doctype html
+html
+  head
+    title= title
+    link(href='/stylesheets/bootstrap.min.css', rel='stylesheet')
+    link(href='/stylesheets/style.css', rel='stylesheet')
+  body
+    .container
+      .header
+        ul.nav.nav-pills.pull-right
+          li
+            a(href='/') Home
+          if user
+            li
+              a(href='/logout') Logout
+          else
+            li
+              a(href='/login') Login
+        h3.text-muted Power BI Embedded Sample Application
+      block content
+    script(src='/javascripts/jquery.min.js')
+    script(src='/javascripts/bootstrap.min.js')

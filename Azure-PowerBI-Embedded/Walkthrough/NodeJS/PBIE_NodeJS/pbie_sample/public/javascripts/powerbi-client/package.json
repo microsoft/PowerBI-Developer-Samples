@@ -1,0 +1,117 @@
+{
+  "name": "powerbi-client",
+  "version": "2.2.3",
+  "description": "JavaScript library for embedding Power BI into your apps. Provides service which makes it easy to embed different types of components and an object model which allows easy interaction with these components such as changing pages, applying filters, and res",
+  "main": "dist/powerbi.js",
+  "typings": "dist/powerbi.d.ts",
+  "files": [
+    "dist"
+  ],
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "gulp build",
+    "start": "http-server ./demo",
+    "version": "gulp build && git add .",
+    "prepublish": "typings install && gulp build",
+    "prestart": "cd demo && npm install",
+    "test": "gulp test",
+    "gulp": "gulp",
+    "typings": "typings"
+  },
+  "keywords": [
+    "microsoft",
+    "powerbi",
+    "embedded",
+    "visuals"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/PowerBI-JavaScript.git"
+  },
+  "author": {
+    "name": "Microsoft"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "del": "^2.2.2",
+    "es6-promise": "^3.2.1",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-flatten": "^0.2.0",
+    "gulp-gh-pages": "^0.5.4",
+    "gulp-header": "^1.8.7",
+    "gulp-help": "^1.6.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-tslint": "^4.3.4",
+    "gulp-typedoc": "^2.0.0",
+    "gulp-typescript": "^2.12.1",
+    "gulp-uglify": "^1.5.1",
+    "http-server": "^0.9.0",
+    "ignore-loader": "^0.1.1",
+    "jasmine": "^2.4.1",
+    "jasmine-core": "^2.4.1",
+    "jquery": "^2.2.3",
+    "json-loader": "^0.5.4",
+    "karma": "^0.13.19",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-coverage": "^0.5.3",
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-jasmine": "^0.3.7",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-spec-reporter": "0.0.23",
+    "moment": "^2.14.1",
+    "phantomjs-prebuilt": "^2.1.3",
+    "run-sequence": "^1.1.5",
+    "ts-loader": "^0.8.1",
+    "tslint": "^3.6.0",
+    "typedoc": "^0.4.4",
+    "typescript": "^1.8.10",
+    "typings": "^1.3.2",
+    "webpack": "^1.12.14",
+    "webpack-stream": "^3.1.0",
+    "yargs": "^4.4.0"
+  },
+  "dependencies": {
+    "http-post-message": "^0.2.3",
+    "powerbi-models": "^0.10.1",
+    "powerbi-router": "^0.1.4",
+    "window-post-message-proxy": "^0.2.4"
+  },
+  "publishConfig": {
+    "tag": "beta"
+  },
+  "gitHead": "0a9464c383a20faeb486f1dd1795baebe795d212",
+  "bugs": {
+    "url": "https://github.com/Microsoft/PowerBI-JavaScript/issues"
+  },
+  "homepage": "https://github.com/Microsoft/PowerBI-JavaScript#readme",
+  "_id": "powerbi-client@2.2.3",
+  "_shasum": "720aa3246d6214b484297726d5b14e5986e40ad5",
+  "_from": "powerbi-client@latest",
+  "_npmVersion": "3.10.9",
+  "_nodeVersion": "7.2.0",
+  "_npmUser": {
+    "name": "powerbi",
+    "email": "nugetpowerbi@microsoft.com"
+  },
+  "dist": {
+    "shasum": "720aa3246d6214b484297726d5b14e5986e40ad5",
+    "tarball": "https://registry.npmjs.org/powerbi-client/-/powerbi-client-2.2.3.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "powerbi",
+      "email": "nugetpowerbi@microsoft.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/powerbi-client-2.2.3.tgz_1480602950612_0.22554590832442045"
+  },
+  "_resolved": "https://registry.npmjs.org/powerbi-client/-/powerbi-client-2.2.3.tgz",
+  "readme": "ERROR: No README data found!"
+}
