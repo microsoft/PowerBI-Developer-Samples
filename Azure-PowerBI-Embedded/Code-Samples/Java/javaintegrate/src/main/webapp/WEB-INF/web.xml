@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<web-app id="WebApp_ID" version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+    http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>Archetype Created Web Application</display-name>
+	<context-param>
+		<param-name>authority</param-name>
+		<param-value>https://login.windows.net/</param-value>
+	</context-param>
+	<context-param>
+		<param-name>tenant</param-name>
+		<param-value>common</param-value>
+	</context-param>
+
+	<filter>
+		<filter-name>BasicFilter</filter-name>
+		<filter-class>com.pliu.powerbiintegrate.BasicFilter</filter-class>
+		<init-param>
+			<param-name>client_id</param-name>
+			<param-value>67a1a066-8db5-41d9-b606-caa97c1250c3</param-value>
+		</init-param>
+		<init-param>
+			<param-name>secret_key</param-name>
+			<param-value>your client app AAD key</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>BasicFilter</filter-name>
+		<url-pattern>/secure/*</url-pattern>
+	</filter-mapping>
+
+	<servlet>
+		<servlet-name>mvc-dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>mvc-dispatcher</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/mvc-dispatcher-servlet.xml</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+</web-app>
