@@ -1,0 +1,73 @@
+﻿@model PowerBIEmbedded_AppOwnsData.Models.EmbedConfig
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/scripts/powerbi.js"></script>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div id="errorWrapper">
+        <h2>
+            Error
+        </h2>
+        @Model.ErrorMessage
+    </div>
+
+    return;
+}
+
+<h2>Embedded Tile</h2>
+<div>
+    The following tile is the first tile found in the first dashboard in given group. Please feel free to change the code to match your needs.
+</div>
+
+@if (string.IsNullOrEmpty(Model.EmbedUrl))
+{
+    return;
+}
+
+<iframe id="tileIframe"></iframe>
+
+<div class="infoBox">
+    Code is in files:<br />
+    1) HomeController.cs<br />
+    2) EmbedTile.cshtml
+</div>
+
+@Html.Partial("LiveDemoLink")
+
+<script type="text/javascript">
+        //Configure IFrame for the tile after you have an Access Token. See Default.aspx.cs to learn how to get an Access Token
+        window.onload = function () {
+            var iframe = document.getElementById('tileIframe');
+
+            // To load a tile do the following:
+            // Set the IFrame source to the EmbedUrl from the Get Tiles operation
+            iframe.src = "@Html.Raw(Model.EmbedUrl)";
+
+            // Add an onload handler to submit the access token
+            iframe.onload = postActionLoadTile;
+        };
+
+        // Post the access token to the IFrame
+        function postActionLoadTile() {
+
+            // Construct the push message structure
+            // This is where you assign the Embed Token to get access to the tile visual
+            var messageStructure = {
+                action: "loadTile",
+                accessToken: "@Model.EmbedToken.Token",
+                tokenType: 1,
+                width: 400,
+                height: 350
+            };
+
+            message = JSON.stringify(messageStructure);
+
+            // Push the message
+            document.getElementById('tileIframe').contentWindow.postMessage(message, "*");;
+        }
+</script>
