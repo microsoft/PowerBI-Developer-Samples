@@ -1,4 +1,4 @@
-﻿@model PowerBIEmbedded_AppOwnsData.Models.EmbedConfig
+﻿@model PowerBIEmbedded_AppOwnsData.Models.TileEmbedConfig
 
 @{
     ViewBag.Title = "Index";
@@ -23,13 +23,12 @@
 <div>
     The following tile is the first tile found in the first dashboard in given group. Please feel free to change the code to match your needs.
 </div>
+<div id="tileContainer"></div>
 
 @if (string.IsNullOrEmpty(Model.EmbedUrl))
 {
     return;
 }
-
-<iframe id="tileIframe"></iframe>
 
 <div class="infoBox">
     Code is in files:<br />
@@ -39,35 +38,38 @@
 
 @Html.Partial("LiveDemoLink")
 
-<script type="text/javascript">
-        //Configure IFrame for the tile after you have an Access Token. See Default.aspx.cs to learn how to get an Access Token
-        window.onload = function () {
-            var iframe = document.getElementById('tileIframe');
+<script>
+    // Read embed application token from Model
+    var accessToken = "@Model.EmbedToken.Token";
 
-            // To load a tile do the following:
-            // Set the IFrame source to the EmbedUrl from the Get Tiles operation
-            iframe.src = "@Html.Raw(Model.EmbedUrl)";
+    // Read embed URL from Model
+    var embedUrl = "@Html.Raw(Model.EmbedUrl)";
 
-            // Add an onload handler to submit the access token
-            iframe.onload = postActionLoadTile;
-        };
+    // Read tile Id from Model
+    var embedTileId = "@Model.Id";
 
-        // Post the access token to the IFrame
-        function postActionLoadTile() {
+    // Read dashboard Id from Model
+    var embedDashboardeId = "@Model.dashboardId";
 
-            // Construct the push message structure
-            // This is where you assign the Embed Token to get access to the tile visual
-            var messageStructure = {
-                action: "loadTile",
-                accessToken: "@Model.EmbedToken.Token",
-                tokenType: 1,
-                width: 400,
-                height: 350
-            };
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
 
-            message = JSON.stringify(messageStructure);
+    // Embed configuration used to describe the what and how to embed.
+    // This object is used when calling powerbi.embed.
+    // This also includes settings and options such as filters.
+    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+    var config = {
+        type: 'tile',
+        tokenType: models.TokenType.Embed,
+        accessToken: accessToken,
+        embedUrl: embedUrl,
+        id: embedTileId,
+        dashboardId: embedDashboardeId
+    };
 
-            // Push the message
-            document.getElementById('tileIframe').contentWindow.postMessage(message, "*");;
-        }
+    // Get a reference to the embedded tile HTML element
+    var tileContainer = $('#tileContainer')[0];
+
+    // Embed the tile and display it within the div container.
+    var tile = powerbi.embed(tileContainer, config);
 </script>

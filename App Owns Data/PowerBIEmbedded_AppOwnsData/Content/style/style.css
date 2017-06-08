@@ -45,7 +45,7 @@ a:hover, a:visited, a:link, a:active {
    font-size: 120%;
 }
 
-#tileIframe {
+#tileContainer {
     width: 400px;
     height: 350px;
 }
