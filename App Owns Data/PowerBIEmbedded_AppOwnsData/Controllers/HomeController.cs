@@ -169,7 +169,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             var error = GetWebConfigErrors();
             if (error != null)
             {
-                return View(new EmbedConfig()
+                return View(new TileEmbedConfig()
                 {
                     ErrorMessage = error
                 });
@@ -184,7 +184,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 
             if (authenticationResult == null)
             {
-                return View(new EmbedConfig()
+                return View(new TileEmbedConfig()
                 {
                     ErrorMessage = "Authentication Failed."
                 });
@@ -203,7 +203,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 
                 if (dashboard == null)
                 {
-                    return View(new EmbedConfig()
+                    return View(new TileEmbedConfig()
                     {
                         ErrorMessage = "Group has no dashboards."
                     });
@@ -220,18 +220,19 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 
                 if (tokenResponse == null)
                 {
-                    return View(new EmbedConfig()
+                    return View(new TileEmbedConfig()
                     {
                         ErrorMessage = "Failed to generate embed token."
                     });
                 }
 
                 // Generate Embed Configuration.
-                var embedConfig = new EmbedConfig()
+                var embedConfig = new TileEmbedConfig()
                 {
                     EmbedToken = tokenResponse,
                     EmbedUrl = tile.EmbedUrl,
-                    Id = tile.Id
+                    Id = tile.Id,
+                    dashboardId = dashboard.Id 
                 };
 
                 return View(embedConfig);
