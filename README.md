@@ -19,9 +19,9 @@ For security reasons, in real application, don't save the user and password in w
 
 # User Owns Data samples
 
-Pleaes follow these steps to run PowerBI.com Integrate samples:
+Please follow these steps to run PowerBI.com Integrate samples:
 ## Step 1 - App Registration
-you need to register an application in
+You need to register an application in
 https://dev.powerbi.com/apps
 
 ### Registration parameters per sample
