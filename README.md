@@ -50,5 +50,20 @@ Copy Client Id and Client secret to web.config file
 
 ![regexample](https://cloud.githubusercontent.com/assets/23071967/23340740/48d4f640-fc44-11e6-8f31-dd273d26a61e.png)
 
+## Troubleshooting
+
+### Visual Studio 2013
+To resolve a 'CS0012:Predefined type 'System.Object' is not defined or imported' error, please update web.config.
+
+Find line:
+ <compilation debug="true" targetFramework="4.5"/>
+ 
+ And modify it to:
+ <compilation debug="true" targetFramework="4.5">
+  <assemblies>     
+    <add assembly="System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />   
+  </assemblies>
+</compilation>
+
 
 
