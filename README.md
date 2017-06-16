@@ -56,14 +56,18 @@ Copy Client Id and Client secret to web.config file
 To resolve a 'CS0012:Predefined type 'System.Object' is not defined or imported' error, please update web.config.
 
 Find line:
+ ```xml
  <compilation debug="true" targetFramework="4.5"/>
+ ```
  
  And modify it to:
+ 
+ ```xml
  <compilation debug="true" targetFramework="4.5">
   <assemblies>     
     <add assembly="System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />   
   </assemblies>
 </compilation>
-
+```
 
 
