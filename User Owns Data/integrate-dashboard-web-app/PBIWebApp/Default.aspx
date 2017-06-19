@@ -7,6 +7,7 @@
             <p><b class="step">Step 1</b>: Sign in to your Power BI account to link your account to this web application.</p>
             <p>
                 <asp:Button ID="signInButton" runat="server" OnClick="signInButton_Click" Text="Sign in to Power BI" />
+                <asp:Button ID="signOffButton" runat="server" OnClick="signOffButton_Click" Text="Sign off from Power BI" />
             </p>   
 
             <asp:Panel ID="signInStatus" runat="server" Visible="false">
