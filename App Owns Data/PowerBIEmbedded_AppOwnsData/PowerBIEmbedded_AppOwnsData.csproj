@@ -229,8 +229,8 @@
     <Content Include="CloudConfigs\Power BI US Government\Cloud.config" />
     <Content Include="CloudConfigs\Power BI Global\Cloud.config" />
     <Content Include="CloudConfigs\Power BI operated by 21Vianet in China\Cloud.config" />
-    <Content Include="CloudConfigs\Pathfinder\Cloud.config" />
-    <Content Include="CloudConfigs\Traiblazer\Cloud.config" />
+    <Content Include="CloudConfigs\Power BI DoD\Cloud.config" />
+    <Content Include="CloudConfigs\Power BI DoD Contractors\Cloud.config" />
     <None Include="Project_Readme.html" />
     <Content Include="scripts\powerbi.js.map" />
   </ItemGroup>
