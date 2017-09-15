@@ -224,6 +224,13 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
+    <Content Include="Cloud.config" />
+    <Content Include="CloudConfigs\Power BI in Germany\Cloud.config" />
+    <Content Include="CloudConfigs\Power BI US Government\Cloud.config" />
+    <Content Include="CloudConfigs\Power BI Global\Cloud.config" />
+    <Content Include="CloudConfigs\Power BI operated by 21Vianet in China\Cloud.config" />
+    <Content Include="CloudConfigs\Power BI DoD\Cloud.config" />
+    <Content Include="CloudConfigs\Power BI DoD Contractors\Cloud.config" />
     <None Include="Project_Readme.html" />
     <Content Include="scripts\powerbi.js.map" />
   </ItemGroup>
