@@ -20,6 +20,16 @@ namespace PowerBIEmbedded_AppOwnsData.Models
             }
         }
 
+        public bool? IsEffectiveIdentityRolesRequired { get; set; }
+
+        public bool? IsEffectiveIdentityRequired { get; set; }
+
+        public bool EnableRLS { get; set; }
+
+        public string Username { get; set; }
+
+        public string Roles { get; set; }
+
         public string ErrorMessage { get; internal set; }
     }
 }
