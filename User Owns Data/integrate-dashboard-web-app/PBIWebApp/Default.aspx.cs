@@ -30,10 +30,15 @@ namespace PBIWebApp
                 //Show Power BI Panel
                 signInStatus.Visible = true;
                 signInButton.Visible = false;
+                signOffButton.Visible = true;
 
                 //Set user and token from authentication result
                 userLabel.Text = authResult.UserInfo.DisplayableId;
                 accessTokenTextbox.Text = authResult.AccessToken;
+            }
+            else
+            {
+                signOffButton.Visible = false;
             }
         }
 
@@ -64,7 +69,38 @@ namespace PBIWebApp
 
             //Redirect authority
             //Authority Uri is an Azure resource that takes a client id to get an Access token
-            string authorityUri = Properties.Settings.Default.AADAuthorityUri;
+            string authorityUri = Properties.Settings.Default.AADAuthoritySignInUri;
+            var authUri = String.Format("{0}?{1}", authorityUri, queryString);
+            Response.Redirect(authUri);
+        }
+
+        protected void signOffButton_Click(object sender, EventArgs e)
+        {
+            //Create a query string
+            //Create a sign-in NameValueCollection for query string
+            var @params = new NameValueCollection
+            {
+                //Client ID is used by the application to identify themselves to the users that they are requesting permissions from. 
+                //You get the client id when you register your Azure app.
+                {"client_id", Properties.Settings.Default.ClientID},
+
+                //Resource uri to the Power BI resource to be authorized
+                {"resource", Properties.Settings.Default.PowerBiAPI},
+
+                //After user authenticates, Azure AD will redirect back to the web app
+                {"redirect_uri", "http://localhost:13526/"},
+
+                //After user authenticates, Azure AD will redirect back to the web app
+                {"post_logout_redirect_uri", "http://localhost:13526/Redirect"}
+            };
+
+            //Create sign-in query string
+            var queryString = HttpUtility.ParseQueryString(string.Empty);
+            queryString.Add(@params);
+
+            //Redirect authority
+            //Authority Uri is an Azure resource that takes a client id to get an Access token
+            string authorityUri = Properties.Settings.Default.AADAuthoritySignOffUri;
             var authUri = String.Format("{0}?{1}", authorityUri, queryString);
             Response.Redirect(authUri);
         }
