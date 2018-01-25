@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="PBIWebApp._Default" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+    <script src="https://npmcdn.com/es6-promise@3.2.1"></script>
     <script type="text/javascript" src="scripts/powerbi.js"></script>
 
     <script type="text/javascript">
