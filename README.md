@@ -71,4 +71,7 @@ Find line:
 </compilation>
 ```
 
+## Issues
+[Power BI Support Page](https://powerbi.microsoft.com/en-us/support/)
 
+[Power BI Ideas](https://ideas.powerbi.com)
