@@ -60,7 +60,7 @@ namespace PBIWebApp
                 {"resource", Properties.Settings.Default.PowerBiAPI},
 
                 //After user authenticates, Azure AD will redirect back to the web app
-                {"redirect_uri", "http://localhost:13526/Redirect"}
+                {"redirect_uri", "http://localhost:13526/redirect"}
             };
 
             //Create sign-in query string
@@ -69,7 +69,7 @@ namespace PBIWebApp
 
             //Redirect authority
             //Authority Uri is an Azure resource that takes a client id to get an Access token
-            string authorityUri = Properties.Settings.Default.AADAuthorityUri;
+            string authorityUri = Properties.Settings.Default.AADAuthoritySignInUri;
             var authUri = String.Format("{0}?{1}", authorityUri, queryString);
             Response.Redirect(authUri);
         }
@@ -91,7 +91,7 @@ namespace PBIWebApp
                 {"redirect_uri", "http://localhost:13526/"},
 
                 //After user authenticates, Azure AD will redirect back to the web app
-                {"post_logout_redirect_uri", "http://localhost:13526/Redirect"}
+                {"post_logout_redirect_uri", "http://localhost:13526/redirect"}
             };
 
             //Create sign-in query string
@@ -100,7 +100,7 @@ namespace PBIWebApp
 
             //Redirect authority
             //Authority Uri is an Azure resource that takes a client id to get an Access token
-            string authorityUri = Properties.Settings.Default.AADAuthorityUri;
+            string authorityUri = Properties.Settings.Default.AADAuthoritySignOffUri;
             var authUri = String.Format("{0}?{1}", authorityUri, queryString);
             Response.Redirect(authUri);
         }

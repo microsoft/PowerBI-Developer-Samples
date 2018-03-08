@@ -11,10 +11,10 @@
     <Setting Name="AADAuthoritySignInUri" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://login.windows.net/common/oauth2/authorize/</Value>
     </Setting>
+    <Setting Name="AADAuthoritySignOffUri" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://login.windows.net/common/oauth2/logout/</Value>
+    </Setting>
     <Setting Name="PowerBiAPI" Type="System.String" Scope="Application">
-      <Setting Name="AADAuthoritySignOffUri" Type="System.String" Scope="Application">
-        <Value Profile="(Default)">https://login.windows.net/common/oauth2/logout/</Value>
-      </Setting>
       <Value Profile="(Default)">https://analysis.windows.net/powerbi/api</Value>
     </Setting>
     <Setting Name="PowerBiDataset" Type="System.String" Scope="Application">

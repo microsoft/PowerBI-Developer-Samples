@@ -18,8 +18,8 @@ namespace PBIWebApp
         protected void Page_Load(object sender, EventArgs e)
         {
             //Redirect uri must match the redirect_uri used when requesting Authorization code.
-            string redirectUri = String.Format("{0}Redirect", Properties.Settings.Default.RedirectUrl);
-            string authorityUri = Properties.Settings.Default.AADAuthorityUri;
+            string redirectUri = String.Format("{0}redirect", Properties.Settings.Default.RedirectUrl);
+            string authorityUri = Properties.Settings.Default.AADAuthoritySignInUri;
 
             // Get the auth code
             string code = Request.Params["code"];
