@@ -1,0 +1,27 @@
+{
+  "name": "pbie-sample",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.15.2",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "express": "~4.14.0",
+    "express-session": "^1.14.2",
+    "jade": "~1.11.0",
+    "morgan": "~1.7.0",
+    "ms-rest": "^1.15.2",
+    "mssql": "^3.3.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "powerbi-api": "^1.0.1",
+    "powerbi-client": "^2.2.3",
+    "serve-favicon": "~2.3.0",
+    "stylus": "0.54.5",
+    "tedious": "^1.14.0"
+  }
+}
