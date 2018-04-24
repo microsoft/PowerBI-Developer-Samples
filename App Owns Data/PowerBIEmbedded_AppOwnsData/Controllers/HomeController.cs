@@ -170,21 +170,52 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             }
 
             // Create a user password cradentials.
-            var credential = new UserPasswordCredential(Username, Password);
+            //var credential = new UserPasswordCredential(Username, Password);
 
-            // Authenticate using created credentials
-            var authenticationContext = new AuthenticationContext(AuthorityUrl);
-            var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ClientId, credential);
+            //// Authenticate using created credentials
+            //var authenticationContext = new AuthenticationContext(AuthorityUrl);
+            //var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ClientId, credential);
 
-            if (authenticationResult == null)
+            //if (authenticationResult == null)
+            //{
+            //    return View(new EmbedConfig()
+            //    {
+            //        ErrorMessage = "Authentication Failed."
+            //    });
+            //}
+
+            //var tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
+
+            OAuthResult oAuthResult;
+            using (var client = new HttpClient())
             {
-                return View(new EmbedConfig()
+                client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
+                var _result = await client.PostAsync(
+                    new Uri(TokenUrl), new FormUrlEncodedContent(
+                        new[]
+                        {
+                            new KeyValuePair<string, string>("resource", ResourceUrl),
+                            new KeyValuePair<string, string>("client_id", ClientId),
+                            new KeyValuePair<string, string>("grant_type", "password"),
+                            new KeyValuePair<string, string>("username", Username),
+                            new KeyValuePair<string, string>("password", Password),
+                            new KeyValuePair<string, string>("scope", "openid"),
+                        }));
+                if (_result.IsSuccessStatusCode)
                 {
-                    ErrorMessage = "Authentication Failed."
-                });
+                    oAuthResult = JsonConvert.DeserializeObject<OAuthResult>(await _result.Content.ReadAsStringAsync());
+
+                }
+                else
+                {
+                    return View(new EmbedConfig()
+                    {
+                        ErrorMessage = "Authentication Failed."
+                    });
+                }
             }
 
-            var tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
+            var tokenCredentials = new TokenCredentials(oAuthResult.AccessToken, "Bearer");
 
             // Create a Power BI Client object. It will be used to call Power BI APIs.
             using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
@@ -238,22 +269,53 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                 });
             }
 
-            // Create a user password cradentials.
-            var credential = new UserPasswordCredential(Username, Password);
+            //// Create a user password cradentials.
+            //var credential = new UserPasswordCredential(Username, Password);
 
-            // Authenticate using created credentials
-            var authenticationContext = new AuthenticationContext(AuthorityUrl);
-            var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ClientId, credential);
+            //// Authenticate using created credentials
+            //var authenticationContext = new AuthenticationContext(AuthorityUrl);
+            //var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ClientId, credential);
 
-            if (authenticationResult == null)
+            //if (authenticationResult == null)
+            //{
+            //    return View(new TileEmbedConfig()
+            //    {
+            //        ErrorMessage = "Authentication Failed."
+            //    });
+            //}
+
+            //var tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
+
+            OAuthResult oAuthResult;
+            using (var client = new HttpClient())
             {
-                return View(new TileEmbedConfig()
+                client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
+                var _result = await client.PostAsync(
+                    new Uri(TokenUrl), new FormUrlEncodedContent(
+                        new[]
+                        {
+                            new KeyValuePair<string, string>("resource", ResourceUrl),
+                            new KeyValuePair<string, string>("client_id", ClientId),
+                            new KeyValuePair<string, string>("grant_type", "password"),
+                            new KeyValuePair<string, string>("username", Username),
+                            new KeyValuePair<string, string>("password", Password),
+                            new KeyValuePair<string, string>("scope", "openid"),
+                        }));
+                if (_result.IsSuccessStatusCode)
                 {
-                    ErrorMessage = "Authentication Failed."
-                });
+                    oAuthResult = JsonConvert.DeserializeObject<OAuthResult>(await _result.Content.ReadAsStringAsync());
+
+                }
+                else
+                {
+                    return View(new TileEmbedConfig()
+                    {
+                        ErrorMessage = "Authentication Failed."
+                    });
+                }
             }
 
-            var tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
+            var tokenCredentials = new TokenCredentials(oAuthResult.AccessToken, "Bearer");
 
             // Create a Power BI Client object. It will be used to call Power BI APIs.
             using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
