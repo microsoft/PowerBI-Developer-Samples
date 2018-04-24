@@ -7,8 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 
 namespace PowerBIEmbedded_AppOwnsData.Controllers
 {
@@ -17,6 +20,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
         private static readonly string Username = ConfigurationManager.AppSettings["pbiUsername"];
         private static readonly string Password = ConfigurationManager.AppSettings["pbiPassword"];
         private static readonly string AuthorityUrl = ConfigurationManager.AppSettings["authorityUrl"];
+        private static readonly string TokenUrl = ConfigurationManager.AppSettings["tokenUrl"];
         private static readonly string ResourceUrl = ConfigurationManager.AppSettings["resourceUrl"];
         private static readonly string ClientId = ConfigurationManager.AppSettings["clientId"];
         private static readonly string ApiUrl = ConfigurationManager.AppSettings["apiUrl"];
@@ -41,20 +45,44 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                     return View(result);
                 }
 
-                // Create a user password cradentials.
-                var credential = new UserPasswordCredential(Username, Password);
+                //**********Removed as UserPasswordCredential won't work in .NET Core ************************************************//
+                //// Create a user password cradentials.
+                //var credential = new UserPasswordCredential(Username, Password);
+                //var authenticationContext =
+                //    new AuthenticationContext("https://login.microsoftonline.com/common/oauth2/token");
+                //// Authenticate using created credentials
+                //var authenticationContext = new AuthenticationContext(AuthorityUrl);
+                //var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ClientId, credential);
+                //*******************************************************************************************************************//
 
-                // Authenticate using created credentials
-                var authenticationContext = new AuthenticationContext(AuthorityUrl);
-                var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ClientId, credential);
-
-                if (authenticationResult == null)
+                OAuthResult oAuthResult;
+                using (var client = new HttpClient())
                 {
-                    result.ErrorMessage = "Authentication Failed.";
-                    return View(result);
+                    client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
+                    var _result = await client.PostAsync(
+                        new Uri(TokenUrl), new FormUrlEncodedContent(
+                            new[]
+                            {
+                                new KeyValuePair<string, string>("resource", ResourceUrl),
+                                new KeyValuePair<string, string>("client_id", ClientId),
+                                new KeyValuePair<string, string>("grant_type", "password"),
+                                new KeyValuePair<string, string>("username", Username),
+                                new KeyValuePair<string, string>("password", Password),
+                                new KeyValuePair<string, string>("scope", "openid"),
+                            }));
+                    if (_result.IsSuccessStatusCode)
+                    {
+                        oAuthResult = JsonConvert.DeserializeObject<OAuthResult>(await _result.Content.ReadAsStringAsync());
+
+                    }
+                    else
+                    {
+                        result.ErrorMessage = "Authentication Failed.";
+                        return View(result);
+                    }
                 }
 
-                var tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
+                var tokenCredentials = new TokenCredentials(oAuthResult.AccessToken, "Bearer");
 
                 // Create a Power BI Client object. It will be used to call Power BI APIs.
                 using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
@@ -267,7 +295,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                     EmbedToken = tokenResponse,
                     EmbedUrl = tile.EmbedUrl,
                     Id = tile.Id,
-                    dashboardId = dashboard.Id 
+                    dashboardId = dashboard.Id
                 };
 
                 return View(embedConfig);
