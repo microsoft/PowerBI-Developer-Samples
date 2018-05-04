@@ -1,4 +1,4 @@
-/*! powerbi-client v2.5.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.5.1 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -957,7 +957,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.0.3 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.0.4 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1040,6 +1040,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		    DisplayOption[DisplayOption["FitToWidth"] = 1] = "FitToWidth";
 		    DisplayOption[DisplayOption["ActualSize"] = 2] = "ActualSize";
 		})(DisplayOption = exports.DisplayOption || (exports.DisplayOption = {}));
+		var BackgroundType;
+		(function (BackgroundType) {
+		    BackgroundType[BackgroundType["Default"] = 0] = "Default";
+		    BackgroundType[BackgroundType["Transparent"] = 1] = "Transparent";
+		})(BackgroundType = exports.BackgroundType || (exports.BackgroundType = {}));
 		var VisualContainerDisplayMode;
 		(function (VisualContainerDisplayMode) {
 		    VisualContainerDisplayMode[VisualContainerDisplayMode["Visible"] = 0] = "Visible";
@@ -1496,6 +1501,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		    addBookmarkRequestValidator: new bookmarkValidator_1.AddBookmarkRequestValidator(),
 		    applyBookmarkByNameRequestValidator: new bookmarkValidator_1.ApplyBookmarkByNameRequestValidator(),
 		    applyBookmarkStateRequestValidator: new bookmarkValidator_1.ApplyBookmarkStateRequestValidator(),
+		    applyBookmarkValidator: new anyOfValidator_1.AnyOfValidator([new bookmarkValidator_1.ApplyBookmarkByNameRequestValidator(), new bookmarkValidator_1.ApplyBookmarkStateRequestValidator()]),
+		    backgroundValidator: new typeValidator_1.EnumValidator([0, 1]),
 		    booleanArrayValidator: new typeValidator_1.BooleanArrayValidator(),
 		    booleanValidator: new typeValidator_1.BooleanValidator(),
 		    commandExtensionValidator: new extensionsValidator_1.CommandExtensionValidator(),
@@ -2018,7 +2025,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		            {
 		                field: "customLayout",
 		                validators: [validator_1.Validators.customLayoutValidator]
-		            }
+		            },
+		            {
+		                field: "background",
+		                validators: [validator_1.Validators.backgroundValidator]
+		            },
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
 		        return multipleFieldsValidator.validate(input, path, field);
@@ -2662,6 +2673,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		            {
 		                field: "tokenType",
 		                validators: [validator_1.Validators.tokenTypeValidator]
+		            },
+		            {
+		                field: "bookmark",
+		                validators: [validator_1.Validators.applyBookmarkValidator]
 		            }
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
@@ -4598,7 +4613,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.5.0',
+	    version: '2.5.1',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
