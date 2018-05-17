@@ -1,11 +1,13 @@
-﻿
-using System;
+﻿using System;
+using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Collections.Specialized;
-using Newtonsoft.Json;
 using PBIWebApp.Properties;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Microsoft.PowerBI.Api.V2;
+using Microsoft.PowerBI.Api.V2.Models;
+using Microsoft.Rest;
 
 namespace PBIWebApp
 {
@@ -17,7 +19,7 @@ namespace PBIWebApp
     */
     public partial class _Default : Page
     {
-        string baseUri = Properties.Settings.Default.PowerBiDataset;
+        string baseUri = Settings.Default.PowerBiDataset;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -51,8 +53,9 @@ namespace PBIWebApp
                 //In this sample, you get the first Report. In a production app, you would create a more robost
                 //solution
 
-                //Get first report. 
-                GetReport(0);
+                //Gets the corresponding report to the setting's ReportId and GroupId.
+                //If reportId or groupId are empty or invalid, it will get the first user's report.
+                GetReport();
             }
         }
 
@@ -65,36 +68,45 @@ namespace PBIWebApp
 
 
         //Get a Report. In this sample, you get the first Report.
-        protected void GetReport(int index)
+        protected void GetReport()
         {
-            //Configure Reports request
-            System.Net.WebRequest request = System.Net.WebRequest.Create(
-                String.Format("{0}/Reports",
-                baseUri)) as System.Net.HttpWebRequest;
+            var groupId = Settings.Default.GroupId;
+            var reportId = Settings.Default.ReportId;
+            var powerBiApiUrl = Settings.Default.PowerBiApiUrl;
 
-            request.Method = "GET";
-            request.ContentLength = 0;
-            request.Headers.Add("Authorization", String.Format("Bearer {0}", accessToken.Value));
-
-            //Get Reports response from request.GetResponse()
-            using (var response = request.GetResponse() as System.Net.HttpWebResponse)
+            using (var client = new PowerBIClient(new Uri(powerBiApiUrl), new TokenCredentials(accessToken.Value, "Bearer")))
             {
-                //Get reader from response stream
-                using (var reader = new System.IO.StreamReader(response.GetResponseStream()))
+                var groups = client.Groups.GetGroups();
+                var sourceGroup = groups.Value.FirstOrDefault(g => g.Id == groupId);
+                if (sourceGroup == null)
                 {
-                    //Deserialize JSON string
-                    PBIReports Reports = JsonConvert.DeserializeObject<PBIReports>(reader.ReadToEnd());
+                    sourceGroup = groups.Value.FirstOrDefault();
+                }
 
-                    //Sample assumes at least one Report.
-                    //You could write an app that lists all Reports
-                    if (Reports.value.Length > 0)
-                    {
-                        var report = Reports.value[index];
+                if(sourceGroup == null)
+                {
+                    return;
+                }
 
-                        txtEmbedUrl.Text = report.embedUrl;
-                        txtReportId.Text = report.id;
-                        txtReportName.Text = report.name;
-                    }
+                // Get a list of reports.
+                var reports = client.Reports.GetReportsInGroup(sourceGroup.Id);
+
+                Report report;
+                if (string.IsNullOrEmpty(reportId))
+                {
+                    // Get the first report in the group.
+                    report = reports.Value.FirstOrDefault();
+                }
+                else
+                {
+                    report = reports.Value.FirstOrDefault(r => r.Id == reportId);
+                }
+
+                if (report != null)
+                {
+                    txtEmbedUrl.Text = report.EmbedUrl;
+                    txtReportId.Text = report.Id;
+                    txtReportName.Text = report.Name;
                 }
             }
         }
@@ -115,7 +127,7 @@ namespace PBIWebApp
 
                 //Resource uri to the Power BI resource to be authorized
                 //The resource uri is hard-coded for sample purposes
-                {"resource", Properties.Settings.Default.PowerBiAPI},
+                {"resource", Settings.Default.PowerBiAPIResource},
 
                 //After app authenticates, Azure AD will redirect back to the web app. In this sample, Azure AD redirects back
                 //to Default page (Default.aspx).
@@ -135,7 +147,7 @@ namespace PBIWebApp
             //      redirect_uri which is the uri that Azure AD will redirect back to after it authenticates
 
             //Redirect to Azure AD to get an authorization code
-            Response.Redirect(String.Format(Properties.Settings.Default.AADAuthorityUri + "?{0}", queryString));
+            Response.Redirect(String.Format(Settings.Default.AADAuthorityUri + "?{0}", queryString));
         }
 
         public string GetAccessToken(string authorizationCode, string clientID, string clientSecret, string redirectUri)
@@ -148,7 +160,7 @@ namespace PBIWebApp
             TokenCache TC = new TokenCache();
 
             //Values are hard-coded for sample purposes
-            string authority = Properties.Settings.Default.AADAuthorityUri;
+            string authority = Settings.Default.AADAuthorityUri;
             AuthenticationContext AC = new AuthenticationContext(authority, TC);
             ClientCredential cc = new ClientCredential(clientID, clientSecret);
 
@@ -157,18 +169,5 @@ namespace PBIWebApp
                 authorizationCode,
                 new Uri(redirectUri), cc).AccessToken;
         }
-    }
-
-    //Power BI Reports used to deserialize the Get Reports response.
-    public class PBIReports
-    {
-        public PBIReport[] value { get; set; }
-    }
-    public class PBIReport
-    {
-        public string id { get; set; }
-        public string name { get; set; }
-        public string webUrl { get; set; }
-        public string embedUrl { get; set; }
     }
 }
