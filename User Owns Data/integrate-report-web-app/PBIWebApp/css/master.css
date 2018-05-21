@@ -48,3 +48,7 @@ input[type="submit"] {
     min-width: 150px;
     float: left;
 }
+
+.error{
+    color: #FF0000;
+}

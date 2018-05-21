@@ -54,7 +54,7 @@ namespace PBIWebApp
                 //solution
 
                 //Gets the corresponding report to the setting's ReportId and GroupId.
-                //If reportId or groupId are empty or invalid, it will get the first user's report.
+                //If ReportId or GroupId are empty, it will get the first user's report.
                 GetReport();
             }
         }
@@ -67,7 +67,8 @@ namespace PBIWebApp
         }
 
 
-        //Get a Report. In this sample, you get the first Report.
+        // Gets a report based on the setting's ReportId and GroupId.
+        // If reportId or groupId are empty, it will get the first user's report.
         protected void GetReport()
         {
             var groupId = Settings.Default.GroupId;
@@ -76,30 +77,27 @@ namespace PBIWebApp
 
             using (var client = new PowerBIClient(new Uri(powerBiApiUrl), new TokenCredentials(accessToken.Value, "Bearer")))
             {
-                var groups = client.Groups.GetGroups();
-                var sourceGroup = groups.Value.FirstOrDefault(g => g.Id == groupId);
-                if (sourceGroup == null)
-                {
-                    sourceGroup = groups.Value.FirstOrDefault();
-                }
-
-                if(sourceGroup == null)
-                {
-                    return;
-                }
-
-                // Get a list of reports.
-                var reports = client.Reports.GetReportsInGroup(sourceGroup.Id);
-
                 Report report;
-                if (string.IsNullOrEmpty(reportId))
+
+                // Settings' group ID is not empty
+                if (!string.IsNullOrEmpty(groupId))
                 {
-                    // Get the first report in the group.
-                    report = reports.Value.FirstOrDefault();
+                    // Gets a report from the group.
+                    report = GetReportFromGroup(client, groupId, reportId);
                 }
+
+                // Settings contains report ID. (no group ID)
+                else if (string.IsNullOrEmpty(reportId))
+                {
+                    report = client.Reports.GetReports().Value.FirstOrDefault();
+                    AppendErrorIfReportNull(report, "No reports found. Please specify the target report ID and group in the applications settings.");
+                }
+
+                // Settings' report and group Ids are empty, retrieves the user's first report.
                 else
                 {
-                    report = reports.Value.FirstOrDefault(r => r.Id == reportId);
+                    report = client.Reports.GetReports().Value.FirstOrDefault(r => r.Id == reportId);
+                    AppendErrorIfReportNull(report, string.Format("Report with ID: {0} not found. Please check the report ID. For reports within a group with a group ID, add the group ID to the application's settings", reportId));
                 }
 
                 if (report != null)
@@ -168,6 +166,54 @@ namespace PBIWebApp
             return AC.AcquireTokenByAuthorizationCode(
                 authorizationCode,
                 new Uri(redirectUri), cc).AccessToken;
+        }
+
+        // Gets the report with the specified ID from the group. If report ID is emty it will retrieve the first report from the group.
+        private Report GetReportFromGroup(PowerBIClient client, string groupId, string reportId)
+        {
+            // Gets the group by groupId.
+            var groups = client.Groups.GetGroups();
+            var sourceGroup = groups.Value.FirstOrDefault(g => g.Id == groupId);
+
+            // No group with the group ID was found.
+            if (sourceGroup == null)
+            {
+                errorLabel.Text = string.Format("Group with id: {0} not found. Please validate the provided group ID.", groupId);
+                return null;
+            }
+
+            Report report = null;
+            if (string.IsNullOrEmpty(reportId))
+            {
+                // Get the first report in the group.
+                report = client.Reports.GetReportsInGroup(sourceGroup.Id).Value.FirstOrDefault();
+                AppendErrorIfReportNull(report, "Group doesn't contain any reports.");
+            }
+
+            else
+            {
+                try
+                {
+                    // retrieve a report by the group ID and report ID.
+                    report = client.Reports.GetReportInGroup(groupId, reportId);
+                }
+
+                catch(HttpOperationException)
+                {
+                    errorLabel.Text = string.Format("Report with ID:{0} not found in the group {1}, Please check the report ID.", reportId, groupId);
+
+                }
+            }
+
+            return report;
+        }
+
+        private void AppendErrorIfReportNull(Report report, string errorMessage)
+        {
+            if (report == null)
+            {
+                errorLabel.Text = errorMessage;
+            }
         }
     }
 }
