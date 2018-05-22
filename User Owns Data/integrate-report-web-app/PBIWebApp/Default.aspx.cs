@@ -85,15 +85,13 @@ namespace PBIWebApp
                     // Gets a report from the group.
                     report = GetReportFromGroup(client, groupId, reportId);
                 }
-
-                // Settings contains report ID. (no group ID)
+                // Settings' report and group Ids are empty, retrieves the user's first report.
                 else if (string.IsNullOrEmpty(reportId))
                 {
                     report = client.Reports.GetReports().Value.FirstOrDefault();
                     AppendErrorIfReportNull(report, "No reports found. Please specify the target report ID and group in the applications settings.");
                 }
-
-                // Settings' report and group Ids are empty, retrieves the user's first report.
+                // Settings contains report ID. (no group ID)
                 else
                 {
                     report = client.Reports.GetReports().Value.FirstOrDefault(r => r.Id == reportId);
