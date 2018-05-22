@@ -35,9 +35,9 @@ namespace PBIWebApp.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("https://analysis.windows.net/powerbi/api")]
-        public string PowerBiAPI {
+        public string PowerBiAPIResource {
             get {
-                return ((string)(this["PowerBiAPI"]));
+                return ((string)(this["PowerBiAPIResource"]));
             }
         }
         
@@ -74,6 +74,33 @@ namespace PBIWebApp.Properties {
         public string RedirectUrl {
             get {
                 return ((string)(this["RedirectUrl"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://api.powerbi.com/")]
+        public string PowerBiApiUrl {
+            get {
+                return ((string)(this["PowerBiApiUrl"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GroupId {
+            get {
+                return ((string)(this["GroupId"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ReportId {
+            get {
+                return ((string)(this["ReportId"]));
             }
         }
     }

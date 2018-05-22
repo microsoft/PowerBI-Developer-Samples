@@ -1,11 +1,13 @@
-﻿
-using System;
+﻿using System;
+using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Collections.Specialized;
-using Newtonsoft.Json;
 using PBIWebApp.Properties;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Microsoft.PowerBI.Api.V2;
+using Microsoft.PowerBI.Api.V2.Models;
+using Microsoft.Rest;
 
 namespace PBIWebApp
 {
@@ -17,7 +19,7 @@ namespace PBIWebApp
     */
     public partial class _Default : Page
     {
-        string baseUri = Properties.Settings.Default.PowerBiDataset;
+        string baseUri = Settings.Default.PowerBiDataset;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -51,8 +53,9 @@ namespace PBIWebApp
                 //In this sample, you get the first Report. In a production app, you would create a more robost
                 //solution
 
-                //Get first report. 
-                GetReport(0);
+                //Gets the corresponding report to the setting's ReportId and GroupId.
+                //If ReportId or GroupId are empty, it will get the first user's report.
+                GetReport();
             }
         }
 
@@ -64,37 +67,42 @@ namespace PBIWebApp
         }
 
 
-        //Get a Report. In this sample, you get the first Report.
-        protected void GetReport(int index)
+        // Gets a report based on the setting's ReportId and GroupId.
+        // If reportId or groupId are empty, it will get the first user's report.
+        protected void GetReport()
         {
-            //Configure Reports request
-            System.Net.WebRequest request = System.Net.WebRequest.Create(
-                String.Format("{0}/Reports",
-                baseUri)) as System.Net.HttpWebRequest;
+            var groupId = Settings.Default.GroupId;
+            var reportId = Settings.Default.ReportId;
+            var powerBiApiUrl = Settings.Default.PowerBiApiUrl;
 
-            request.Method = "GET";
-            request.ContentLength = 0;
-            request.Headers.Add("Authorization", String.Format("Bearer {0}", accessToken.Value));
-
-            //Get Reports response from request.GetResponse()
-            using (var response = request.GetResponse() as System.Net.HttpWebResponse)
+            using (var client = new PowerBIClient(new Uri(powerBiApiUrl), new TokenCredentials(accessToken.Value, "Bearer")))
             {
-                //Get reader from response stream
-                using (var reader = new System.IO.StreamReader(response.GetResponseStream()))
+                Report report;
+
+                // Settings' group ID is not empty
+                if (!string.IsNullOrEmpty(groupId))
                 {
-                    //Deserialize JSON string
-                    PBIReports Reports = JsonConvert.DeserializeObject<PBIReports>(reader.ReadToEnd());
+                    // Gets a report from the group.
+                    report = GetReportFromGroup(client, groupId, reportId);
+                }
+                // Settings' report and group Ids are empty, retrieves the user's first report.
+                else if (string.IsNullOrEmpty(reportId))
+                {
+                    report = client.Reports.GetReports().Value.FirstOrDefault();
+                    AppendErrorIfReportNull(report, "No reports found. Please specify the target report ID and group in the applications settings.");
+                }
+                // Settings contains report ID. (no group ID)
+                else
+                {
+                    report = client.Reports.GetReports().Value.FirstOrDefault(r => r.Id == reportId);
+                    AppendErrorIfReportNull(report, string.Format("Report with ID: {0} not found. Please check the report ID. For reports within a group with a group ID, add the group ID to the application's settings", reportId));
+                }
 
-                    //Sample assumes at least one Report.
-                    //You could write an app that lists all Reports
-                    if (Reports.value.Length > 0)
-                    {
-                        var report = Reports.value[index];
-
-                        txtEmbedUrl.Text = report.embedUrl;
-                        txtReportId.Text = report.id;
-                        txtReportName.Text = report.name;
-                    }
+                if (report != null)
+                {
+                    txtEmbedUrl.Text = report.EmbedUrl;
+                    txtReportId.Text = report.Id;
+                    txtReportName.Text = report.Name;
                 }
             }
         }
@@ -115,7 +123,7 @@ namespace PBIWebApp
 
                 //Resource uri to the Power BI resource to be authorized
                 //The resource uri is hard-coded for sample purposes
-                {"resource", Properties.Settings.Default.PowerBiAPI},
+                {"resource", Settings.Default.PowerBiAPIResource},
 
                 //After app authenticates, Azure AD will redirect back to the web app. In this sample, Azure AD redirects back
                 //to Default page (Default.aspx).
@@ -135,7 +143,7 @@ namespace PBIWebApp
             //      redirect_uri which is the uri that Azure AD will redirect back to after it authenticates
 
             //Redirect to Azure AD to get an authorization code
-            Response.Redirect(String.Format(Properties.Settings.Default.AADAuthorityUri + "?{0}", queryString));
+            Response.Redirect(String.Format(Settings.Default.AADAuthorityUri + "?{0}", queryString));
         }
 
         public string GetAccessToken(string authorizationCode, string clientID, string clientSecret, string redirectUri)
@@ -148,7 +156,7 @@ namespace PBIWebApp
             TokenCache TC = new TokenCache();
 
             //Values are hard-coded for sample purposes
-            string authority = Properties.Settings.Default.AADAuthorityUri;
+            string authority = Settings.Default.AADAuthorityUri;
             AuthenticationContext AC = new AuthenticationContext(authority, TC);
             ClientCredential cc = new ClientCredential(clientID, clientSecret);
 
@@ -157,18 +165,53 @@ namespace PBIWebApp
                 authorizationCode,
                 new Uri(redirectUri), cc).AccessToken;
         }
-    }
 
-    //Power BI Reports used to deserialize the Get Reports response.
-    public class PBIReports
-    {
-        public PBIReport[] value { get; set; }
-    }
-    public class PBIReport
-    {
-        public string id { get; set; }
-        public string name { get; set; }
-        public string webUrl { get; set; }
-        public string embedUrl { get; set; }
+        // Gets the report with the specified ID from the group. If report ID is emty it will retrieve the first report from the group.
+        private Report GetReportFromGroup(PowerBIClient client, string groupId, string reportId)
+        {
+            // Gets the group by groupId.
+            var groups = client.Groups.GetGroups();
+            var sourceGroup = groups.Value.FirstOrDefault(g => g.Id == groupId);
+
+            // No group with the group ID was found.
+            if (sourceGroup == null)
+            {
+                errorLabel.Text = string.Format("Group with id: {0} not found. Please validate the provided group ID.", groupId);
+                return null;
+            }
+
+            Report report = null;
+            if (string.IsNullOrEmpty(reportId))
+            {
+                // Get the first report in the group.
+                report = client.Reports.GetReportsInGroup(sourceGroup.Id).Value.FirstOrDefault();
+                AppendErrorIfReportNull(report, "Group doesn't contain any reports.");
+            }
+
+            else
+            {
+                try
+                {
+                    // retrieve a report by the group ID and report ID.
+                    report = client.Reports.GetReportInGroup(groupId, reportId);
+                }
+
+                catch(HttpOperationException)
+                {
+                    errorLabel.Text = string.Format("Report with ID:{0} not found in the group {1}, Please check the report ID.", reportId, groupId);
+
+                }
+            }
+
+            return report;
+        }
+
+        private void AppendErrorIfReportNull(Report report, string errorMessage)
+        {
+            if (report == null)
+            {
+                errorLabel.Text = errorMessage;
+            }
+        }
     }
 }

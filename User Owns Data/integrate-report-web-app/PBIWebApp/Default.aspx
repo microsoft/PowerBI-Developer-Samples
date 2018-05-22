@@ -24,7 +24,7 @@
             // This object is used when calling powerbi.embed.
             // This also includes settings and options such as filters.
             // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
-            var config= {
+            var config = {
                 type: 'report',
                 accessToken: accessToken,
                 embedUrl: embedUrl,
@@ -68,20 +68,22 @@
             Power BI Embed Report
         </h1>
         <h2>
-            Basic Sample <br />
+            Basic Sample
+            <br />
             First make sure you <a href="https://dev.powerbi.com/apps">register your app</a>. After registration, copy <u>Client ID</u> and <u>Client Secret</u> to web.config file.
+            <br />
+            The application will embed the first report from your Power BI account. If you wish to embed a specific report, please copy the report's Report ID and corresponding Group ID to web.config file.
         </h2>
     </header>
-    
+
     <div>
-        <h3>
-            Select <b>"Get Report"</b> to get and embed first report from your Power BI account.
+        <h3>Select <b>"Get Report"</b> to embed the report.
         </h3>
-        <asp:Button ID="getReportButton" runat="server" OnClick="getReportButton_Click" Text="Get Report" />  
+        <asp:Button ID="getReportButton" runat="server" OnClick="getReportButton_Click" Text="Get Report" />
     </div>
 
     <div class="field">
-         <div class="fieldtxt">Report Name</div>
+        <div class="fieldtxt">Report Name</div>
         <asp:Textbox ID="txtReportName" runat="server" Width="750px"></asp:Textbox>
     </div>
 
@@ -94,7 +96,9 @@
         <div class="fieldtxt">Report Embed URL</div>
         <asp:Textbox ID="txtEmbedUrl" runat="server" Width="750px"></asp:Textbox>
     </div>
-
+    <div class="error">
+        <asp:Label ID="errorLabel" runat="server"></asp:Label>
+    </div>
     <div>
         Embedded Report
         <br />
@@ -106,5 +110,4 @@
         <br />
         <div ID="logView" style="width: 880px;"></div>
     </div>
-
 </asp:Content>
