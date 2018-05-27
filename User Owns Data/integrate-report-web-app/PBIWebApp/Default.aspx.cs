@@ -95,7 +95,7 @@ namespace PBIWebApp
                 else
                 {
                     report = client.Reports.GetReports().Value.FirstOrDefault(r => r.Id == reportId);
-                    AppendErrorIfReportNull(report, string.Format("Report with ID: {0} not found. Please check the report ID. For reports within a group with a group ID, add the group ID to the application's settings", reportId));
+                    AppendErrorIfReportNull(report, string.Format("Report with ID: '{0}' not found. Please check the report ID. For reports within a group with a group ID, add the group ID to the application's settings", reportId));
                 }
 
                 if (report != null)
@@ -176,7 +176,7 @@ namespace PBIWebApp
             // No group with the group ID was found.
             if (sourceGroup == null)
             {
-                errorLabel.Text = string.Format("Group with id: {0} not found. Please validate the provided group ID.", groupId);
+                errorLabel.Text = string.Format("Group with id: '{0}' not found. Please validate the provided group ID.", groupId);
                 return null;
             }
 
@@ -198,7 +198,7 @@ namespace PBIWebApp
 
                 catch(HttpOperationException)
                 {
-                    errorLabel.Text = string.Format("Report with ID:{0} not found in the group {1}, Please check the report ID.", reportId, groupId);
+                    errorLabel.Text = string.Format("Report with ID: '{0}' not found in the group with ID: '{1}', Please check the report ID.", reportId, groupId);
 
                 }
             }
