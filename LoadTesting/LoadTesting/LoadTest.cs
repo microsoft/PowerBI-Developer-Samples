@@ -41,7 +41,7 @@ namespace LoadTesting
                 });
             log.Info("Started");
 
-            using (_client = CreatePowerBIClient(testSettings))
+            using (_client = CreatePowerBIV1Client(testSettings))
             {
                 var group = _client.EnsureGroupSpace(testSettings).Result;
 
@@ -65,11 +65,9 @@ namespace LoadTesting
         }
 
 
-        IPowerBIClientWrapper CreatePowerBIClient(TestSettings testSettings)
+        IPowerBIClientWrapper CreatePowerBIV2Client(TestSettings testSettings)
         {
             var tokenCredentials = GetTokenCredentials(testSettings).Result;
-
-            //var tokenCredentials = new TokenCredentials(testSettings.CollectionKey, "AppKey");
 
             var client = new PowerBIV2ClientWrapper(new Uri(testSettings.ApiUrl), tokenCredentials)
             {
@@ -77,11 +75,24 @@ namespace LoadTesting
                 {
                     Timeout = TimeSpan.FromSeconds(testSettings.HttpClientTimeoutSeconds)
                 },
-               // CollectionName = testSettings.CollectionName
             };
             return client;
         }
 
+        IPowerBIClientWrapper CreatePowerBIV1Client(TestSettings testSettings)
+        {
+            var tokenCredentials = new TokenCredentials(testSettings.CollectionKey, "AppKey");
+
+            var client = new PowerBIV1ClientWrapper(new Uri(testSettings.ApiUrl), tokenCredentials)
+            {
+                HttpClient =
+                {
+                    Timeout = TimeSpan.FromSeconds(testSettings.HttpClientTimeoutSeconds)
+                },
+                CollectionName = testSettings.CollectionName
+            };
+            return client;
+        }
 
         static async Task<TokenCredentials> GetTokenCredentials(TestSettings testSettings)
         {
@@ -102,14 +113,15 @@ namespace LoadTesting
         {
             try
             {
-                log.Info($"Importing {report.Key}");
+                log.Info($"Importing '{report.Key}'");
                 var importData = await Import(@group, report.Value, report.Key, testSettings.ImportStatusAttempts, testSettings.ImportStatusDelaySeconds);
-                log.Info($"UpdateConnections {report.Key}");
+                log.Info($"UpdateConnections '{report.Key}'");
                 await UpdateConnections(importData, testSettings);
+                log.Info($"Imported '{report.Key}'");
             }
             catch (Exception exception)
             {
-                log.Error("Import Failed", exception);
+                log.Error($"Import Failed '{report.Key}'", exception);
                 _telemetryClient.TrackException(exception);
             }
         }
