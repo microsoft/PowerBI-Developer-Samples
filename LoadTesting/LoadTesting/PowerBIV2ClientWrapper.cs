@@ -11,7 +11,8 @@ namespace LoadTesting
 {
     class PowerBIV2ClientWrapper : PowerBIClient, IPowerBIClientWrapper
     {
-        public PowerBIV2ClientWrapper(Uri uri, ServiceClientCredentials tokenCredentials) : base(uri, tokenCredentials)
+        public PowerBIV2ClientWrapper(Uri uri, ServiceClientCredentials tokenCredentials)
+            : base(uri, tokenCredentials)
         {
         }
 
@@ -28,14 +29,48 @@ namespace LoadTesting
             return group.Id;
         }
 
-        async Task AssignCapacity( string name, Group @group)
+        async Task AssignCapacity( string name, Group group)
         {
-            if (!string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
+            {
+
+                await Groups.AssignToCapacityAsync(group.Id, new AssignToCapacityRequest(Guid.Empty.ToString()));
+            }
+                else
             {
                 var capacities = await Capacities.GetCapacitiesAsync();
                 var capacityId = capacities.Value.Single(x => x.DisplayName == name).Id;
-                await Groups.AssignToCapacityAsync(@group.Id, new AssignToCapacityRequest(capacityId));
+                await Groups.AssignToCapacityAsync(group.Id, new AssignToCapacityRequest(capacityId));
             }
+        }
+
+        public async Task<ImportResult> Import(string groupId, MemoryStream memoryStream, string datasetName)
+        {
+            var result = await Imports.PostImportWithFileAsyncInGroup(groupId, memoryStream, datasetName);
+            return new ImportResult
+            {
+                Id = result.Id,
+                ImportState = result.ImportState,
+                Datasets = result.Datasets?.Select(x => new ImportDataset
+                {
+                    Id = x.Id
+                })
+            };
+        }
+
+        public async Task<ImportResult> GetImportById(string groupId, string importId)
+        {
+            var result = await Imports.GetImportByIdInGroupAsync(groupId, importId);
+            return new ImportResult
+            {
+                Id = result.Id,
+                ImportState = result.ImportState,
+                Datasets = result.Datasets?.Select(x => new ImportDataset
+                {
+                    Id = x.Id
+                }),
+                //Reports = result.Reports?.Select(x => x.DatasetId);
+            };
         }
 
         public async Task SetConnections(string groupSpace, string datasetKey, string connectionString)
@@ -69,32 +104,10 @@ namespace LoadTesting
             await Gateways.UpdateDatasourceAsync(bindingGatewayId, bindingId, updateDatasourceRequest);
         }
 
-        public async Task<ImportResult> Import(string groupId, MemoryStream memoryStream, string datasetName)
+        public async Task<string> GenerateToken(string groupId, string reportKey)
         {
-            var result = await Imports.PostImportWithFileAsyncInGroup(groupId, memoryStream, datasetName);
-            return new ImportResult
-            {
-                Id = result.Id,
-                ImportState = result.ImportState,
-                Datasets = result.Datasets?.Select(x => new ImportDataset
-                {
-                    Id = x.Id
-                })
-            };
-        }
-
-        public async Task<ImportResult> GetImportById(string groupId, string importId)
-        {
-            var result = await Imports.GetImportByIdInGroupAsync(groupId, importId);
-            return new ImportResult
-            {
-                Id = result.Id,
-                ImportState = result.ImportState,
-                Datasets = result.Datasets?.Select(x => new ImportDataset
-                {
-                    Id = x.Id
-                })
-            };
+            var result = await Reports.GenerateTokenInGroupAsync(groupId, reportKey, new GenerateTokenRequest("view", new EffectiveIdentity { Username = "username"} ));
+            return result.Token;
         }
     }
 }

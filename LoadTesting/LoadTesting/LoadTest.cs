@@ -41,7 +41,7 @@ namespace LoadTesting
                 });
             log.Info("Started");
 
-            using (_client = CreatePowerBIV1Client(testSettings))
+            using (_client = CreatePowerBIV2Client(testSettings))
             {
                 var group = _client.EnsureGroupSpace(testSettings).Result;
 
@@ -124,6 +124,7 @@ namespace LoadTesting
                 log.Error($"Import Failed '{report.Key}'", exception);
                 _telemetryClient.TrackException(exception);
             }
+            _telemetryClient.Flush();
         }
 
         async Task<ImportData> Import(string @groupId, byte[] bytes, string name, int testSettingsImportStatusAttempts, int testSettingsImportStatusDelaySeconds)
