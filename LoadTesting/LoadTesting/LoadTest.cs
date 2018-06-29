@@ -4,23 +4,22 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using log4net;
+using log4net.Core;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Microsoft.PowerBI.Api.V2;
-using Microsoft.PowerBI.Api.V2.Models;
 using Microsoft.Rest;
 
 namespace LoadTesting
 {
     public class LoadTest
     {
-        const string Succeeded = "Succeeded";
-        ConnectionDetails _connectionDetails;
-        IPowerBIClient _client;
-        UpdateDatasourceRequest _updateDatasourceRequest;
-        TelemetryClient _telemetryClient;
+        static readonly ILog log = LogManager.GetLogger(typeof(LoadTest));
 
+        const string Succeeded = "Succeeded";
+        IPowerBIClientWrapper _client;
+        TelemetryClient _telemetryClient;
         public void Go(TestSettings testSettings)
         {
             var allReports = LoadAllReports(testSettings.ReportsRoot);
@@ -40,51 +39,17 @@ namespace LoadTesting
                     {"HttpClientTimeoutSeconds", testSettings.HttpClientTimeoutSeconds},
                     {"ReportCount", allReports.Count}
                 });
-
-            CreateSqlCredentials(testSettings);
+            log.Info("Started");
 
             using (_client = CreatePowerBIClient(testSettings))
             {
-                var group = EnsureGroup(testSettings.GroupNamePrefix).Result;
+                var group = _client.EnsureGroupSpace(testSettings).Result;
 
-                AssignCapacity(testSettings.CapacityName, @group).Wait();
                 UploadReports(group, allReports, testSettings);
             }
 
+            log.Info("Completed");
             _telemetryClient.TrackEvent("Completed");
-        }
-
-        async Task<Group> EnsureGroup(string groupName)
-        {
-            var filter = $"name eq '{groupName}'";
-            var group = _client.Groups.GetGroups(filter).Value.FirstOrDefault() ?? await _client.Groups.CreateGroupAsync(new GroupCreationRequest(groupName));
-            return group;
-        }
-
-        async Task AssignCapacity(string name, Group @group)
-        {
-            if (!string.IsNullOrEmpty(name))
-            {
-                var capacities = await _client.Capacities.GetCapacitiesAsync();
-                var capacityId = capacities.Value.Single(x => x.DisplayName == name).Id;
-                await _client.Groups.AssignToCapacityAsync(@group.Id, new AssignToCapacityRequest(capacityId));
-            }
-        }
-
-        void CreateSqlCredentials(TestSettings TestSettings)
-        {
-            _connectionDetails = new ConnectionDetails(TestSettings.SqlConnectionString);
-            _updateDatasourceRequest = new UpdateDatasourceRequest
-            {
-                CredentialDetails = new CredentialDetails
-                {
-                    Credentials = new CredentialData(new BasicCredentials(TestSettings.SqlUsername, TestSettings.SqlPassword)).AsJson(),
-                    CredentialType = "Basic",
-                    EncryptedConnection = "Encrypted",
-                    EncryptionAlgorithm = "None",
-                    PrivacyLevel = "None"
-                }
-            };
         }
 
         Dictionary<string, byte[]> LoadAllReports(string path)
@@ -99,17 +64,24 @@ namespace LoadTesting
             return bytes;
         }
 
-        IPowerBIClient CreatePowerBIClient(TestSettings testSettings)
+
+        IPowerBIClientWrapper CreatePowerBIClient(TestSettings testSettings)
         {
             var tokenCredentials = GetTokenCredentials(testSettings).Result;
 
-            var client = new PowerBIClient(new Uri(testSettings.ApiUrl), tokenCredentials);
-            if (testSettings.HttpClientTimeoutSeconds > 0)
+            //var tokenCredentials = new TokenCredentials(testSettings.CollectionKey, "AppKey");
+
+            var client = new PowerBIV2ClientWrapper(new Uri(testSettings.ApiUrl), tokenCredentials)
             {
-                client.HttpClient.Timeout = TimeSpan.FromSeconds(testSettings.HttpClientTimeoutSeconds);
-            }
+                HttpClient =
+                {
+                    Timeout = TimeSpan.FromSeconds(testSettings.HttpClientTimeoutSeconds)
+                },
+               // CollectionName = testSettings.CollectionName
+            };
             return client;
         }
+
 
         static async Task<TokenCredentials> GetTokenCredentials(TestSettings testSettings)
         {
@@ -120,40 +92,43 @@ namespace LoadTesting
             return tokenCredentials;
         }
 
-        void UploadReports(Group @group, Dictionary<string, byte[]> allReports, TestSettings testSettings)
+        void UploadReports(string @group, Dictionary<string, byte[]> allReports, TestSettings testSettings)
         {
             var tasks = allReports.Select(report => Action(@group, report, testSettings));
             Task.WhenAll(tasks).Wait();
         }
 
-        async Task Action(Group @group, KeyValuePair<string, byte[]> report, TestSettings testSettings)
+        async Task Action(string @group, KeyValuePair<string, byte[]> report, TestSettings testSettings)
         {
             try
             {
+                log.Info($"Importing {report.Key}");
                 var importData = await Import(@group, report.Value, report.Key, testSettings.ImportStatusAttempts, testSettings.ImportStatusDelaySeconds);
-                await UpdateConnections(importData);
+                log.Info($"UpdateConnections {report.Key}");
+                await UpdateConnections(importData, testSettings);
             }
             catch (Exception exception)
             {
+                log.Error("Import Failed", exception);
                 _telemetryClient.TrackException(exception);
             }
         }
 
-        async Task<ImportData> Import(Group group, byte[] bytes, string name, int testSettingsImportStatusAttempts, int testSettingsImportStatusDelaySeconds)
+        async Task<ImportData> Import(string @groupId, byte[] bytes, string name, int testSettingsImportStatusAttempts, int testSettingsImportStatusDelaySeconds)
         {
-            Import import;
+            ImportResult import;
             using (var operation = _telemetryClient.StartOperation<RequestTelemetry>("PostImport"))
             {
                 var datasetName = "ds_" + Guid.NewGuid();
                 operation.Telemetry.Metrics.Add("PBIXSize", bytes.Length);
                 operation.Telemetry.Properties.Add("DataSetId", datasetName);
-                import = await _client.Imports.PostImportWithFileAsyncInGroup(@group.Id, new MemoryStream(bytes), datasetName);
+                import = await _client.Import(@groupId, new MemoryStream(bytes), datasetName);
                 _telemetryClient.StopOperation(operation);
             }
 
             using (var operation = _telemetryClient.StartOperation<RequestTelemetry>("PollImport"))
             {
-                var importResult = await PollImportState(group, import, testSettingsImportStatusAttempts, testSettingsImportStatusDelaySeconds * 1000);
+                var importResult = await PollImportState(groupId, import.Id, testSettingsImportStatusAttempts, testSettingsImportStatusDelaySeconds * 1000);
                 if (importResult == null)
                 {
                     operation.Telemetry.Success = false;
@@ -161,20 +136,20 @@ namespace LoadTesting
                 }
                 return new ImportData
                 {
-                    GroupId = group.Id,
-                    DatasetId = importResult.Datasets[0].Id,
+                    GroupId = groupId,
+                    DatasetId = importResult.Datasets.Single().Id,
                     Name = name
                 };
             }
         }
 
-        async Task<Import> PollImportState(Group @group, Import import, int count, int sleep)
+        async Task<ImportResult> PollImportState(string @groupId, string importId, int count, int sleep)
         {
             for (var tries = 0; tries < count; tries++)
             {
                 using (_telemetryClient.StartOperation<RequestTelemetry>("GetImportById"))
                 {
-                    var result = await _client.Imports.GetImportByIdInGroupAsync(@group.Id, import.Id);
+                    var result = await _client.GetImportById(@groupId, importId);
                     if (result.ImportState == Succeeded)
                     {
                         return result;
@@ -185,27 +160,27 @@ namespace LoadTesting
             return null;
         }
 
-        async Task UpdateConnections(ImportData importData)
+        async Task UpdateConnections(ImportData importData, TestSettings testSettings)
         {
             using (_telemetryClient.StartOperation<RequestTelemetry>("SetAllDatasetConnections"))
             {
-                await _client.Datasets.SetAllDatasetConnectionsInGroupAsync(
+                await _client.SetConnections(
                     importData.GroupId,
                     importData.DatasetId,
-                    _connectionDetails);
+                    testSettings.SqlConnectionString);
             }
 
-            ODataResponseListGatewayDatasource dataSourceBindings;
+            IEnumerable<DataSource> dataSourceBindings;
             using (_telemetryClient.StartOperation<RequestTelemetry>("GetGatewayDatasources"))
             {
-                dataSourceBindings = await _client.Datasets.GetGatewayDatasourcesInGroupAsync(importData.GroupId, importData.DatasetId);
+                dataSourceBindings = await _client.GetDatasources(importData.GroupId, importData.DatasetId);
             }
 
-            foreach (var binding in dataSourceBindings.Value)
+            foreach (var binding in dataSourceBindings)
             {
                 using (_telemetryClient.StartOperation<RequestTelemetry>("UpdateDatasource"))
                 {
-                    await _client.Gateways.UpdateDatasourceAsync(binding.GatewayId, binding.Id, _updateDatasourceRequest);
+                    await _client.UpdateDatasource(importData.GroupId, binding.GatewayId, binding.Id, testSettings.SqlUsername, testSettings.SqlPassword);
                 }
             }
         }

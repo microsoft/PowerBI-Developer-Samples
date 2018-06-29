@@ -26,7 +26,9 @@ namespace LoadTesting
                 SqlUsername = ConfigurationManager.AppSettings["sqlUsername"],
                 SqlPassword = ConfigurationManager.AppSettings["sqlPassword"],
                 ImportStatusAttempts = int.Parse(ConfigurationManager.AppSettings["importStatusAttempts"]),
-                ImportStatusDelaySeconds = int.Parse(ConfigurationManager.AppSettings["importStatusDelaySeconds"])
+                ImportStatusDelaySeconds = int.Parse(ConfigurationManager.AppSettings["importStatusDelaySeconds"]),
+                CollectionName = ConfigurationManager.AppSettings["workspaceCollectionName"],
+                CollectionKey = ConfigurationManager.AppSettings["workspaceCollectionKey"],
             };
 
             var LoadTest = new LoadTest();
