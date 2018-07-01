@@ -44,18 +44,10 @@ namespace LoadTesting
             }
         }
 
-        public async Task<ImportResult> Import(string groupId, MemoryStream memoryStream, string datasetName)
+        public async Task<string> Import(string groupId, MemoryStream memoryStream, string datasetName)
         {
             var result = await Imports.PostImportWithFileAsyncInGroup(groupId, memoryStream, datasetName);
-            return new ImportResult
-            {
-                Id = result.Id,
-                ImportState = result.ImportState,
-                Datasets = result.Datasets?.Select(x => new ImportDataset
-                {
-                    Id = x.Id
-                })
-            };
+            return result.Id;
         }
 
         public async Task<ImportResult> GetImportById(string groupId, string importId)
@@ -69,7 +61,12 @@ namespace LoadTesting
                 {
                     Id = x.Id
                 }),
-                //Reports = result.Reports?.Select(x => x.DatasetId);
+                Reports = result.Reports?.Select(r => new ImportReport
+                {
+                    Id = r.Id,
+                    DataSetId = r.DatasetId,
+                    EmbedUrl = r.EmbedUrl
+                })
             };
         }
 
@@ -106,7 +103,7 @@ namespace LoadTesting
 
         public async Task<string> GenerateToken(string groupId, string reportKey)
         {
-            var result = await Reports.GenerateTokenInGroupAsync(groupId, reportKey, new GenerateTokenRequest("view", new EffectiveIdentity { Username = "username"} ));
+            var result = await Reports.GenerateTokenInGroupAsync(groupId, reportKey, new GenerateTokenRequest("view"));
             return result.Token;
         }
     }

@@ -20,5 +20,6 @@
         public int ConcurrentImportsLimit { get; set; }
         public string CollectionName { get; set; }
         public string CollectionKey { get; set; }
+        public bool UseV1 { get; set; }
     }
 }
