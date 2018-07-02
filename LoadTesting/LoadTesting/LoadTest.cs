@@ -53,11 +53,9 @@ namespace LoadTesting
 
         IPowerBIClientWrapper CreatePowerBIClient(TestSettings testSettings)
         {
-            if (testSettings.UseV1)
-            {
-                return PowerBIClientFactory.CreatePowerBIV1Client(testSettings);
-            }
-            return PowerBIClientFactory.CreatePowerBIV2Client(testSettings);
+            return testSettings.ApiVersion == 1
+                ? PowerBIClientFactory.CreatePowerBIV1Client(testSettings)
+                : PowerBIClientFactory.CreatePowerBIV2Client(testSettings);
         }
 
         Dictionary<string, byte[]> LoadAllReports(string path)
@@ -109,11 +107,12 @@ namespace LoadTesting
         {
             var token = await _client.GenerateToken(importData.GroupId, importData.Report.Id);
 
+            // TODO Emulate a browser to load the report...
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.TryAddWithoutValidation("Token", token);
-                var html = await client.GetStringAsync(importData.Report.EmbedUrl);
-                log.Debug(html);
+                await client.GetStringAsync(importData.Report.EmbedUrl);
+                //log.Debug(html);
             }
         }
 

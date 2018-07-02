@@ -5,8 +5,15 @@ using Microsoft.Rest;
 
 namespace LoadTesting
 {
-    public class PowerBIClientFactory
+    public static class PowerBIClientFactory
     {
+        public static IPowerBIClientWrapper CreatePowerBIClient(TestSettings testSettings)
+        {
+            return testSettings.ApiVersion == 1
+                ? PowerBIClientFactory.CreatePowerBIV1Client(testSettings)
+                : PowerBIClientFactory.CreatePowerBIV2Client(testSettings);
+        }
+
         public static IPowerBIClientWrapper CreatePowerBIV2Client(TestSettings testSettings)
         {
             var tokenCredentials = GetUserPasswordTokenCredentials(testSettings).Result;
