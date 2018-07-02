@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using log4net;
+using LoadTesting.Model;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 
@@ -13,7 +14,7 @@ namespace LoadTesting
 {
     public class LoadTest
     {
-        static readonly ILog log = LogManager.GetLogger(typeof(LoadTest));
+        static readonly ILog Log = LogManager.GetLogger(typeof(LoadTest));
 
         const string Succeeded = "Succeeded";
         IPowerBIClientWrapper _client;
@@ -38,27 +39,20 @@ namespace LoadTesting
                     {"HttpClientTimeoutSeconds", testSettings.HttpClientTimeoutSeconds},
                     {"ReportCount", allReports.Count}
                 });
-            log.Info("Started");
+            Log.Info("Started");
 
-            using (_client = CreatePowerBIClient(testSettings))
+            using (_client = PowerBIClientFactory.CreatePowerBIClient(testSettings))
             {
                 var group = _client.EnsureGroupSpace(testSettings).Result;
 
                 UploadReports(group, allReports, testSettings);
             }
 
-            log.Info("Completed");
+            Log.Info("Completed");
             _telemetryClient.TrackEvent("Completed");
         }
 
-        IPowerBIClientWrapper CreatePowerBIClient(TestSettings testSettings)
-        {
-            return testSettings.ApiVersion == 1
-                ? PowerBIClientFactory.CreatePowerBIV1Client(testSettings)
-                : PowerBIClientFactory.CreatePowerBIV2Client(testSettings);
-        }
-
-        Dictionary<string, byte[]> LoadAllReports(string path)
+        static Dictionary<string, byte[]> LoadAllReports(string path)
         {
             var bytes = new Dictionary<string, byte[]>();
 
@@ -69,7 +63,6 @@ namespace LoadTesting
 
             return bytes;
         }
-
 
         void UploadReports(string @group, Dictionary<string, byte[]> allReports, TestSettings testSettings)
         {
@@ -86,16 +79,16 @@ namespace LoadTesting
                     operation.Telemetry.Metrics.Add("PBIXSize", report.Value.Length);
                     operation.Telemetry.Metrics.Add("PBIXName", report.Key.Length);
 
-                    log.Info($"Importing '{report.Key}'");
+                    Log.Info($"Importing '{report.Key}'");
                     var importData = await Import(@group, report.Value, report.Key, testSettings.ImportStatusAttempts, testSettings.ImportStatusDelaySeconds);
-                    log.Info($"UpdateConnections '{report.Key}'");
+                    Log.Info($"UpdateConnections '{report.Key}'");
                     await UpdateConnections(importData, testSettings);
-                    log.Info($"Imported '{report.Key}'");
-                    await TestEmbeddedUrl(importData);
+                    Log.Info($"Imported '{report.Key}'");
+                    //await TestEmbeddedUrl(importTestData);
                 }
                 catch (Exception exception)
                 {
-                    log.Error($"Import Failed '{report.Key}'", exception);
+                    Log.Error($"Import Failed '{report.Key}'", exception);
                     _telemetryClient.TrackException(exception);
                 }
             }
@@ -103,20 +96,20 @@ namespace LoadTesting
             _telemetryClient.Flush();
         }
 
-        async Task TestEmbeddedUrl(ImportData importData)
+        async Task TestEmbeddedUrl(ImportTestData importTestData)
         {
-            var token = await _client.GenerateToken(importData.GroupId, importData.Report.Id);
+            var token = await _client.GenerateToken(importTestData.GroupId, importTestData.Report.Id);
 
             // TODO Emulate a browser to load the report...
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.TryAddWithoutValidation("Token", token);
-                await client.GetStringAsync(importData.Report.EmbedUrl);
+                await client.GetStringAsync(importTestData.Report.EmbedUrl);
                 //log.Debug(html);
             }
         }
 
-        async Task<ImportData> Import(string @groupId, byte[] bytes, string name, int testSettingsImportStatusAttempts, int testSettingsImportStatusDelaySeconds)
+        async Task<ImportTestData> Import(string @groupId, byte[] bytes, string name, int testSettingsImportStatusAttempts, int testSettingsImportStatusDelaySeconds)
         {
             var datasetName = "ds_" + Guid.NewGuid();
             var importId = await _client.Import(@groupId, new MemoryStream(bytes), datasetName);
@@ -126,7 +119,7 @@ namespace LoadTesting
             {
                 return null;
             }
-            return new ImportData
+            return new ImportTestData
             {
                 GroupId = groupId,
                 DatasetId = importResult.Datasets.Single().Id,
@@ -135,13 +128,13 @@ namespace LoadTesting
             };
         }
 
-        async Task<ImportResult> PollImportState(string @groupId, string importId, int count, int sleep)
+        async Task<ImportResult> PollImportState(string groupId, string importId, int count, int sleep)
         {
             for (var tries = 0; tries < count; tries++)
             {
-                //using (_telemetryClient.StartOperation<RequestTelemetry>("GetImportById"))
+                using (_telemetryClient.StartOperation<RequestTelemetry>("GetImportById"))
                 {
-                    var result = await _client.GetImportById(@groupId, importId);
+                    var result = await _client.GetImportById(groupId, importId);
                     if (result.ImportState == Succeeded)
                     {
                         return result;
@@ -152,27 +145,27 @@ namespace LoadTesting
             return null;
         }
 
-        async Task UpdateConnections(ImportData importData, TestSettings testSettings)
+        async Task UpdateConnections(ImportTestData importTestData, TestSettings testSettings)
         {
-            //using (_telemetryClient.StartOperation<RequestTelemetry>("SetAllDatasetConnections"))
+            using (_telemetryClient.StartOperation<RequestTelemetry>("SetAllDatasetConnections"))
             {
                 await _client.SetConnections(
-                    importData.GroupId,
-                    importData.DatasetId,
+                    importTestData.GroupId,
+                    importTestData.DatasetId,
                     testSettings.SqlConnectionString);
             }
 
             IEnumerable<DataSource> dataSourceBindings;
-            //using (_telemetryClient.StartOperation<RequestTelemetry>("GetGatewayDatasources"))
+            using (_telemetryClient.StartOperation<RequestTelemetry>("GetGatewayDatasources"))
             {
-                dataSourceBindings = await _client.GetDatasources(importData.GroupId, importData.DatasetId);
+                dataSourceBindings = await _client.GetDatasources(importTestData.GroupId, importTestData.DatasetId);
             }
 
             foreach (var binding in dataSourceBindings)
             {
-                //using (_telemetryClient.StartOperation<RequestTelemetry>("UpdateDatasource"))
+                using (_telemetryClient.StartOperation<RequestTelemetry>("UpdateDatasource"))
                 {
-                    await _client.UpdateDatasource(importData.GroupId, binding.GatewayId, binding.Id, testSettings.SqlUsername, testSettings.SqlPassword);
+                    await _client.UpdateDatasource(importTestData.GroupId, binding.GatewayId, binding.Id, testSettings.SqlUsername, testSettings.SqlPassword);
                 }
             }
         }

@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using LoadTesting.Model;
 using Microsoft.PowerBI.Api.V2;
 using Microsoft.PowerBI.Api.V2.Models;
 using Microsoft.Rest;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace LoadTesting
 {
-    class PowerBIV2ClientWrapper : PowerBIClient, IPowerBIClientWrapper
+    class PowerBIClientV2Wrapper : PowerBIClient, IPowerBIClientWrapper
     {
-        public PowerBIV2ClientWrapper(Uri uri, ServiceClientCredentials tokenCredentials)
+        public PowerBIClientV2Wrapper(Uri uri, ServiceClientCredentials tokenCredentials)
             : base(uri, tokenCredentials)
         {
         }
@@ -29,14 +32,14 @@ namespace LoadTesting
             return group.Id;
         }
 
-        async Task AssignCapacity( string name, Group group)
+        async Task AssignCapacity(string name, Group group)
         {
             if (string.IsNullOrEmpty(name))
             {
 
                 await Groups.AssignToCapacityAsync(group.Id, new AssignToCapacityRequest(Guid.Empty.ToString()));
             }
-                else
+            else
             {
                 var capacities = await Capacities.GetCapacitiesAsync();
                 var capacityId = capacities.Value.Single(x => x.DisplayName == name).Id;
@@ -91,7 +94,7 @@ namespace LoadTesting
             {
                 CredentialDetails = new CredentialDetails
                 {
-                    Credentials = new CredentialData(new BasicCredentials(sqluser, sqlPassword)).AsJson(),
+                    Credentials = CredentialsJson(sqluser, sqlPassword),
                     CredentialType = "Basic",
                     EncryptedConnection = "Encrypted",
                     EncryptionAlgorithm = "None",
@@ -105,6 +108,29 @@ namespace LoadTesting
         {
             var result = await Reports.GenerateTokenInGroupAsync(groupId, reportKey, new GenerateTokenRequest("view"));
             return result.Token;
+        }
+
+        static string CredentialsJson(string username, string password)
+        {
+            return JsonConvert.SerializeObject(new
+            {
+                CredentialData = new[]
+                {
+                        new
+                        {
+                            Value = username,
+                            Name = "username"
+                        },
+                        new
+                        {
+                            Value = password,
+                            Name = "password"
+                        }
+                    }
+            }, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
         }
     }
 }

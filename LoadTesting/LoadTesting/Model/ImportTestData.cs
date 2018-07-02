@@ -1,6 +1,6 @@
-﻿namespace LoadTesting
+﻿namespace LoadTesting.Model
 {
-    internal class ImportData
+    internal class ImportTestData
     {
         public string GroupId { get; set; }
         public string DatasetId { get; set; }

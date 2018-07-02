@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using LoadTesting.Model;
 using Microsoft.PowerBI.Security;
 using Microsoft.PowerBI.Api.V1;
 using Microsoft.PowerBI.Api.V1.Models;
@@ -10,12 +11,12 @@ using Microsoft.Rest;
 
 namespace LoadTesting
 {
-    class PowerBIV1ClientWrapper : PowerBIClient, IPowerBIClientWrapper
+    class PowerBIClientV1Wrapper : PowerBIClient, IPowerBIClientWrapper
     {
         public string CollectionName { private get; set; }
         public string WorkspaceKey { private get; set; }
 
-        public PowerBIV1ClientWrapper(Uri uri, ServiceClientCredentials tokenCredentials) : base(uri, tokenCredentials)
+        public PowerBIClientV1Wrapper(Uri uri, ServiceClientCredentials tokenCredentials) : base(uri, tokenCredentials)
         {
         }
 

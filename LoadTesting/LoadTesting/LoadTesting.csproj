@@ -111,13 +111,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\DataSource.cs" />
+    <Compile Include="Model\ImportDataset.cs" />
+    <Compile Include="Model\ImportReport.cs" />
+    <Compile Include="Model\ImportResult.cs" />
     <Compile Include="IPowerBIClientWrapper.cs" />
     <Compile Include="LoadTest.cs" />
-    <Compile Include="CredentialData.cs" />
-    <Compile Include="ImportData.cs" />
+    <Compile Include="Model\ImportTestData.cs" />
     <Compile Include="PowerBIClientFactory.cs" />
-    <Compile Include="PowerBIV1ClientWrapper.cs" />
-    <Compile Include="PowerBIV2ClientWrapper.cs" />
+    <Compile Include="PowerBIClientV1Wrapper.cs" />
+    <Compile Include="PowerBIClientV2Wrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestSettings.cs" />

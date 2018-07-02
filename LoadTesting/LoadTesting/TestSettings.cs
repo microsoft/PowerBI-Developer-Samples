@@ -17,7 +17,6 @@
         public string AuthorityUrl { get; set; }
         public string ResourceUrl { get; set; }
         public string ClientId { get; set; }
-        public int ConcurrentImportsLimit { get; set; }
         public string CollectionName { get; set; }
         public string CollectionKey { get; set; }
         public int ApiVersion { get; set; }

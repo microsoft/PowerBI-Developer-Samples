@@ -10,15 +10,15 @@ namespace LoadTesting
         public static IPowerBIClientWrapper CreatePowerBIClient(TestSettings testSettings)
         {
             return testSettings.ApiVersion == 1
-                ? PowerBIClientFactory.CreatePowerBIV1Client(testSettings)
-                : PowerBIClientFactory.CreatePowerBIV2Client(testSettings);
+                ? CreatePowerBIClientV1(testSettings)
+                : CreatePowerBIClientV2(testSettings);
         }
 
-        public static IPowerBIClientWrapper CreatePowerBIV2Client(TestSettings testSettings)
+        public static IPowerBIClientWrapper CreatePowerBIClientV2(TestSettings testSettings)
         {
             var tokenCredentials = GetUserPasswordTokenCredentials(testSettings).Result;
 
-            var client = new PowerBIV2ClientWrapper(new Uri(testSettings.ApiUrl), tokenCredentials)
+            var client = new PowerBIClientV2Wrapper(new Uri(testSettings.ApiUrl), tokenCredentials)
             {
                 HttpClient =
                 {
@@ -28,11 +28,11 @@ namespace LoadTesting
             return client;
         }
 
-        public static IPowerBIClientWrapper CreatePowerBIV1Client(TestSettings testSettings)
+        public static IPowerBIClientWrapper CreatePowerBIClientV1(TestSettings testSettings)
         {
             var tokenCredentials = GetAppKeyTokenCredentials(testSettings);
 
-            var client = new PowerBIV1ClientWrapper(new Uri(testSettings.ApiUrl), tokenCredentials)
+            var client = new PowerBIClientV1Wrapper(new Uri(testSettings.ApiUrl), tokenCredentials)
             {
                 HttpClient =
                 {
