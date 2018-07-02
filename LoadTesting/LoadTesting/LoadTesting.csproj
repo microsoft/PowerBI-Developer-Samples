@@ -123,6 +123,7 @@
     <Compile Include="PowerBIClientV2Wrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RenderTest.cs" />
     <Compile Include="TestSettings.cs" />
     <Compile Include="TestSettingsFactory.cs" />
   </ItemGroup>

@@ -68,7 +68,8 @@ namespace LoadTesting
                 {
                     Id = r.Id,
                     DataSetId = r.DatasetId,
-                    EmbedUrl = r.EmbedUrl
+                    EmbedUrl = r.EmbedUrl,
+                    WebUrl = r.WebUrl
                 })
             };
         }

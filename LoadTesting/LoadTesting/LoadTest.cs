@@ -64,27 +64,30 @@ namespace LoadTesting
             return bytes;
         }
 
-        void UploadReports(string @group, Dictionary<string, byte[]> allReports, TestSettings testSettings)
+        void UploadReports(string group, Dictionary<string, byte[]> allReports, TestSettings testSettings)
         {
             var tasks = allReports.Select(report => Action(@group, report, testSettings));
             Task.WhenAll(tasks).Wait();
         }
 
-        async Task Action(string @group, KeyValuePair<string, byte[]> report, TestSettings testSettings)
+        async Task Action(string group, KeyValuePair<string, byte[]> report, TestSettings testSettings)
         {
             using (var operation = _telemetryClient.StartOperation<RequestTelemetry>("TotalImport"))
             {
+                operation.Telemetry.Metrics.Add("PBIXSize", report.Value.Length);
+                operation.Telemetry.Metrics.Add("PBIXName", report.Key.Length);
                 try
                 {
-                    operation.Telemetry.Metrics.Add("PBIXSize", report.Value.Length);
-                    operation.Telemetry.Metrics.Add("PBIXName", report.Key.Length);
-
                     Log.Info($"Importing '{report.Key}'");
-                    var importData = await Import(@group, report.Value, report.Key, testSettings.ImportStatusAttempts, testSettings.ImportStatusDelaySeconds);
+                    var importTestData = await Import(group, report.Value, report.Key, testSettings.ImportStatusAttempts, testSettings.ImportStatusDelaySeconds);
+
                     Log.Info($"UpdateConnections '{report.Key}'");
-                    await UpdateConnections(importData, testSettings);
+                    await UpdateConnections(importTestData, testSettings);
+
                     Log.Info($"Imported '{report.Key}'");
-                    //await TestEmbeddedUrl(importTestData);
+
+                    var token = await CreateToken(importTestData);
+                    Log.Info($"Embedded Token created {token}");
                 }
                 catch (Exception exception)
                 {
@@ -96,17 +99,10 @@ namespace LoadTesting
             _telemetryClient.Flush();
         }
 
-        async Task TestEmbeddedUrl(ImportTestData importTestData)
+        async Task<string> CreateToken(ImportTestData importTestData)
         {
             var token = await _client.GenerateToken(importTestData.GroupId, importTestData.Report.Id);
-
-            // TODO Emulate a browser to load the report...
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.TryAddWithoutValidation("Token", token);
-                await client.GetStringAsync(importTestData.Report.EmbedUrl);
-                //log.Debug(html);
-            }
+            return token;
         }
 
         async Task<ImportTestData> Import(string @groupId, byte[] bytes, string name, int testSettingsImportStatusAttempts, int testSettingsImportStatusDelaySeconds)
