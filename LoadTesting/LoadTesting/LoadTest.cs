@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using log4net;
@@ -32,7 +31,7 @@ namespace LoadTesting
                 new Dictionary<string, string>
                 {
                     { "CapacityName", testSettings.CapacityName },
-                    { "ApiVersion", "2" }
+                    { "ApiVersion", testSettings.ApiVersion.ToString() }
                 },
                 new Dictionary<string, double>
                 {
