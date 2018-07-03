@@ -20,5 +20,6 @@
         public string CollectionName { get; set; }
         public string CollectionKey { get; set; }
         public int ApiVersion { get; set; }
+        public bool RunInParallel { get; set; }
     }
 }

@@ -65,8 +65,19 @@ namespace LoadTesting
 
         void UploadReports(string group, Dictionary<string, byte[]> allReports, TestSettings testSettings)
         {
-            var tasks = allReports.Select(report => Action(@group, report, testSettings));
-            Task.WhenAll(tasks).Wait();
+            var tasks = allReports.Select(report => Action(group, report, testSettings));
+
+            if (testSettings.RunInParallel)
+            {
+                Task.WhenAll(tasks).Wait();
+            }
+            else
+            {
+                foreach (var task in tasks)
+                {
+                    task.Wait();
+                }
+            }
         }
 
         async Task Action(string group, KeyValuePair<string, byte[]> report, TestSettings testSettings)
@@ -104,10 +115,10 @@ namespace LoadTesting
             return token;
         }
 
-        async Task<ImportTestData> Import(string @groupId, byte[] bytes, string name, int testSettingsImportStatusAttempts, int testSettingsImportStatusDelaySeconds)
+        async Task<ImportTestData> Import(string groupId, byte[] bytes, string name, int testSettingsImportStatusAttempts, int testSettingsImportStatusDelaySeconds)
         {
             var datasetName = "ds_" + Guid.NewGuid();
-            var importId = await _client.Import(@groupId, new MemoryStream(bytes), datasetName);
+            var importId = await _client.Import(groupId, new MemoryStream(bytes), datasetName);
 
             var importResult = await PollImportState(groupId, importId, testSettingsImportStatusAttempts, testSettingsImportStatusDelaySeconds * 1000);
             if (importResult == null)

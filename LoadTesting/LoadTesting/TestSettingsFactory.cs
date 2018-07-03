@@ -26,6 +26,7 @@ namespace LoadTesting
                 ImportStatusDelaySeconds = int.Parse(ConfigurationManager.AppSettings["importStatusDelaySeconds"]),
                 CollectionName = ConfigurationManager.AppSettings["workspaceCollectionName"],
                 CollectionKey = ConfigurationManager.AppSettings["workspaceCollectionKey"],
+                RunInParallel = bool.Parse(ConfigurationManager.AppSettings["runInParallel"]),
             };
             return testSettings;
         }
