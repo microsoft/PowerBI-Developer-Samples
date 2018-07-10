@@ -97,10 +97,10 @@ namespace LoadTesting
                     Log.Info($"Importing '{report.Key}'");
                     var importTestData = await Import(group, report.Value, report.Key, testSettings.ImportStatusAttempts, testSettings.ImportStatusDelaySeconds);
 
-                    //await UpdateConnections(importTestData, testSettings);
+                    await UpdateConnections(importTestData, testSettings);
                     Log.Info($"Imported '{report.Key}'");
 
-                    //if (testSettings.CreateEmbedToken)
+                    if (testSettings.CreateEmbedToken)
                     {
                         var token = await CreateEmbeddedToken(importTestData);
                         Log.Info($"Embedded {importTestData.Report.WebUrl} Token created");
