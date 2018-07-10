@@ -1,4 +1,4 @@
 language: csharp
-solution: "./Fibonacci/Fibonacci.sln"
+solution: "./LoadTesting/LoadTesting.sln"
 install:
-- travis_retry nuget restore -source "https://www.nuget.org/api/v2" ./Fibonacci/Fibonacci.sln
+- travis_retry nuget restore -source "https://www.nuget.org/api/v2" ./LoadTesting/LoadTesting.sln
