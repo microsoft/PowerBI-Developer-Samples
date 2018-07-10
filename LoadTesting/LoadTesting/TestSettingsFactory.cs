@@ -27,6 +27,7 @@ namespace LoadTesting
                 CollectionName = ConfigurationManager.AppSettings["workspaceCollectionName"],
                 CollectionKey = ConfigurationManager.AppSettings["workspaceCollectionKey"],
                 RunInParallel = bool.Parse(ConfigurationManager.AppSettings["runInParallel"]),
+                CreateEmbedToken = bool.Parse(ConfigurationManager.AppSettings["createEmbedToken"]),
             };
             return testSettings;
         }

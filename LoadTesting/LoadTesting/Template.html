@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <!-- https://community.powerbi.com/t5/Developer/How-To-Get-embed-token-using-Get-Post-only/td-p/294475 -->
+    <title>{reportId}</title>
+    <script src="https://microsoft.github.io/PowerBI-JavaScript/demo/node_modules/jquery/dist/jquery.js"></script>
+    <script src="https://microsoft.github.io/PowerBI-JavaScript/demo/node_modules/es6-promise/dist/es6-promise.js"></script>
+    <script src="https://microsoft.github.io/PowerBI-JavaScript/demo/node_modules/powerbi-client/dist/powerbi.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://microsoft.github.io/PowerBI-JavaScript/demo/v2-demo/style/layout.css">
+
+    <script type="text/javascript">
+
+        window.onload = function () {
+            var models = window['powerbi-client'].models;
+            var permissions = models.Permissions.All;
+
+            var config = {
+                type: 'report',
+                tokenType: models.TokenType.Embed,
+                accessToken: '{accessToken}',
+                embedUrl: '{embedUrl}',
+                id: '{reportId}',
+                permissions: permissions,
+                settings: {
+                    filterPaneEnabled: true,
+                    navContentPaneEnabled: true
+                }
+            };
+
+            var embedContainer = $('#embedContainer')[0];
+            var report = powerbi.embed(embedContainer, config);
+        }
+
+        function reloadreport() {
+            var element = $('#embedContainer');
+            alert(element);
+            var report = powerbi.get(element);
+            report.reload().catch(error => { console.log(error) });
+        };
+    </script>
+</head>
+<body>
+    <a href="{webUrl}">{reportId}</a><br />
+    <div class="reportContainer iframeContainer active" id="embedContainer"></div>
+</body>
+</html>

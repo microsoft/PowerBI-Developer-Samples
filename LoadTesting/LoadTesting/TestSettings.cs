@@ -21,5 +21,6 @@
         public string CollectionKey { get; set; }
         public int ApiVersion { get; set; }
         public bool RunInParallel { get; set; }
+        public bool CreateEmbedToken { get; set; }
     }
 }

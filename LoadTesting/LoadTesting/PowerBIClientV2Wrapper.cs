@@ -107,7 +107,7 @@ namespace LoadTesting
 
         public async Task<string> GenerateToken(string groupId, string reportKey)
         {
-            var result = await Reports.GenerateTokenInGroupAsync(groupId, reportKey, new GenerateTokenRequest("view"));
+            var result = await Reports.GenerateTokenInGroupAsync(groupId, reportKey, new GenerateTokenRequest("View", string.Empty));
             return result.Token;
         }
 

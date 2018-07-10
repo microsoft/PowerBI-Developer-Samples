@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -18,6 +19,7 @@ namespace LoadTesting
         const string Succeeded = "Succeeded";
         IPowerBIClientWrapper _client;
         TelemetryClient _telemetryClient;
+        string _template;
 
         public void Go(TestSettings testSettings)
         {
@@ -39,6 +41,10 @@ namespace LoadTesting
                     {"ReportCount", allReports.Count}
                 });
             Log.Info("Started");
+            var sw = Stopwatch.StartNew();
+
+            _template = File.ReadAllText("Template.html");
+            Directory.CreateDirectory("out");
 
             using (_client = PowerBIClientFactory.CreatePowerBIClient(testSettings))
             {
@@ -47,7 +53,7 @@ namespace LoadTesting
                 UploadReports(group, allReports, testSettings);
             }
 
-            Log.Info("Completed");
+            Log.Info($"Completed in {sw.Elapsed}");
             _telemetryClient.TrackEvent("Completed");
         }
 
@@ -91,13 +97,19 @@ namespace LoadTesting
                     Log.Info($"Importing '{report.Key}'");
                     var importTestData = await Import(group, report.Value, report.Key, testSettings.ImportStatusAttempts, testSettings.ImportStatusDelaySeconds);
 
-                    Log.Info($"UpdateConnections '{report.Key}'");
-                    await UpdateConnections(importTestData, testSettings);
-
+                    //await UpdateConnections(importTestData, testSettings);
                     Log.Info($"Imported '{report.Key}'");
 
-                    var token = await CreateToken(importTestData);
-                    Log.Info($"Embedded Token created {token}");
+                    //if (testSettings.CreateEmbedToken)
+                    {
+                        var token = await CreateEmbeddedToken(importTestData);
+                        Log.Info($"Embedded {importTestData.Report.WebUrl} Token created");
+                        Log.Debug($"Embed Token,{token}");
+                        Log.Debug($"Embed URL,{importTestData.Report.EmbedUrl}");
+                        Log.Debug($"Report ID,{importTestData.Report.Id}");
+
+                        WriteHTml(importTestData, token);
+                    }
                 }
                 catch (Exception exception)
                 {
@@ -109,7 +121,20 @@ namespace LoadTesting
             _telemetryClient.Flush();
         }
 
-        async Task<string> CreateToken(ImportTestData importTestData)
+        async void WriteHTml(ImportTestData importTestData, string token)
+        {
+            var output = _template
+                .Replace("{reportId}", importTestData.Report.Id)
+                .Replace("{embedUrl}", importTestData.Report.EmbedUrl)
+                .Replace("{accessToken}", token)
+                .Replace("{webUrl}", importTestData.Report.WebUrl)
+                .Replace("{name}", importTestData.Name);
+            using (var sw = new StreamWriter("out\\" + importTestData.Report.Id + ".html"))
+            {
+                await sw.WriteAsync(output);
+            }
+        }
+        async Task<string> CreateEmbeddedToken(ImportTestData importTestData)
         {
             var token = await _client.GenerateToken(importTestData.GroupId, importTestData.Report.Id);
             return token;
@@ -153,25 +178,32 @@ namespace LoadTesting
 
         async Task UpdateConnections(ImportTestData importTestData, TestSettings testSettings)
         {
-            using (_telemetryClient.StartOperation<RequestTelemetry>("SetAllDatasetConnections"))
+            if (!string.IsNullOrEmpty(testSettings.SqlConnectionString))
             {
-                await _client.SetConnections(
-                    importTestData.GroupId,
-                    importTestData.DatasetId,
-                    testSettings.SqlConnectionString);
-            }
-
-            IEnumerable<DataSource> dataSourceBindings;
-            using (_telemetryClient.StartOperation<RequestTelemetry>("GetGatewayDatasources"))
-            {
-                dataSourceBindings = await _client.GetDatasources(importTestData.GroupId, importTestData.DatasetId);
-            }
-
-            foreach (var binding in dataSourceBindings)
-            {
-                using (_telemetryClient.StartOperation<RequestTelemetry>("UpdateDatasource"))
+                Log.Info($"SetAllDatasetConnections '{importTestData.Report.Id}'");
+                using (_telemetryClient.StartOperation<RequestTelemetry>("SetAllDatasetConnections"))
                 {
-                    await _client.UpdateDatasource(importTestData.GroupId, binding.GatewayId, binding.Id, testSettings.SqlUsername, testSettings.SqlPassword);
+                    await _client.SetConnections(
+                        importTestData.GroupId,
+                        importTestData.DatasetId,
+                        testSettings.SqlConnectionString);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(testSettings.SqlUsername))
+            {
+                IEnumerable<DataSource> dataSourceBindings;
+                using (_telemetryClient.StartOperation<RequestTelemetry>("GetGatewayDatasources"))
+                {
+                    dataSourceBindings = await _client.GetDatasources(importTestData.GroupId, importTestData.DatasetId);
+                }
+                Log.Info($"UpdateDatasource '{importTestData.Report.Id}'");
+                foreach (var binding in dataSourceBindings)
+                {
+                    using (_telemetryClient.StartOperation<RequestTelemetry>("UpdateDatasource"))
+                    {
+                        await _client.UpdateDatasource(importTestData.GroupId, binding.GatewayId, binding.Id, testSettings.SqlUsername, testSettings.SqlPassword);
+                    }
                 }
             }
         }
