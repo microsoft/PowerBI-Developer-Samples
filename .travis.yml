@@ -2,3 +2,9 @@ language: csharp
 solution: "./LoadTesting/LoadTesting.sln"
 install:
 - travis_retry nuget restore -source "https://www.nuget.org/api/v2" ./LoadTesting/LoadTesting.sln
+deploy:
+  provider: releases
+  api_key: "$GITHUB_OAUTH_TOKEN"
+  skip_cleanup: true
+  on:
+    tags: true
