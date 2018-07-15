@@ -32,8 +32,8 @@ namespace PBIWebApp
                 //After you get an AccessToken, you can call Power BI API operations such as Get Report
                 Session["AccessToken"] = GetAccessToken(
                     Request.Params.GetValues("code")[0],
-                    Settings.Default.ClientID,
-                    Settings.Default.ClientSecret,
+                    Settings.Default.ApplicationID,
+                    Settings.Default.ApplicationSecret,
                     Settings.Default.RedirectUrl);
 
                 //Redirect again to get rid of code=
@@ -53,8 +53,8 @@ namespace PBIWebApp
                 //In this sample, you get the first Report. In a production app, you would create a more robost
                 //solution
 
-                //Gets the corresponding report to the setting's ReportId and GroupId.
-                //If ReportId or GroupId are empty, it will get the first user's report.
+                //Gets the corresponding report to the setting's ReportId and WorkspaceId.
+                //If ReportId or WorkspaceId are empty, it will get the first user's report.
                 GetReport();
             }
         }
@@ -67,11 +67,11 @@ namespace PBIWebApp
         }
 
 
-        // Gets a report based on the setting's ReportId and GroupId.
-        // If reportId or groupId are empty, it will get the first user's report.
+        // Gets a report based on the setting's ReportId and WorkspaceId.
+        // If reportId or WorkspaceId are empty, it will get the first user's report.
         protected void GetReport()
         {
-            var groupId = Settings.Default.GroupId;
+            var WorkspaceId = Settings.Default.WorkspaceId;
             var reportId = Settings.Default.ReportId;
             var powerBiApiUrl = Settings.Default.PowerBiApiUrl;
 
@@ -79,23 +79,23 @@ namespace PBIWebApp
             {
                 Report report;
 
-                // Settings' group ID is not empty
-                if (!string.IsNullOrEmpty(groupId))
+                // Settings' workspace ID is not empty
+                if (!string.IsNullOrEmpty(WorkspaceId))
                 {
-                    // Gets a report from the group.
-                    report = GetReportFromGroup(client, groupId, reportId);
+                    // Gets a report from the workspace.
+                    report = GetReportFromWorkspace(client, WorkspaceId, reportId);
                 }
-                // Settings' report and group Ids are empty, retrieves the user's first report.
+                // Settings' report and workspace Ids are empty, retrieves the user's first report.
                 else if (string.IsNullOrEmpty(reportId))
                 {
                     report = client.Reports.GetReports().Value.FirstOrDefault();
-                    AppendErrorIfReportNull(report, "No reports found. Please specify the target report ID and group in the applications settings.");
+                    AppendErrorIfReportNull(report, "No reports found. Please specify the target report ID and workspace in the applications settings.");
                 }
-                // Settings contains report ID. (no group ID)
+                // Settings contains report ID. (no workspace ID)
                 else
                 {
                     report = client.Reports.GetReports().Value.FirstOrDefault(r => r.Id == reportId);
-                    AppendErrorIfReportNull(report, string.Format("Report with ID: '{0}' not found. Please check the report ID. For reports within a group with a group ID, add the group ID to the application's settings", reportId));
+                    AppendErrorIfReportNull(report, string.Format("Report with ID: '{0}' not found. Please check the report ID. For reports within a workspace with a workspace ID, add the workspace ID to the application's settings", reportId));
                 }
 
                 if (report != null)
@@ -119,7 +119,7 @@ namespace PBIWebApp
 
                 //Client ID is used by the application to identify themselves to the users that they are requesting permissions from. 
                 //You get the client id when you register your Azure app.
-                {"client_id", Settings.Default.ClientID},
+                {"client_id", Settings.Default.ApplicationID},
 
                 //Resource uri to the Power BI resource to be authorized
                 //The resource uri is hard-coded for sample purposes
@@ -135,7 +135,7 @@ namespace PBIWebApp
             queryString.Add(@params);
 
             //Redirect to Azure AD Authority
-            //  Authority Uri is an Azure resource that takes a client id and client secret to get an Access token
+            //  Authority Uri is an Azure resource that takes a application id and application secret to get an Access token
             //  QueryString contains 
             //      response_type of "code"
             //      client_id that identifies your app in Azure AD
@@ -146,7 +146,7 @@ namespace PBIWebApp
             Response.Redirect(String.Format(Settings.Default.AADAuthorityUri + "?{0}", queryString));
         }
 
-        public string GetAccessToken(string authorizationCode, string clientID, string clientSecret, string redirectUri)
+        public string GetAccessToken(string authorizationCode, string applicationID, string applicationSecret, string redirectUri)
         {
             //Redirect uri must match the redirect_uri used when requesting Authorization code.
             //Note: If you use a redirect back to Default, as in this sample, you need to add a forward slash
@@ -158,7 +158,7 @@ namespace PBIWebApp
             //Values are hard-coded for sample purposes
             string authority = Settings.Default.AADAuthorityUri;
             AuthenticationContext AC = new AuthenticationContext(authority, TC);
-            ClientCredential cc = new ClientCredential(clientID, clientSecret);
+            ClientCredential cc = new ClientCredential(applicationID, applicationSecret);
 
             //Set token from authentication result
             return AC.AcquireTokenByAuthorizationCode(
@@ -166,39 +166,39 @@ namespace PBIWebApp
                 new Uri(redirectUri), cc).AccessToken;
         }
 
-        // Gets the report with the specified ID from the group. If report ID is emty it will retrieve the first report from the group.
-        private Report GetReportFromGroup(PowerBIClient client, string groupId, string reportId)
+        // Gets the report with the specified ID from the workspace. If report ID is emty it will retrieve the first report from the workspace.
+        private Report GetReportFromWorkspace(PowerBIClient client, string WorkspaceId, string reportId)
         {
-            // Gets the group by groupId.
-            var groups = client.Groups.GetGroups();
-            var sourceGroup = groups.Value.FirstOrDefault(g => g.Id == groupId);
+            // Gets the workspace by WorkspaceId.
+            var workspaces = client.Groups.GetGroups();
+            var sourceWorkspace = workspaces.Value.FirstOrDefault(g => g.Id == WorkspaceId);
 
-            // No group with the group ID was found.
-            if (sourceGroup == null)
+            // No workspace with the workspace ID was found.
+            if (sourceWorkspace == null)
             {
-                errorLabel.Text = string.Format("Group with id: '{0}' not found. Please validate the provided group ID.", groupId);
+                errorLabel.Text = string.Format("Workspace with id: '{0}' not found. Please validate the provided workspace ID.", WorkspaceId);
                 return null;
             }
 
             Report report = null;
             if (string.IsNullOrEmpty(reportId))
             {
-                // Get the first report in the group.
-                report = client.Reports.GetReportsInGroup(sourceGroup.Id).Value.FirstOrDefault();
-                AppendErrorIfReportNull(report, "Group doesn't contain any reports.");
+                // Get the first report in the workspace.
+                report = client.Reports.GetReportsInGroup(sourceWorkspace.Id).Value.FirstOrDefault();
+                AppendErrorIfReportNull(report, "Workspace doesn't contain any reports.");
             }
 
             else
             {
                 try
                 {
-                    // retrieve a report by the group ID and report ID.
-                    report = client.Reports.GetReportInGroup(groupId, reportId);
+                    // retrieve a report by the workspace ID and report ID.
+                    report = client.Reports.GetReportInGroup(WorkspaceId, reportId);
                 }
 
                 catch(HttpOperationException)
                 {
-                    errorLabel.Text = string.Format("Report with ID: '{0}' not found in the group with ID: '{1}', Please check the report ID.", reportId, groupId);
+                    errorLabel.Text = string.Format("Report with ID: '{0}' not found in the workspace with ID: '{1}', Please check the report ID.", reportId, WorkspaceId);
 
                 }
             }

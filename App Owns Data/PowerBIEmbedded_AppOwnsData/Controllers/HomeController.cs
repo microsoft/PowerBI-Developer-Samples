@@ -18,9 +18,9 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
         private static readonly string Password = ConfigurationManager.AppSettings["pbiPassword"];
         private static readonly string AuthorityUrl = ConfigurationManager.AppSettings["authorityUrl"];
         private static readonly string ResourceUrl = ConfigurationManager.AppSettings["resourceUrl"];
-        private static readonly string ClientId = ConfigurationManager.AppSettings["clientId"];
+        private static readonly string ApplicationId = ConfigurationManager.AppSettings["ApplicationId"];
         private static readonly string ApiUrl = ConfigurationManager.AppSettings["apiUrl"];
-        private static readonly string GroupId = ConfigurationManager.AppSettings["groupId"];
+        private static readonly string WorkspaceId = ConfigurationManager.AppSettings["workspaceId"];
         private static readonly string ReportId = ConfigurationManager.AppSettings["reportId"];
 
         public ActionResult Index()
@@ -46,7 +46,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 
                 // Authenticate using created credentials
                 var authenticationContext = new AuthenticationContext(AuthorityUrl);
-                var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ClientId, credential);
+                var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ApplicationId, credential);
 
                 if (authenticationResult == null)
                 {
@@ -60,12 +60,19 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                 using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
                 {
                     // Get a list of reports.
-                    var reports = await client.Reports.GetReportsInGroupAsync(GroupId);
+                    var reports = await client.Reports.GetReportsInGroupAsync(WorkspaceId);
+
+                    // No reports retrieved for the given workspace.
+                    if(reports.Value.Count() == 0)
+                    {
+                        result.ErrorMessage = "No reports were found in the workspace";
+                        return View(result);
+                    }
 
                     Report report;
-                    if (string.IsNullOrEmpty(ReportId))
+                    if (string.IsNullOrWhiteSpace(ReportId))
                     {
-                        // Get the first report in the group.
+                        // Get the first report in the workspace.
                         report = reports.Value.FirstOrDefault();
                     }
                     else
@@ -75,16 +82,16 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 
                     if (report == null)
                     {
-                        result.ErrorMessage = "Group has no reports.";
+                        result.ErrorMessage = "No report with the given ID was found in the workspace. Make sure ReportId is valid.";
                         return View(result);
                     }
 
-                    var datasets = await client.Datasets.GetDatasetByIdInGroupAsync(GroupId, report.DatasetId);
+                    var datasets = await client.Datasets.GetDatasetByIdInGroupAsync(WorkspaceId, report.DatasetId);
                     result.IsEffectiveIdentityRequired = datasets.IsEffectiveIdentityRequired;
                     result.IsEffectiveIdentityRolesRequired = datasets.IsEffectiveIdentityRolesRequired;
                     GenerateTokenRequest generateTokenRequestParameters;
                     // This is how you create embed token with effective identities
-                    if (!string.IsNullOrEmpty(username))
+                    if (!string.IsNullOrWhiteSpace(username))
                     {
                         var rls = new EffectiveIdentity(username, new List<string> { report.DatasetId });
                         if (!string.IsNullOrWhiteSpace(roles))
@@ -102,7 +109,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                         generateTokenRequestParameters = new GenerateTokenRequest(accessLevel: "view");
                     }
 
-                    var tokenResponse = await client.Reports.GenerateTokenInGroupAsync(GroupId, report.Id, generateTokenRequestParameters);
+                    var tokenResponse = await client.Reports.GenerateTokenInGroupAsync(WorkspaceId, report.Id, generateTokenRequestParameters);
 
                     if (tokenResponse == null)
                     {
@@ -146,7 +153,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 
             // Authenticate using created credentials
             var authenticationContext = new AuthenticationContext(AuthorityUrl);
-            var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ClientId, credential);
+            var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ApplicationId, credential);
 
             if (authenticationResult == null)
             {
@@ -162,22 +169,22 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
             {
                 // Get a list of dashboards.
-                var dashboards = await client.Dashboards.GetDashboardsInGroupAsync(GroupId);
+                var dashboards = await client.Dashboards.GetDashboardsInGroupAsync(WorkspaceId);
 
-                // Get the first report in the group.
+                // Get the first report in the workspace.
                 var dashboard = dashboards.Value.FirstOrDefault();
 
                 if (dashboard == null)
                 {
                     return View(new EmbedConfig()
                     {
-                        ErrorMessage = "Group has no dashboards."
+                        ErrorMessage = "Workspace has no dashboards."
                     });
                 }
 
                 // Generate Embed Token.
                 var generateTokenRequestParameters = new GenerateTokenRequest(accessLevel: "view");
-                var tokenResponse = await client.Dashboards.GenerateTokenInGroupAsync(GroupId, dashboard.Id, generateTokenRequestParameters);
+                var tokenResponse = await client.Dashboards.GenerateTokenInGroupAsync(WorkspaceId, dashboard.Id, generateTokenRequestParameters);
 
                 if (tokenResponse == null)
                 {
@@ -215,7 +222,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 
             // Authenticate using created credentials
             var authenticationContext = new AuthenticationContext(AuthorityUrl);
-            var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ClientId, credential);
+            var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ApplicationId, credential);
 
             if (authenticationResult == null)
             {
@@ -231,27 +238,27 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
             {
                 // Get a list of dashboards.
-                var dashboards = await client.Dashboards.GetDashboardsInGroupAsync(GroupId);
+                var dashboards = await client.Dashboards.GetDashboardsInGroupAsync(WorkspaceId);
 
-                // Get the first report in the group.
+                // Get the first report in the workspace.
                 var dashboard = dashboards.Value.FirstOrDefault();
 
                 if (dashboard == null)
                 {
                     return View(new TileEmbedConfig()
                     {
-                        ErrorMessage = "Group has no dashboards."
+                        ErrorMessage = "Workspace has no dashboards."
                     });
                 }
 
-                var tiles = await client.Dashboards.GetTilesInGroupAsync(GroupId, dashboard.Id);
+                var tiles = await client.Dashboards.GetTilesInGroupAsync(WorkspaceId, dashboard.Id);
 
-                // Get the first tile in the group.
+                // Get the first tile in the workspace.
                 var tile = tiles.Value.FirstOrDefault();
 
                 // Generate Embed Token for a tile.
                 var generateTokenRequestParameters = new GenerateTokenRequest(accessLevel: "view");
-                var tokenResponse = await client.Tiles.GenerateTokenInGroupAsync(GroupId, dashboard.Id, tile.Id, generateTokenRequestParameters);
+                var tokenResponse = await client.Tiles.GenerateTokenInGroupAsync(WorkspaceId, dashboard.Id, tile.Id, generateTokenRequestParameters);
 
                 if (tokenResponse == null)
                 {
@@ -280,39 +287,39 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
         /// <returns>Null if web.config parameters are valid, otherwise returns specific error string.</returns>
         private string GetWebConfigErrors()
         {
-            // Client Id must have a value.
-            if (string.IsNullOrEmpty(ClientId))
+            // Application Id must have a value.
+            if (string.IsNullOrWhiteSpace(ApplicationId))
             {
-                return "ClientId is empty. please register your application as Native app in https://dev.powerbi.com/apps and fill client Id in web.config.";
+                return "ApplicationId is empty. please register your application as Native app in https://dev.powerbi.com/apps and fill client Id in web.config.";
             }
 
-            // Client Id must be a Guid object.
+            // Application Id must be a Guid object.
             Guid result;
-            if (!Guid.TryParse(ClientId, out result))
+            if (!Guid.TryParse(ApplicationId, out result))
             {
-                return "ClientId must be a Guid object. please register your application as Native app in https://dev.powerbi.com/apps and fill client Id in web.config.";
+                return "ApplicationId must be a Guid object. please register your application as Native app in https://dev.powerbi.com/apps and fill application Id in web.config.";
             }
 
-            // Group Id must have a value.
-            if (string.IsNullOrEmpty(GroupId))
+            // Workspace Id must have a value.
+            if (string.IsNullOrWhiteSpace(WorkspaceId))
             {
-                return "GroupId is empty. Please select a group you own and fill its Id in web.config";
+                return "WorkspaceId is empty. Please select a group you own and fill its Id in web.config";
             }
 
-            // Group Id must be a Guid object.
-            if (!Guid.TryParse(GroupId, out result))
+            // Workspace Id must be a Guid object.
+            if (!Guid.TryParse(WorkspaceId, out result))
             {
-                return "GroupId must be a Guid object. Please select a group you own and fill its Id in web.config";
+                return "WorkspaceId must be a Guid object. Please select a workspace you own and fill its Id in web.config";
             }
 
             // Username must have a value.
-            if (string.IsNullOrEmpty(Username))
+            if (string.IsNullOrWhiteSpace(Username))
             {
                 return "Username is empty. Please fill Power BI username in web.config";
             }
 
             // Password must have a value.
-            if (string.IsNullOrEmpty(Password))
+            if (string.IsNullOrWhiteSpace(Password))
             {
                 return "Password is empty. Please fill password of Power BI username in web.config";
             }
