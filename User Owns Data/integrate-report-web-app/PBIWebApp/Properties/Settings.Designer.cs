@@ -25,10 +25,10 @@ namespace PBIWebApp.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{Enter your app ClientID}")]
-        public string ClientID {
+        [global::System.Configuration.DefaultSettingValueAttribute("{Enter your app ApplicationID}")]
+        public string ApplicationID {
             get {
-                return ((string)(this["ClientID"]));
+                return ((string)(this["ApplicationID"]));
             }
         }
         
@@ -44,9 +44,9 @@ namespace PBIWebApp.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("{Enter your app SecretKey}")]
-        public string ClientSecret {
+        public string ApplicationSecret {
             get {
-                return ((string)(this["ClientSecret"]));
+                return ((string)(this["ApplicationSecret"]));
             }
         }
         
@@ -89,9 +89,9 @@ namespace PBIWebApp.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string GroupId {
+        public string WorkspaceId {
             get {
-                return ((string)(this["GroupId"]));
+                return ((string)(this["WorkspaceId"]));
             }
         }
         

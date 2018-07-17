@@ -70,9 +70,9 @@
         <h2>
             Basic Sample
             <br />
-            First make sure you <a href="https://dev.powerbi.com/apps">register your app</a>. After registration, copy <u>Client ID</u> and <u>Client Secret</u> to web.config file.
+            First make sure you <a href="https://dev.powerbi.com/apps">register your app</a>. After registration, copy <u>Application ID</u> and <u>Application Secret</u> to web.config file.
             <br />
-            The application will embed the first report from your Power BI account. If you wish to embed a specific report, please copy the report's ID and the corresponding group ID to web.config file.
+            The application will embed the first report from your Power BI account. If you wish to embed a specific report, please copy the report's ID and the corresponding workspace ID to web.config file.
         </h2>
     </header>
 
