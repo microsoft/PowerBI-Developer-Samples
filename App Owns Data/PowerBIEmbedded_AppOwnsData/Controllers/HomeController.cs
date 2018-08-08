@@ -19,6 +19,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
         private static readonly string AuthorityUrl = ConfigurationManager.AppSettings["authorityUrl"];
         private static readonly string ResourceUrl = ConfigurationManager.AppSettings["resourceUrl"];
         private static readonly string ApplicationId = ConfigurationManager.AppSettings["ApplicationId"];
+        private static readonly string ApplicationSecret = ConfigurationManager.AppSettings["ApplicationSecret"];
         private static readonly string ApiUrl = ConfigurationManager.AppSettings["apiUrl"];
         private static readonly string WorkspaceId = ConfigurationManager.AppSettings["workspaceId"];
         private static readonly string ReportId = ConfigurationManager.AppSettings["reportId"];
@@ -41,12 +42,20 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                     return View(result);
                 }
 
-                // Create a user password cradentials.
-                var credential = new UserPasswordCredential(Username, Password);
-
                 // Authenticate using created credentials
                 var authenticationContext = new AuthenticationContext(AuthorityUrl);
-                var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ApplicationId, credential);
+                AuthenticationResult authenticationResult = null;
+                if (string.IsNullOrEmpty(ApplicationSecret))
+                {
+                    var credential = new UserPasswordCredential(Username, Password);
+                    authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ApplicationId, credential);
+                }
+                else
+                {
+
+                    ClientCredential clientCredential = new ClientCredential(ApplicationId, ApplicationSecret);
+                    authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, clientCredential);
+                }
 
                 if (authenticationResult == null)
                 {
@@ -77,7 +86,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                     }
                     else
                     {
-                        report = reports.Value.FirstOrDefault(r => r.Id == ReportId);
+                        report = reports.Value.FirstOrDefault(r => r.Id.Equals(ReportId, StringComparison.InvariantCultureIgnoreCase));
                     }
 
                     if (report == null)
@@ -312,17 +321,6 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                 return "WorkspaceId must be a Guid object. Please select a workspace you own and fill its Id in web.config";
             }
 
-            // Username must have a value.
-            if (string.IsNullOrWhiteSpace(Username))
-            {
-                return "Username is empty. Please fill Power BI username in web.config";
-            }
-
-            // Password must have a value.
-            if (string.IsNullOrWhiteSpace(Password))
-            {
-                return "Password is empty. Please fill password of Power BI username in web.config";
-            }
 
             return null;
         }
