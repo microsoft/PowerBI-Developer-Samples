@@ -6,6 +6,7 @@ using PowerBIEmbedded_AppOwnsData.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -68,7 +69,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             {
                 var folder = await client.Groups.CreateGroupAsync(new GroupCreationRequest() { Name = newFolderName });
                 WorkspaceId = folder.Id;
-                var sampleLocation = "C:\\dev\\PowerBI-developer-samples\\App Owns Data\\PowerBIEmbedded_AppOwnsData\\Samples\\Contoso Sales Sample for Power BI Desktop.pbix";
+                var sampleLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory.ToString(), "Samples", "Contoso Sales Sample for Power BI Desktop.pbix");
                 var sampleName = "contosoSales";
                 using (var stream = System.IO.File.OpenRead(sampleLocation))
                 {
