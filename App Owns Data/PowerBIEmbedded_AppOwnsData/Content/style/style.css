@@ -36,13 +36,13 @@ a:hover, a:visited, a:link, a:active {
     padding: 5px 30px;
     margin: 5px;
     width: 200px;
-    height: 30px;
+    height: 60px;
     display: inline-block;
     text-align: center;
-}
+    font-size: 12px;}
 
 #buttonsWrapper a:hover {
-   font-size: 120%;
+   font-size: 110%;
 }
 
 #tileContainer {

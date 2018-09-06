@@ -1,0 +1,129 @@
+﻿@model PowerBIEmbedded_AppOwnsData.Models.EmbedConfig
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://npmcdn.com/es6-promise@3.2.1"></script>
+<script src="~/scripts/powerbi.js"></script>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div id="errorWrapper">
+        <h2>
+            Error
+        </h2>
+        <pre>
+            @Model.ErrorMessage
+        </pre>
+    </div>
+
+    return;
+}
+
+<h2>Embedded Report WV2</h2>
+<div>
+    The following report is the first report found in the given group, or the reportId defined in Web.config. Feel free to change the code to match your needs.<br/><br/>
+        @using (Html.BeginForm())
+        {
+            <div>
+                <input type="checkbox" id="RLS" disabled>
+                <label for="RLS">View as a different user</label>
+            </div>
+            <div id="noRLSdiv">
+                <h8>This checkbox is disabled because the current report does not support providing effective user name</h8>
+                <br />
+                <h8>For more info, visit RLS link in the bottom of the page</h8>
+            </div>
+            <div class="webConfigInfo">
+                <br />
+                SET THE FOLLOWING PARAMETERS IN WEB.CONFIG<br />
+                workspace id: @Model.EmbedUrl.Substring(@Model.EmbedUrl.IndexOf("groupId=") + "groupId=".Length, Guid.Empty.ToString().Length)<br />
+                report id: @Model.EmbedUrl.Substring(@Model.EmbedUrl.IndexOf("reportId=") + "reportId=".Length, Guid.Empty.ToString().Length)<br />
+                <br />
+            </div>
+            <div id="RLSdiv" hidden="hidden">
+                <div class="inputLineTitle">User name</div>
+                <input type="text" name="username" value="@Model.Username" />
+                <h8>User name is always required for RLS.</h8>
+                <div class="inputLineTitle">Roles</div>
+                <input type="text" name="roles" value="@Model.Roles" />
+                <h8>Comma separeted roles, optional for SSAS, mandatory for roles defined in pbix</h8>
+                <br /><br />
+                <input type="submit" value="Reload" />
+                <br /><br />
+            </div>
+        }
+</div>
+<div id="reportContainer"></div>
+
+<div class="infoBox">
+    Code is in files:<br />
+    1) HomeController.cs<br />
+    2) EmbedReportWV2.cshtml
+</div>
+
+@Html.Partial("LiveDemoLink")
+
+<script>
+    // Read embed application token from Model
+    var accessToken = "@Model.EmbedToken.Token";
+
+    // Read embed URL from Model
+    var embedUrl = "@Html.Raw(Model.EmbedUrl)";
+
+    // Read report Id from Model
+    var embedReportId = "@Model.Id";
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Embed configuration used to describe the what and how to embed.
+    // This object is used when calling powerbi.embed.
+    // This also includes settings and options such as filters.
+    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+    var config = {
+        type: 'report',
+        tokenType: models.TokenType.Embed,
+        accessToken: accessToken,
+        embedUrl: embedUrl,
+        id: embedReportId,
+        permissions: models.Permissions.All,
+        settings: {
+            filterPaneEnabled: true,
+            navContentPaneEnabled: true
+        }
+    };
+
+    // Get a reference to the embedded report HTML element
+    var reportContainer = $('#reportContainer')[0];
+
+    if ("@Model.Username" != "") {
+        $("#RLS").prop('checked', true);
+        $("#RLSdiv").show();
+    }
+    else
+    {
+        $("#RLS").prop('checked', false);
+        $("#RLSdiv").hide();
+    }
+
+    if ("@Model.IsEffectiveIdentityRequired.GetValueOrDefault()" == "True") {
+        $("#noRLSdiv").hide();
+        $("#RLS").removeAttr("disabled");
+        $("#RLS").change(function () {
+            if ($(this).is(":checked")) {
+                $("#RLSdiv").show(300);
+            } else {
+                $("#RLSdiv").hide(200);
+            }
+        });
+    }
+    else
+    {
+        $("#noRLSdiv").show();
+    }
+    // Embed the report and display it within the div container.
+    var report = powerbi.embed(reportContainer, config);
+</script>
