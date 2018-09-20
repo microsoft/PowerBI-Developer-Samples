@@ -77,7 +77,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                     while (import.ImportState != "Succeeded" && import.ImportState != "Failed")
                     {
                         Thread.Sleep(1000);
-                        import = await client.Imports.GetImportByIdAsync(import.Id);
+                        import = await client.Imports.GetImportByIdInGroupAsync(WorkspaceId, import.Id);
                     }
                     ReportId = import.Reports[0].Id;
                     result = await _EmbedReport(null, null);
