@@ -5,9 +5,9 @@ https://docs.microsoft.com/en-us/power-bi/developer/embedding-content
 
 To see embedded report, dashboard and tile, you need to fill missing details in web.config.
 
-clientId - Id of AAD application registered as NATIVE app.
+applicationId - Id of AAD application registered as NATIVE app.
 
-groupId - group or workspace Id in Power BI which contains reports, dashboards and tiles you want to embed.
+workspaceId - group or workspace Id in Power BI which contains reports, dashboards and tiles you want to embed.
 
 pbiUsername - Power BI username (e.g. Email). Must be an admin of the group above.
 
