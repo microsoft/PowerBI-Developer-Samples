@@ -69,7 +69,7 @@ namespace PBIWebApp
 
             //Redirect authority
             //Authority Uri is an Azure resource that takes a client id to get an Access token
-            string authorityUri = Properties.Settings.Default.AADAuthorityUri;
+            string authorityUri = Properties.Settings.Default.AADAuthoritySignInUri;
             var authUri = String.Format("{0}?{1}", authorityUri, queryString);
             Response.Redirect(authUri);
         }
@@ -100,7 +100,7 @@ namespace PBIWebApp
 
             //Redirect authority
             //Authority Uri is an Azure resource that takes a client id to get an Access token
-            string authorityUri = Properties.Settings.Default.AADAuthorityUri;
+            string authorityUri = Properties.Settings.Default.AADAuthoritySignInUri;
             var authUri = String.Format("{0}?{1}", authorityUri, queryString);
             Response.Redirect(authUri);
         }
