@@ -166,6 +166,8 @@
     <Compile Include="Models\EmbedConfig.cs" />
     <Compile Include="Models\TileEmbedConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\EmbedService.cs" />
+    <Compile Include="Services\IEmbedService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
