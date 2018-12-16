@@ -7,7 +7,7 @@
     </Setting>
     <Setting Name="ClientSecret" Type="System.String" Scope="Application">
       <Value Profile="(Default)">{Enter your app SecretKey}</Value>
-    </Setting> 
+    </Setting>
     <Setting Name="AADAuthoritySignInUri" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://login.windows.net/common/oauth2/authorize/</Value>
     </Setting>
