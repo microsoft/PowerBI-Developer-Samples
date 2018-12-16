@@ -44,9 +44,9 @@ namespace PBIWebApp.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("https://login.windows.net/common/oauth2/authorize/")]
-        public string AADAuthoritySignInUri {
+        public string AADAuthorityUri {
             get {
-                return ((string)(this["AADAuthoritySignInUri"]));
+                return ((string)(this["AADAuthorityUri"]));
             }
         }
         
