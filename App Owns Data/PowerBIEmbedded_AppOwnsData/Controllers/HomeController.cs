@@ -198,7 +198,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 
         public async Task<ActionResult> EmbedTile()
         {
-            var result = new EmbedConfig();
+            EmbedConfig result = new TileEmbedConfig();
             try
             {
                 var error = GetWebConfigErrors();
