@@ -15,28 +15,30 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 {
     public class HomeController : Controller
     {
+        private static readonly string AuthorityUrl = ConfigurationManager.AppSettings["authorityUrl"];
+        private static readonly string ResourceUrl = ConfigurationManager.AppSettings["resourceUrl"];
+        private static readonly string ApplicationId = ConfigurationManager.AppSettings["applicationId"];
+        private static readonly string ApiUrl = ConfigurationManager.AppSettings["apiUrl"];
+        private static readonly string WorkspaceId = ConfigurationManager.AppSettings["workspaceId"];
+        private static readonly string ReportId = ConfigurationManager.AppSettings["reportId"];
+
         private static readonly string AuthenticationType = ConfigurationManager.AppSettings["AuthenticationType"];
         private static readonly NameValueCollection sectionConfig = ConfigurationManager.GetSection(AuthenticationType) as NameValueCollection;
+        private static readonly string ApplicationSecret = sectionConfig["applicationSecret"];
         private static readonly string Username = sectionConfig["pbiUsername"];
         private static readonly string Password = sectionConfig["pbiPassword"];
-        private static readonly string AuthorityUrl = sectionConfig["authorityUrl"];
-        private static readonly string ResourceUrl = sectionConfig["resourceUrl"];
-        private static readonly string ApplicationId = sectionConfig["applicationId"];
-        private static readonly string ApplicationSecret = sectionConfig["applicationSecret"];
-        private static readonly string ApiUrl = sectionConfig["apiUrl"];
-        private static readonly string WorkspaceId = sectionConfig["workspaceId"];
-        private static readonly string ReportId = sectionConfig["reportId"];
 
         public ActionResult Index()
         {
             return View();
         }
 
-        public async Task<ActionResult> EmbedReport(string username = "", string roles = "")
+        public async Task<ActionResult> EmbedReport(string username = null, string roles = null)
         {
             var result = new EmbedConfig();
             try
             {
+                result = new EmbedConfig { Username = username, Roles = roles };
                 var error = GetWebConfigErrors();
                 if (error != null)
                 {
@@ -44,12 +46,15 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                     return View(result);
                 }
 
-                var tokenCredentials = DoAuthentication(out result, username, roles);
+                var authenticationResult = DoAuthentication();
 
-                if (!string.IsNullOrEmpty(result.ErrorMessage))
+                if (authenticationResult == null)
                 {
+                    result.ErrorMessage = "Authentication Failed.";
                     return View(result);
                 }
+
+                var tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
 
                 // Create a Power BI Client object. It will be used to call Power BI APIs.
                 using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
@@ -72,7 +77,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                     }
                     else
                     {
-                        report = reports.Value.FirstOrDefault(r => r.Id.Equals(ReportId, StringComparison.CurrentCultureIgnoreCase));
+                        report = reports.Value.FirstOrDefault(r => r.Id.Equals(ReportId, StringComparison.InvariantCultureIgnoreCase));
                     }
 
                     if (report == null)
@@ -144,12 +149,15 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                     return View(result);
                 }
 
-                var tokenCredentials = DoAuthentication(out result);
+                var authenticationResult = DoAuthentication();
 
-                if (!string.IsNullOrEmpty(result.ErrorMessage))
+                if (authenticationResult == null)
                 {
+                    result.ErrorMessage = "Authentication Failed.";
                     return View(result);
                 }
+
+                var tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
 
                 // Create a Power BI Client object. It will be used to call Power BI APIs.
                 using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
@@ -208,12 +216,15 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                     return View(result);
                 }
 
-                var tokenCredentials = DoAuthentication(out result);
+                var authenticationResult = DoAuthentication();
 
-                if (!string.IsNullOrEmpty(result.ErrorMessage))
+                if (authenticationResult == null)
                 {
+                    result.ErrorMessage = "Authentication Failed.";
                     return View(result);
                 }
+
+                var tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
 
                 // Create a Power BI Client object. It will be used to call Power BI APIs.
                 using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
@@ -300,6 +311,12 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                 return "WorkspaceId must be a Guid object. Please select a workspace you own and fill its Id in web.config";
             }
 
+            // Must fill tenant Id in authorityUrl
+            if (AuthorityUrl.Contains("Fill Tenant ID"))
+            {
+                return "Invalid AuthorityUrl. Please fill Tenant ID in AuthorityUrl under web.config";
+            }
+
             if (AuthenticationType.Equals("MasterUser"))
             {
                 // Username must have a value.
@@ -325,9 +342,8 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             return null;
         }
 
-        private TokenCredentials DoAuthentication(out EmbedConfig result, string username = "", string roles = "")
+        private AuthenticationResult DoAuthentication()
         {
-            result = new EmbedConfig { Username = username, Roles = roles, ErrorMessage = string.Empty };
             var authenticationContext = new AuthenticationContext(AuthorityUrl);
             AuthenticationResult authenticationResult = null;
             if (AuthenticationType.Equals("MasterUser"))
@@ -343,13 +359,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                 authenticationResult = authenticationContext.AcquireTokenAsync(ResourceUrl, clientCredential).Result;
             }
 
-            if (authenticationResult == null)
-            {
-                result.ErrorMessage = "Authentication Failed.";
-                return new TokenCredentials(string.Empty);
-            }
-
-            return new TokenCredentials(authenticationResult.AccessToken, "Bearer");
+            return authenticationResult;
         }
     }
 
