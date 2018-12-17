@@ -226,10 +226,8 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 
                     if (dashboard == null)
                     {
-                        return View(new TileEmbedConfig()
-                        {
-                            ErrorMessage = "Workspace has no dashboards."
-                        });
+                        result.ErrorMessage = "Workspace has no dashboards.";
+                        return View(result);
                     }
 
                     var tiles = await client.Dashboards.GetTilesInGroupAsync(WorkspaceId, dashboard.Id);
@@ -243,14 +241,12 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 
                     if (tokenResponse == null)
                     {
-                        return View(new TileEmbedConfig()
-                        {
-                            ErrorMessage = "Failed to generate embed token."
-                        });
+                        result.ErrorMessage = "Failed to generate embed token.";
+                        return View(result);
                     }
 
                     // Generate Embed Configuration.
-                    var embedConfig = new TileEmbedConfig()
+                    result = new TileEmbedConfig()
                     {
                         EmbedToken = tokenResponse,
                         EmbedUrl = tile.EmbedUrl,
@@ -258,7 +254,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                         dashboardId = dashboard.Id
                     };
 
-                    return View(embedConfig);
+                    return View(result);
                 }
             }
             catch (HttpOperationException exc)
