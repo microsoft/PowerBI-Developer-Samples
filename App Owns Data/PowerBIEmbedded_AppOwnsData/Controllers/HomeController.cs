@@ -5,6 +5,7 @@ using Microsoft.Rest;
 using PowerBIEmbedded_AppOwnsData.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,26 +15,28 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 {
     public class HomeController : Controller
     {
-        private static readonly string Username = ConfigurationManager.AppSettings["pbiUsername"];
-        private static readonly string Password = ConfigurationManager.AppSettings["pbiPassword"];
-        private static readonly string AuthorityUrl = ConfigurationManager.AppSettings["authorityUrl"];
-        private static readonly string ResourceUrl = ConfigurationManager.AppSettings["resourceUrl"];
-        private static readonly string ApplicationId = ConfigurationManager.AppSettings["ApplicationId"];
-        private static readonly string ApiUrl = ConfigurationManager.AppSettings["apiUrl"];
-        private static readonly string WorkspaceId = ConfigurationManager.AppSettings["workspaceId"];
-        private static readonly string ReportId = ConfigurationManager.AppSettings["reportId"];
+        private static readonly string AuthenticationType = ConfigurationManager.AppSettings["AuthenticationType"];
+        private static readonly NameValueCollection sectionConfig = ConfigurationManager.GetSection(AuthenticationType) as NameValueCollection;
+        private static readonly string Username = sectionConfig["pbiUsername"];
+        private static readonly string Password = sectionConfig["pbiPassword"];
+        private static readonly string AuthorityUrl = sectionConfig["authorityUrl"];
+        private static readonly string ResourceUrl = sectionConfig["resourceUrl"];
+        private static readonly string ApplicationId = sectionConfig["applicationId"];
+        private static readonly string ApplicationSecret = sectionConfig["applicationSecret"];
+        private static readonly string ApiUrl = sectionConfig["apiUrl"];
+        private static readonly string WorkspaceId = sectionConfig["workspaceId"];
+        private static readonly string ReportId = sectionConfig["reportId"];
 
         public ActionResult Index()
         {
             return View();
         }
 
-        public async Task<ActionResult> EmbedReport(string username, string roles)
+        public async Task<ActionResult> EmbedReport(string username = "", string roles = "")
         {
             var result = new EmbedConfig();
             try
             {
-                result = new EmbedConfig { Username = username, Roles = roles };
                 var error = GetWebConfigErrors();
                 if (error != null)
                 {
@@ -41,20 +44,12 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                     return View(result);
                 }
 
-                // Create a user password cradentials.
-                var credential = new UserPasswordCredential(Username, Password);
+                var tokenCredentials = DoAuthentication(out result, username, roles);
 
-                // Authenticate using created credentials
-                var authenticationContext = new AuthenticationContext(AuthorityUrl);
-                var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ApplicationId, credential);
-
-                if (authenticationResult == null)
+                if (!string.IsNullOrEmpty(result.ErrorMessage))
                 {
-                    result.ErrorMessage = "Authentication Failed.";
                     return View(result);
                 }
-
-                var tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
 
                 // Create a Power BI Client object. It will be used to call Power BI APIs.
                 using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
@@ -77,7 +72,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                     }
                     else
                     {
-                        report = reports.Value.FirstOrDefault(r => r.Id == ReportId);
+                        report = reports.Value.FirstOrDefault(r => r.Id.Equals(ReportId, StringComparison.CurrentCultureIgnoreCase));
                     }
 
                     if (report == null)
@@ -139,146 +134,143 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 
         public async Task<ActionResult> EmbedDashboard()
         {
-            var error = GetWebConfigErrors();
-            if (error != null)
+            var result = new EmbedConfig();
+            try
             {
-                return View(new EmbedConfig()
+                var error = GetWebConfigErrors();
+                if (error != null)
                 {
-                    ErrorMessage = error
-                });
-            }
-
-            // Create a user password cradentials.
-            var credential = new UserPasswordCredential(Username, Password);
-
-            // Authenticate using created credentials
-            var authenticationContext = new AuthenticationContext(AuthorityUrl);
-            var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ApplicationId, credential);
-
-            if (authenticationResult == null)
-            {
-                return View(new EmbedConfig()
-                {
-                    ErrorMessage = "Authentication Failed."
-                });
-            }
-
-            var tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
-
-            // Create a Power BI Client object. It will be used to call Power BI APIs.
-            using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
-            {
-                // Get a list of dashboards.
-                var dashboards = await client.Dashboards.GetDashboardsInGroupAsync(WorkspaceId);
-
-                // Get the first report in the workspace.
-                var dashboard = dashboards.Value.FirstOrDefault();
-
-                if (dashboard == null)
-                {
-                    return View(new EmbedConfig()
-                    {
-                        ErrorMessage = "Workspace has no dashboards."
-                    });
+                    result.ErrorMessage = error;
+                    return View(result);
                 }
 
-                // Generate Embed Token.
-                var generateTokenRequestParameters = new GenerateTokenRequest(accessLevel: "view");
-                var tokenResponse = await client.Dashboards.GenerateTokenInGroupAsync(WorkspaceId, dashboard.Id, generateTokenRequestParameters);
+                var tokenCredentials = DoAuthentication(out result);
 
-                if (tokenResponse == null)
+                if (!string.IsNullOrEmpty(result.ErrorMessage))
                 {
-                    return View(new EmbedConfig()
-                    {
-                        ErrorMessage = "Failed to generate embed token."
-                    });
+                    return View(result);
                 }
 
-                // Generate Embed Configuration.
-                var embedConfig = new EmbedConfig()
+                // Create a Power BI Client object. It will be used to call Power BI APIs.
+                using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
                 {
-                    EmbedToken = tokenResponse,
-                    EmbedUrl = dashboard.EmbedUrl,
-                    Id = dashboard.Id
-                };
+                    // Get a list of dashboards.
+                    var dashboards = await client.Dashboards.GetDashboardsInGroupAsync(WorkspaceId);
 
-                return View(embedConfig);
+                    // Get the first report in the workspace.
+                    var dashboard = dashboards.Value.FirstOrDefault();
+
+                    if (dashboard == null)
+                    {
+                        result.ErrorMessage = "Workspace has no dashboards.";
+                        return View(result);
+                    }
+
+                    // Generate Embed Token.
+                    var generateTokenRequestParameters = new GenerateTokenRequest(accessLevel: "view");
+                    var tokenResponse = await client.Dashboards.GenerateTokenInGroupAsync(WorkspaceId, dashboard.Id, generateTokenRequestParameters);
+
+                    if (tokenResponse == null)
+                    {
+                        result.ErrorMessage = "Failed to generate embed token.";
+                        return View(result);
+                    }
+
+                    // Generate Embed Configuration.
+                    result.EmbedToken = tokenResponse;
+                    result.EmbedUrl = dashboard.EmbedUrl;
+                    result.Id = dashboard.Id;
+
+                    return View(result);
+                }
             }
+            catch (HttpOperationException exc)
+            {
+                result.ErrorMessage = string.Format("Status: {0} ({1})\r\nResponse: {2}\r\nRequestId: {3}", exc.Response.StatusCode, (int)exc.Response.StatusCode, exc.Response.Content, exc.Response.Headers["RequestId"].FirstOrDefault());
+            }
+            catch (Exception exc)
+            {
+                result.ErrorMessage = exc.ToString();
+            }
+
+            return View(result);
         }
 
         public async Task<ActionResult> EmbedTile()
         {
-            var error = GetWebConfigErrors();
-            if (error != null)
+            var result = new EmbedConfig();
+            try
             {
-                return View(new TileEmbedConfig()
+                var error = GetWebConfigErrors();
+                if (error != null)
                 {
-                    ErrorMessage = error
-                });
-            }
-
-            // Create a user password cradentials.
-            var credential = new UserPasswordCredential(Username, Password);
-
-            // Authenticate using created credentials
-            var authenticationContext = new AuthenticationContext(AuthorityUrl);
-            var authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ApplicationId, credential);
-
-            if (authenticationResult == null)
-            {
-                return View(new TileEmbedConfig()
-                {
-                    ErrorMessage = "Authentication Failed."
-                });
-            }
-
-            var tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
-
-            // Create a Power BI Client object. It will be used to call Power BI APIs.
-            using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
-            {
-                // Get a list of dashboards.
-                var dashboards = await client.Dashboards.GetDashboardsInGroupAsync(WorkspaceId);
-
-                // Get the first report in the workspace.
-                var dashboard = dashboards.Value.FirstOrDefault();
-
-                if (dashboard == null)
-                {
-                    return View(new TileEmbedConfig()
-                    {
-                        ErrorMessage = "Workspace has no dashboards."
-                    });
+                    result.ErrorMessage = error;
+                    return View(result);
                 }
 
-                var tiles = await client.Dashboards.GetTilesInGroupAsync(WorkspaceId, dashboard.Id);
+                var tokenCredentials = DoAuthentication(out result);
 
-                // Get the first tile in the workspace.
-                var tile = tiles.Value.FirstOrDefault();
-
-                // Generate Embed Token for a tile.
-                var generateTokenRequestParameters = new GenerateTokenRequest(accessLevel: "view");
-                var tokenResponse = await client.Tiles.GenerateTokenInGroupAsync(WorkspaceId, dashboard.Id, tile.Id, generateTokenRequestParameters);
-
-                if (tokenResponse == null)
+                if (!string.IsNullOrEmpty(result.ErrorMessage))
                 {
-                    return View(new TileEmbedConfig()
-                    {
-                        ErrorMessage = "Failed to generate embed token."
-                    });
+                    return View(result);
                 }
 
-                // Generate Embed Configuration.
-                var embedConfig = new TileEmbedConfig()
+                // Create a Power BI Client object. It will be used to call Power BI APIs.
+                using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
                 {
-                    EmbedToken = tokenResponse,
-                    EmbedUrl = tile.EmbedUrl,
-                    Id = tile.Id,
-                    dashboardId = dashboard.Id 
-                };
+                    // Get a list of dashboards.
+                    var dashboards = await client.Dashboards.GetDashboardsInGroupAsync(WorkspaceId);
 
-                return View(embedConfig);
+                    // Get the first report in the workspace.
+                    var dashboard = dashboards.Value.FirstOrDefault();
+
+                    if (dashboard == null)
+                    {
+                        return View(new TileEmbedConfig()
+                        {
+                            ErrorMessage = "Workspace has no dashboards."
+                        });
+                    }
+
+                    var tiles = await client.Dashboards.GetTilesInGroupAsync(WorkspaceId, dashboard.Id);
+
+                    // Get the first tile in the workspace.
+                    var tile = tiles.Value.FirstOrDefault();
+
+                    // Generate Embed Token for a tile.
+                    var generateTokenRequestParameters = new GenerateTokenRequest(accessLevel: "view");
+                    var tokenResponse = await client.Tiles.GenerateTokenInGroupAsync(WorkspaceId, dashboard.Id, tile.Id, generateTokenRequestParameters);
+
+                    if (tokenResponse == null)
+                    {
+                        return View(new TileEmbedConfig()
+                        {
+                            ErrorMessage = "Failed to generate embed token."
+                        });
+                    }
+
+                    // Generate Embed Configuration.
+                    var embedConfig = new TileEmbedConfig()
+                    {
+                        EmbedToken = tokenResponse,
+                        EmbedUrl = tile.EmbedUrl,
+                        Id = tile.Id,
+                        dashboardId = dashboard.Id
+                    };
+
+                    return View(embedConfig);
+                }
             }
+            catch (HttpOperationException exc)
+            {
+                result.ErrorMessage = string.Format("Status: {0} ({1})\r\nResponse: {2}\r\nRequestId: {3}", exc.Response.StatusCode, (int)exc.Response.StatusCode, exc.Response.Content, exc.Response.Headers["RequestId"].FirstOrDefault());
+            }
+            catch (Exception exc)
+            {
+                result.ErrorMessage = exc.ToString();
+            }
+
+            return View(result);
         }
 
         /// <summary>
@@ -312,19 +304,57 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                 return "WorkspaceId must be a Guid object. Please select a workspace you own and fill its Id in web.config";
             }
 
-            // Username must have a value.
-            if (string.IsNullOrWhiteSpace(Username))
+            if (AuthenticationType.Equals("AppOwnsData"))
             {
-                return "Username is empty. Please fill Power BI username in web.config";
-            }
+                // Username must have a value.
+                if (string.IsNullOrWhiteSpace(Username))
+                {
+                    return "Username is empty. Please fill Power BI username in web.config";
+                }
 
-            // Password must have a value.
-            if (string.IsNullOrWhiteSpace(Password))
+                // Password must have a value.
+                if (string.IsNullOrWhiteSpace(Password))
+                {
+                    return "Password is empty. Please fill password of Power BI username in web.config";
+                }
+            }
+            else
             {
-                return "Password is empty. Please fill password of Power BI username in web.config";
+                if (string.IsNullOrWhiteSpace(ApplicationSecret))
+                {
+                    return "ApplicationSecret is empty. please register your application as Web app and fill appSecret in web.config.";
+                }
             }
 
             return null;
         }
+
+        private TokenCredentials DoAuthentication(out EmbedConfig result, string username = "", string roles = "")
+        {
+            result = new EmbedConfig { Username = username, Roles = roles, ErrorMessage = string.Empty };
+            var authenticationContext = new AuthenticationContext(AuthorityUrl);
+            AuthenticationResult authenticationResult = null;
+            if (AuthenticationType.Equals("AppOwnsData"))
+            {
+                // Authentication using master user credentials
+                var credential = new UserPasswordCredential(Username, Password);
+                authenticationResult = authenticationContext.AcquireTokenAsync(ResourceUrl, ApplicationId, credential).Result;
+            }
+            else
+            {
+                // Authentication using app credentials
+                ClientCredential clientCredential = new ClientCredential(ApplicationId, ApplicationSecret);
+                authenticationResult = authenticationContext.AcquireTokenAsync(ResourceUrl, clientCredential).Result;
+            }
+
+            if (authenticationResult == null)
+            {
+                result.ErrorMessage = "Authentication Failed.";
+                return new TokenCredentials(string.Empty);
+            }
+
+            return new TokenCredentials(authenticationResult.AccessToken, "Bearer");
+        }
     }
+
 }
