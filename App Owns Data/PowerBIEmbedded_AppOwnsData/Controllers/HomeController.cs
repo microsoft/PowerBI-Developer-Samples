@@ -304,7 +304,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
                 return "WorkspaceId must be a Guid object. Please select a workspace you own and fill its Id in web.config";
             }
 
-            if (AuthenticationType.Equals("AppOwnsData"))
+            if (AuthenticationType.Equals("MasterUser"))
             {
                 // Username must have a value.
                 if (string.IsNullOrWhiteSpace(Username))
@@ -334,7 +334,7 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             result = new EmbedConfig { Username = username, Roles = roles, ErrorMessage = string.Empty };
             var authenticationContext = new AuthenticationContext(AuthorityUrl);
             AuthenticationResult authenticationResult = null;
-            if (AuthenticationType.Equals("AppOwnsData"))
+            if (AuthenticationType.Equals("MasterUser"))
             {
                 // Authentication using master user credentials
                 var credential = new UserPasswordCredential(Username, Password);
