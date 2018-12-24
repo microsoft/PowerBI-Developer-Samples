@@ -289,7 +289,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
             }
 
             // Must fill tenant Id in authorityUrl
-            if (AuthorityUrl.Contains("Fill Tenant ID"))
+            if (AuthorityUrl.Contains("Fill_Tenant_ID"))
             {
                 return "Invalid AuthorityUrl. Please fill Tenant ID in AuthorityUrl under web.config";
             }
@@ -333,7 +333,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
             {
                 // Authentication using app credentials
                 var credential = new ClientCredential(ApplicationId, ApplicationSecret);
-                authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, clientCredential);
+                authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, credential);
             }
 
             return authenticationResult;
