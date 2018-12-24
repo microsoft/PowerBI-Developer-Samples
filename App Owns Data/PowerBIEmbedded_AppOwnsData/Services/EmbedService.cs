@@ -288,16 +288,32 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                 return "WorkspaceId must be a Guid object. Please select a workspace you own and fill its Id in web.config";
             }
 
-            // Username must have a value.
-            if (string.IsNullOrWhiteSpace(Username))
+            // Must fill tenant Id in authorityUrl
+            if (AuthorityUrl.Contains("Fill Tenant ID"))
             {
-                return "Username is empty. Please fill Power BI username in web.config";
+                return "Invalid AuthorityUrl. Please fill Tenant ID in AuthorityUrl under web.config";
             }
 
-            // Password must have a value.
-            if (string.IsNullOrWhiteSpace(Password))
+            if (AuthenticationType.Equals("MasterUser"))
             {
-                return "Password is empty. Please fill password of Power BI username in web.config";
+                // Username must have a value.
+                if (string.IsNullOrWhiteSpace(Username))
+                {
+                    return "Username is empty. Please fill Power BI username in web.config";
+                }
+
+                // Password must have a value.
+                if (string.IsNullOrWhiteSpace(Password))
+                {
+                    return "Password is empty. Please fill password of Power BI username in web.config";
+                }
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(ApplicationSecret))
+                {
+                    return "ApplicationSecret is empty. please register your application as Web app and fill appSecret in web.config.";
+                }
             }
 
             return null;
