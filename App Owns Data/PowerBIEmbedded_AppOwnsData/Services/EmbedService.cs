@@ -332,7 +332,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
             else
             {
                 // Authentication using app credentials
-                ClientCredential clientCredential = new ClientCredential(ApplicationId, ApplicationSecret);
+                var credential = new ClientCredential(ApplicationId, ApplicationSecret);
                 authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, clientCredential);
             }
 
@@ -348,9 +348,6 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                 m_embedConfig.ErrorMessage = error;
                 return false;
             }
-
-            // Create a user password cradentials.
-            var credential = new UserPasswordCredential(Username, Password);
 
             // Authenticate using created credentials
             AuthenticationResult authenticationResult = null;
@@ -369,10 +366,8 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                 m_embedConfig.ErrorMessage = "Authentication Failed.";
                 return false;
             }
-            var authenticationContext = new AuthenticationContext(AuthorityUrl);
 
             m_tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
-
             return true;
         }
     }
