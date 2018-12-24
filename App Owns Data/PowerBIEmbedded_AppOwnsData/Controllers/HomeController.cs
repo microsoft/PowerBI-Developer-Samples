@@ -35,27 +35,17 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 
         public async Task<ActionResult> EmbedReport(string username = null, string roles = null)
         {
-            var result = new EmbedConfig();
-            try
+            EmbedConfig result;
+
+            var tokenCredentials = GetTokenCredentials(out result);
+            if (tokenCredentials == null)
             {
-                result = new EmbedConfig { Username = username, Roles = roles };
-                var error = GetWebConfigErrors();
-                if (error != null)
-                {
-                    result.ErrorMessage = error;
-                    return View(result);
-                }
+                return View(result);
+            }
 
-                var authenticationResult = DoAuthentication();
+            result = new EmbedConfig { Username = username, Roles = roles };
 
-                if (authenticationResult == null)
-                {
-                    result.ErrorMessage = "Authentication Failed.";
-                    return View(result);
-                }
-
-                var tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
-
+            try { 
                 // Create a Power BI Client object. It will be used to call Power BI APIs.
                 using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
                 {
@@ -129,36 +119,22 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             {
                 result.ErrorMessage = string.Format("Status: {0} ({1})\r\nResponse: {2}\r\nRequestId: {3}", exc.Response.StatusCode, (int)exc.Response.StatusCode, exc.Response.Content, exc.Response.Headers["RequestId"].FirstOrDefault());
             }
-            catch (Exception exc)
-            {
-                result.ErrorMessage = exc.ToString();
-            }
 
             return View(result);
         }
 
         public async Task<ActionResult> EmbedDashboard()
         {
-            var result = new EmbedConfig();
+            EmbedConfig result;
+
+            var tokenCredentials = GetTokenCredentials(out result);
+            if (tokenCredentials == null)
+            {
+                return View(result);
+            }
+
             try
             {
-                var error = GetWebConfigErrors();
-                if (error != null)
-                {
-                    result.ErrorMessage = error;
-                    return View(result);
-                }
-
-                var authenticationResult = DoAuthentication();
-
-                if (authenticationResult == null)
-                {
-                    result.ErrorMessage = "Authentication Failed.";
-                    return View(result);
-                }
-
-                var tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
-
                 // Create a Power BI Client object. It will be used to call Power BI APIs.
                 using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
                 {
@@ -196,36 +172,23 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             {
                 result.ErrorMessage = string.Format("Status: {0} ({1})\r\nResponse: {2}\r\nRequestId: {3}", exc.Response.StatusCode, (int)exc.Response.StatusCode, exc.Response.Content, exc.Response.Headers["RequestId"].FirstOrDefault());
             }
-            catch (Exception exc)
-            {
-                result.ErrorMessage = exc.ToString();
-            }
 
             return View(result);
         }
 
         public async Task<ActionResult> EmbedTile()
         {
-            EmbedConfig result = new TileEmbedConfig();
+            EmbedConfig result;
+
+            var tokenCredentials = GetTokenCredentials(out result);
+            result = new TileEmbedConfig { ErrorMessage = result.ErrorMessage };
+            if (tokenCredentials == null)
+            {
+                return View(result);
+            }
+
             try
             {
-                var error = GetWebConfigErrors();
-                if (error != null)
-                {
-                    result.ErrorMessage = error;
-                    return View(result);
-                }
-
-                var authenticationResult = DoAuthentication();
-
-                if (authenticationResult == null)
-                {
-                    result.ErrorMessage = "Authentication Failed.";
-                    return View(result);
-                }
-
-                var tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
-
                 // Create a Power BI Client object. It will be used to call Power BI APIs.
                 using (var client = new PowerBIClient(new Uri(ApiUrl), tokenCredentials))
                 {
@@ -271,10 +234,6 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             catch (HttpOperationException exc)
             {
                 result.ErrorMessage = string.Format("Status: {0} ({1})\r\nResponse: {2}\r\nRequestId: {3}", exc.Response.StatusCode, (int)exc.Response.StatusCode, exc.Response.Content, exc.Response.Headers["RequestId"].FirstOrDefault());
-            }
-            catch (Exception exc)
-            {
-                result.ErrorMessage = exc.ToString();
             }
 
             return View(result);
@@ -360,6 +319,39 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             }
 
             return authenticationResult;
+        }
+
+        private TokenCredentials GetTokenCredentials(out EmbedConfig result)
+        {
+            result = new EmbedConfig();
+            TokenCredentials tokenCredentials = null;
+
+            var error = GetWebConfigErrors();
+            if (error != null)
+            {
+                result.ErrorMessage = error;
+                return tokenCredentials;
+            }
+
+            AuthenticationResult authenticationResult = null;
+            try
+            {
+                authenticationResult = DoAuthentication();
+            }
+            catch (AggregateException exc)
+            {
+                result.ErrorMessage = exc.InnerException.Message;
+                return tokenCredentials;
+            }
+
+            if (authenticationResult == null)
+            {
+                result.ErrorMessage = "Authentication Failed.";
+                return tokenCredentials;
+            }
+
+            tokenCredentials = new TokenCredentials(authenticationResult.AccessToken, "Bearer");
+            return tokenCredentials;
         }
     }
 
