@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -25,7 +26,13 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            var result = new IndexConfig();
+            var assembly = Assembly.GetExecutingAssembly().GetReferencedAssemblies().Where(n => n.Name.Equals("Microsoft.PowerBI.Api")).FirstOrDefault();
+            if (assembly != null)
+            {
+                result.DotNETSDK = assembly.Version.ToString(3);
+            }
+            return View(result);
         }
 
         public async Task<ActionResult> EmbedReport(string username, string roles)
