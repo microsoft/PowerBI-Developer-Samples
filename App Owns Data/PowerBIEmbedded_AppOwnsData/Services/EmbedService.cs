@@ -25,7 +25,6 @@ namespace PowerBIEmbedded_AppOwnsData.Services
         private static readonly string Username = ConfigurationManager.AppSettings["pbiUsername"];
         private static readonly string Password = ConfigurationManager.AppSettings["pbiPassword"];
 
-
         public EmbedConfig EmbedConfig
         {
             get { return m_embedConfig; }

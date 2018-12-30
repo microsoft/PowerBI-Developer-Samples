@@ -74,5 +74,4 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             }
         }
     }
-
 }
