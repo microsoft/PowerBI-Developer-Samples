@@ -85,7 +85,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                     }
                     else
                     {
-                        report = reports.Value.FirstOrDefault(r => r.Id == ReportId);
+                        report = reports.Value.FirstOrDefault(r => r.Id.Equals(ReportId, StringComparison.InvariantCultureIgnoreCase));
                     }
 
                     if (report == null)
