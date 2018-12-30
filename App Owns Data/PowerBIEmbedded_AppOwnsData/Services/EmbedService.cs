@@ -22,12 +22,8 @@ namespace PowerBIEmbedded_AppOwnsData.Services
         private static readonly string ApiUrl = ConfigurationManager.AppSettings["apiUrl"];
         private static readonly string WorkspaceId = ConfigurationManager.AppSettings["workspaceId"];
         private static readonly string ReportId = ConfigurationManager.AppSettings["reportId"];
-
-        private static readonly string AuthenticationType = ConfigurationManager.AppSettings["AuthenticationType"];
-        private static readonly NameValueCollection sectionConfig = ConfigurationManager.GetSection(AuthenticationType) as NameValueCollection;
-        private static readonly string ApplicationSecret = sectionConfig["applicationSecret"];
-        private static readonly string Username = sectionConfig["pbiUsername"];
-        private static readonly string Password = sectionConfig["pbiPassword"];
+        private static readonly string Username = ConfigurationManager.AppSettings["pbiUsername"];
+        private static readonly string Password = ConfigurationManager.AppSettings["pbiPassword"];
 
 
         public EmbedConfig EmbedConfig
@@ -294,26 +290,16 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                 return "Invalid AuthorityUrl. Please fill Tenant ID in AuthorityUrl under web.config";
             }
 
-            if (AuthenticationType.Equals("MasterUser"))
+            // Username must have a value.
+            if (string.IsNullOrWhiteSpace(Username))
             {
-                // Username must have a value.
-                if (string.IsNullOrWhiteSpace(Username))
-                {
-                    return "Username is empty. Please fill Power BI username in web.config";
-                }
-
-                // Password must have a value.
-                if (string.IsNullOrWhiteSpace(Password))
-                {
-                    return "Password is empty. Please fill password of Power BI username in web.config";
-                }
+                return "Username is empty. Please fill Power BI username in web.config";
             }
-            else
+
+            // Password must have a value.
+            if (string.IsNullOrWhiteSpace(Password))
             {
-                if (string.IsNullOrWhiteSpace(ApplicationSecret))
-                {
-                    return "ApplicationSecret is empty. please register your application as Web app and fill appSecret in web.config.";
-                }
+                return "Password is empty. Please fill password of Power BI username in web.config";
             }
 
             return null;
@@ -323,18 +309,10 @@ namespace PowerBIEmbedded_AppOwnsData.Services
         {
             var authenticationContext = new AuthenticationContext(AuthorityUrl);
             AuthenticationResult authenticationResult = null;
-            if (AuthenticationType.Equals("MasterUser"))
-            {
-                // Authentication using master user credentials
-                var credential = new UserPasswordCredential(Username, Password);
-                authenticationResult = authenticationContext.AcquireTokenAsync(ResourceUrl, ApplicationId, credential).Result;
-            }
-            else
-            {
-                // Authentication using app credentials
-                var credential = new ClientCredential(ApplicationId, ApplicationSecret);
-                authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, credential);
-            }
+
+            // Authentication using master user credentials
+            var credential = new UserPasswordCredential(Username, Password);
+            authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, ApplicationId, credential);
 
             return authenticationResult;
         }
