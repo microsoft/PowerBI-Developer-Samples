@@ -23,7 +23,7 @@ For security reasons, in real application, don't save the user and password in w
 Please follow these steps to run PowerBI.com Integrate samples:
 ## Step 1 - App Registration
 You need to register an application in
-https://app.powerbi.com/embedsetup
+https://app.powerbi.com/embedsetup/UserOwnsData
 
 ### Registration parameters per sample
 
