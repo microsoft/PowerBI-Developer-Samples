@@ -143,7 +143,7 @@ namespace PBIWebApp
             //      redirect_uri which is the uri that Azure AD will redirect back to after it authenticates
 
             //Redirect to Azure AD to get an authorization code
-            Response.Redirect(String.Format(Settings.Default.AADAuthorityUri + "?{0}", queryString));
+            Response.Redirect(String.Format(Settings.Default.AADAuthorityUri + "oauth2/authorize?{0}", queryString));
         }
 
         public string GetAccessToken(string authorizationCode, string applicationID, string applicationSecret, string redirectUri)
