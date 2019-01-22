@@ -184,9 +184,9 @@ namespace PBIWebApp
             ClientCredential cc = new ClientCredential(clientID, clientSecret);
 
             //Set token from authentication result
-            return AC.AcquireTokenByAuthorizationCode(
+            return AC.AcquireTokenByAuthorizationCodeAsync(
                 authorizationCode,
-                new Uri(redirectUri), cc).AccessToken;
+                new Uri(redirectUri), cc).Result.AccessToken;
         }
     }
 

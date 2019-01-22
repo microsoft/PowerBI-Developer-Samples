@@ -161,9 +161,9 @@ namespace PBIWebApp
             ClientCredential cc = new ClientCredential(applicationID, applicationSecret);
 
             //Set token from authentication result
-            return AC.AcquireTokenByAuthorizationCode(
+            return AC.AcquireTokenByAuthorizationCodeAsync(
                 authorizationCode,
-                new Uri(redirectUri), cc).AccessToken;
+                new Uri(redirectUri), cc).Result.AccessToken;
         }
 
         // Gets the report with the specified ID from the workspace. If report ID is emty it will retrieve the first report from the workspace.
