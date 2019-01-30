@@ -287,12 +287,6 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                 return "WorkspaceId must be a Guid object. Please select a workspace you own and fill its Id in web.config";
             }
 
-            // Must fill tenant Id in authorityUrl
-            if (AuthorityUrl.Contains("Fill_Tenant_ID"))
-            {
-                return "Invalid AuthorityUrl. Please fill Tenant ID in AuthorityUrl under web.config";
-            }
-
             if (AuthenticationType.Equals("MasterUser"))
             {
                 // Username must have a value.
@@ -312,6 +306,12 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                 if (string.IsNullOrWhiteSpace(ApplicationSecret))
                 {
                     return "ApplicationSecret is empty. please register your application as Web app and fill appSecret in web.config.";
+                }
+                
+                // Must fill tenant Id in authorityUrl
+                if (AuthorityUrl.Contains("Fill_Tenant_ID"))
+                {
+                    return "Invalid AuthorityUrl. Please fill Tenant ID in AuthorityUrl under web.config";
                 }
             }
 
