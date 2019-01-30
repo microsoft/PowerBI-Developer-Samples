@@ -26,6 +26,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
         private static readonly string AuthenticationType = ConfigurationManager.AppSettings["AuthenticationType"];
         private static readonly NameValueCollection sectionConfig = ConfigurationManager.GetSection(AuthenticationType) as NameValueCollection;
         private static readonly string ApplicationSecret = sectionConfig["applicationSecret"];
+        private static readonly string Tenant = sectionConfig["tenant"];
         private static readonly string Username = sectionConfig["pbiUsername"];
         private static readonly string Password = sectionConfig["pbiPassword"];
 
@@ -307,11 +308,11 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                 {
                     return "ApplicationSecret is empty. please register your application as Web app and fill appSecret in web.config.";
                 }
-                
-                // Must fill tenant Id in authorityUrl
-                if (AuthorityUrl.Contains("Fill_Tenant_ID"))
+
+                // Must fill tenant Id
+                if (string.IsNullOrWhiteSpace(Tenant))
                 {
-                    return "Invalid AuthorityUrl. Please fill Tenant ID in AuthorityUrl under web.config";
+                    return "Invalid Tenant. Please fill Tenant ID in Tenant under web.config";
                 }
             }
 
@@ -320,16 +321,21 @@ namespace PowerBIEmbedded_AppOwnsData.Services
 
         private async Task<AuthenticationResult> DoAuthentication()
         {
-            var authenticationContext = new AuthenticationContext(AuthorityUrl);
             AuthenticationResult authenticationResult = null;
             if (AuthenticationType.Equals("MasterUser"))
             {
+                var authenticationContext = new AuthenticationContext(AuthorityUrl);
+
                 // Authentication using master user credentials
                 var credential = new UserPasswordCredential(Username, Password);
                 authenticationResult = authenticationContext.AcquireTokenAsync(ResourceUrl, ApplicationId, credential).Result;
             }
             else
             {
+                // For app only authentication, we need the specific tenant id in the authority url
+                var tenantSpecificURL = AuthorityUrl.Replace("common", Tenant);
+                var authenticationContext = new AuthenticationContext(tenantSpecificURL);
+
                 // Authentication using app credentials
                 var credential = new ClientCredential(ApplicationId, ApplicationSecret);
                 authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, credential);

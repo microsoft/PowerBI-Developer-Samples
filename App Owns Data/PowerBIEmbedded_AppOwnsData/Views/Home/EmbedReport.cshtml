@@ -49,7 +49,7 @@
             </div>
         }
 </div>
-<div id="reportContainer"></div>
+<div id="embedContainer"></div>
 
 <div class="infoBox">
     Code is in files:<br />
@@ -90,7 +90,7 @@
     };
 
     // Get a reference to the embedded report HTML element
-    var reportContainer = $('#reportContainer')[0];
+    var reportContainer = $('#embedContainer')[0];
 
     if ("@Model.Username" != "") {
         $("#RLS").prop('checked', true);
