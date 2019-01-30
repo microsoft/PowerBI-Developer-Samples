@@ -34,7 +34,7 @@ namespace PBIWebApp
                     (Properties.Settings.Default.ClientID,
                     Properties.Settings.Default.ClientSecret);
 
-                AuthenticationResult AR = AC.AcquireTokenByAuthorizationCode(code, new Uri(redirectUri), cc);
+                AuthenticationResult AR = AC.AcquireTokenByAuthorizationCodeAsync(code, new Uri(redirectUri), cc).Result;
 
                 //Set Session "authResult" index string to the AuthenticationResult
                 Session[_Default.authResultString] = AR;
