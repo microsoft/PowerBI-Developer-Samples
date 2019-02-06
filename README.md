@@ -7,15 +7,14 @@ To embed reports, dashboards and tiles, the following details must be specified 
 
 | Detail        | Description                                                                                           |
 |---------------|-------------------------------------------------------------------------------------------------------|
-| clientId      | Id of the AAD application registered as a NATIVE app.                                                 |
-| groupId       | The group or workspace Id in Power BI containing the reports, dashboards and tiles you want to embed. |
+| applicationId | Id of the AAD application registered as a NATIVE app.                                                 |
+| workspaceId   | The group or workspace Id in Power BI containing the reports, dashboards and tiles you want to embed. |
 | pbiUsername   | A Power BI username (e.g. Email). The user must be an admin of the group above.                       |
 | pbiPassword   | The password of the Power BI user above.                                                              |
 
 ## Important
 
 For security reasons, in a real application, the user and password should not be saved in web.config. Instead, consider securing credentials with an application such as KeyVault.
-
 
 # User Owns Data samples
 
@@ -24,7 +23,7 @@ Follow these steps to run PowerBI.com Integrate samples:
 
 ## Step 1 - App Registration
 
-Register an application to be used to call Power BI APIs using the [App Registration Tool](https://dev.powerbi.com/apps)
+Register an application to be used to call Power BI APIs using the [Embed Setup Tool](https://app.powerbi.com/embedsetup/UserOwnsData)
 
 ### Registration parameters per sample
 

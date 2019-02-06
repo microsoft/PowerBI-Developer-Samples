@@ -143,7 +143,7 @@ namespace PBIWebApp
             //      redirect_uri which is the uri that Azure AD will redirect back to after it authenticates
 
             //Redirect to Azure AD to get an authorization code
-            Response.Redirect(String.Format(Settings.Default.AADAuthorityUri + "?{0}", queryString));
+            Response.Redirect(String.Format(Settings.Default.AADAuthorityUri + "oauth2/authorize?{0}", queryString));
         }
 
         public string GetAccessToken(string authorizationCode, string applicationID, string applicationSecret, string redirectUri)
@@ -161,9 +161,9 @@ namespace PBIWebApp
             ClientCredential cc = new ClientCredential(applicationID, applicationSecret);
 
             //Set token from authentication result
-            return AC.AcquireTokenByAuthorizationCode(
+            return AC.AcquireTokenByAuthorizationCodeAsync(
                 authorizationCode,
-                new Uri(redirectUri), cc).AccessToken;
+                new Uri(redirectUri), cc).Result.AccessToken;
         }
 
         // Gets the report with the specified ID from the workspace. If report ID is emty it will retrieve the first report from the workspace.
