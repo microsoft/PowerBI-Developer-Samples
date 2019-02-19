@@ -1,1 +1,2 @@
 language: csharp
+solution: App Owns Data/PowerBIEmbedded_AppOwnsData.sln
