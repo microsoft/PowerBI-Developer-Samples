@@ -1,3 +1,5 @@
+[![Build Status](https://powerbi.visualstudio.com/Embedded/_apis/build/status/Microsoft.PowerBI-Developer-Samples?branchName=master)](https://powerbi.visualstudio.com/Embedded/_build/latest?definitionId=2793&branchName=master)
+
 # App Owns Data samples
 
 Read this documentation to prepare your environment
