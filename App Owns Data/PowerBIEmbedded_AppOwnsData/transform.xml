@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+    
+  <appSettings>
+    <add xdt:Transform="Replace" xdt:Locator="Match(key)" key="webpages:Enabled" value="true" />
+	<add xdt:Transform="Replace" xdt:Locator="Match(key)" key="applicationId" value="856aa9a8-b647-4722-80b8-c970d68b6d7d"/>
+    <add xdt:Transform="Replace" xdt:Locator="Match(key)" key="workspaceId" value="6af20fde-df7a-4f74-b295-47e5b533d496"/>
+    <add xdt:Transform="Replace" xdt:Locator="Match(key)" key="reportId" value="d5047883-47df-47b8-9aea-f69d904cfa74"/>
+  </appSettings>
+   <MasterUser>
+    <add xdt:Transform="Replace" xdt:Locator="Match(key)" key="pbiUsername" value=%user%/>
+    <add xdt:Transform="Replace" xdt:Locator="Match(key)" key="pbiPassword" value=%password%"/>
+  </MasterUser>
+</configuration> 
