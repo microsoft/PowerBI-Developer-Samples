@@ -1,0 +1,58 @@
+﻿@page
+@model IndexModel
+@Html.HiddenFor(m => m.EmbedUrl, new { id = "embedUrl" })
+@Html.HiddenFor(m => m.AccessToken, new { id = "accessToken" })
+@Html.HiddenFor(m => m.ReportId, new { id = "reportId" })
+
+
+<script type="text/javascript">
+
+    //This code is for sample purposes only.
+
+    //Configure IFrame for the Report after you have an Access Token.
+    window.onload = function () {
+        var accessToken = document.getElementById('accessToken').value;
+        var embedUrl = document.getElementById('embedUrl').value;
+        var reportId = document.getElementById('reportId').value;
+
+        // Embed configuration used to describe the what and how to embed.
+        // This object is used when calling powerbi.embed.
+        // This also includes settings and options such as filters.
+        // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+        var config = {
+            type: 'report',
+            accessToken: accessToken,
+            embedUrl: embedUrl,
+            id: reportId,
+            settings: {
+                filterPaneEnabled: true,
+                navContentPaneEnabled: true
+            }
+        };
+
+        // Grab the reference to the div HTML element that will host the report.
+        var reportContainer = document.getElementById('reportContainer');
+
+        // Embed the report and display it within the div container.
+        var report = powerbi.embed(reportContainer, config);
+    };
+</script>
+
+<head>
+    <script type="text/javascript" src="scripts/powerbi.js"></script>
+    <meta charset='utf-8' />
+    <title>Power BI Embed API Sample</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+</head>
+<body>
+    <h1>Power BI Embed Report</h1>
+
+    <div>
+        <br />
+        Embedded Report
+        <br />
+        <div class="reportContainer iframeContainer active" style="width: 900px; height: 500px" id="reportContainer"></div>
+    </div>
+
+</body>
+
