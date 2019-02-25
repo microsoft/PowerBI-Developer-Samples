@@ -25,7 +25,7 @@ namespace SeleniumTests
         }
 
         [TestMethod]
-        [TestCategory("Chrome")]
+        [TestCategory("IE")]
         public void ReportTitleText()
         {
             driver.Navigate().GoToUrl(appURL + "/");
@@ -55,7 +55,7 @@ namespace SeleniumTests
         {
             appURL = "http://localhost:42734/Home/EmbedReport";
 
-            string browser = "Chrome";
+            string browser = "IE";
             switch (browser)
             {
                 case "Chrome":
@@ -65,7 +65,7 @@ namespace SeleniumTests
                     driver = new FirefoxDriver();
                     break;
                 case "IE":
-                    driver = new InternetExplorerDriver();
+                    driver = new InternetExplorerDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
                     break;
                 default:
                     driver = new ChromeDriver();
