@@ -35,6 +35,35 @@
 
         // Embed the report and display it within the div container.
         var report = powerbi.embed(reportContainer, config);
+
+
+        // Report.on will add an event handler which prints to Log window.
+        report.on("loaded", function () {
+            var logView = document.getElementById('logView');
+            logView.contentWindow.document.write("<html><body>Loaded<br/></body></html>");
+
+            // Report.off removes a given event handler if it exists.
+            report.off("loaded");
+        });
+
+        // Report.on will add an event handler which prints to Log window.
+        report.on("rendered", function () {
+            var logView = document.getElementById('logView');
+            logView.contentWindow.document.write("<html><body>Rendered<br/></body></html>");
+
+            // Report.off removes a given event handler if it exists.
+            report.off("rendered");
+        });
+
+        // Report.on will add an event handler which prints to Log window.
+        report.on("error", function (event) {
+            var logView = document.getElementById('logView');
+            logView.contentWindow.document.write("<html><body>Error<br/></body></html>");
+            logView.contentWindow.document.write("<html><body>" + event.detail + "<br/></body></html>");
+
+            // Report.off removes a given event handler if it exists.
+            report.off("error");
+        });
     };
 </script>
 
@@ -44,15 +73,33 @@
     <title>Power BI Embed API Sample</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 </head>
+
 <body>
-    <h1>Power BI Embed Report</h1>
+    <h1>
+        Power BI Embed Report
+        <br />
+    </h1>
+
+    <div>
+        This is a basic sample for EmbedReport call.
+        <br />
+        The application will embed the first report from the first returned group in your Power BI account.
+        <br />
+        If you wish to embed a report from specific group, please copy the group's ID to appsettings.json file.
+        <br />
+    </div>
 
     <div>
         <br />
-        Embedded Report
+        <b>Embedded Report</b>
         <br />
         <div class="reportContainer iframeContainer active" style="width: 900px; height: 500px" id="reportContainer"></div>
     </div>
 
+    <div>
+        <br />
+        <b>Log View</b>
+        <br />
+        <iframe style="width: 900px;" id="logView"></iframe>
+    </div>
 </body>
-
