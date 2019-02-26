@@ -3,4 +3,7 @@
   <RunConfiguration>
     <TargetPlatform>x64</TargetPlatform>
   </RunConfiguration>
+  <TestRunParameters>
+    <Parameter name="webAppUrl" value="http://localhost:42734" />
+  </TestRunParameters>
 </RunSettings>

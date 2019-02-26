@@ -53,7 +53,7 @@ namespace SeleniumTests
         [TestInitialize()]
         public void SetupTest()
         {
-            appURL = "http://localhost:42734/Home/EmbedReport";
+            appURL = TestContext.Properties["webAppUrl"] + "/Home/EmbedReport";
 
             string browser = "IE";
             switch (browser)
