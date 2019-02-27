@@ -5,9 +5,7 @@ VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerBIEmbedded_AppOwnsData", "PowerBIEmbedded_AppOwnsData\PowerBIEmbedded_AppOwnsData.csproj", "{272D6B69-0644-477B-AAB8-51C71E54E208}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTestProject1\UnitTests.csproj", "{B102E081-28AB-44E4-A60C-A0C489CF504E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject2", "UnitTestProject2\UnitTestProject2.csproj", "{CF03C144-4089-414D-B666-1707448CCE96}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanityTests", "SanityTests\SanityTests.csproj", "{CF03C144-4089-414D-B666-1707448CCE96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +17,6 @@ Global
 		{272D6B69-0644-477B-AAB8-51C71E54E208}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{272D6B69-0644-477B-AAB8-51C71E54E208}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{272D6B69-0644-477B-AAB8-51C71E54E208}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B102E081-28AB-44E4-A60C-A0C489CF504E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B102E081-28AB-44E4-A60C-A0C489CF504E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B102E081-28AB-44E4-A60C-A0C489CF504E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B102E081-28AB-44E4-A60C-A0C489CF504E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF03C144-4089-414D-B666-1707448CCE96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF03C144-4089-414D-B666-1707448CCE96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF03C144-4089-414D-B666-1707448CCE96}.Release|Any CPU.ActiveCfg = Release|Any CPU
