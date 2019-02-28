@@ -98,7 +98,7 @@ namespace PowerBI_API_NetCore_Sample.Pages
 
         private void GetAuthorizationCode()
         {
-            var @params = new NameValueCollection
+            var queryParams = new NameValueCollection
             {
                 // Azure AD will return an authorization code. 
                 {"response_type", "code"},
@@ -118,7 +118,7 @@ namespace PowerBI_API_NetCore_Sample.Pages
 
             // Create sign-in query string
             var queryString = HttpUtility.ParseQueryString(string.Empty);
-            queryString.Add(@params);
+            queryString.Add(queryParams);
 
             // Redirect to Azure AD Authority
             //  Authority Uri is an Azure resource that takes a application id and application secret to get an Access token
