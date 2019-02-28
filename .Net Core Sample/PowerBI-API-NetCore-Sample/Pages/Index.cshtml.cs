@@ -56,8 +56,8 @@ namespace PowerBI_API_NetCore_Sample.Pages
                 }
                 else
                 {
-                    //error in settings
-                    Response.Redirect(String.Format("Error/?message={0}", errorMessage));
+                    // error in settings
+                    Response.Redirect(String.Format("Error?message={0}", errorMessage));
                 }
             }
         }
@@ -67,11 +67,10 @@ namespace PowerBI_API_NetCore_Sample.Pages
             using (var client = new PowerBIClient(new Uri(AppSettings.ApiUrl), new TokenCredentials(AccessToken, "Bearer")))
             {
                 string groupId;
-                Report report;
 
                 if (string.IsNullOrEmpty(AppSettings.GroupId))
                 {
-                    //getting first group in GetGroups results
+                    // getting first group in GetGroups results
                     groupId = (await client.Groups.GetGroupsAsync()).Value.FirstOrDefault().Id;
                 }
                 else
@@ -79,8 +78,8 @@ namespace PowerBI_API_NetCore_Sample.Pages
                     groupId = AppSettings.GroupId;
                 }
 
-                //getting first report in selected group from GetReports results
-                report = (await client.Reports.GetReportsInGroupAsync(groupId)).Value.FirstOrDefault();
+                // getting first report in selected group from GetReports results
+                Report report = (await client.Reports.GetReportsInGroupAsync(groupId)).Value.FirstOrDefault();
 
                 if (report != null)
                 {
@@ -89,10 +88,10 @@ namespace PowerBI_API_NetCore_Sample.Pages
                 }
                 else
                 {
-                    //no reports available for user in chosen group
-                    //need to upload a report or insert a specific group id in appsettings.json
+                    // no reports available for user in chosen group
+                    // need to upload a report or insert a specific group id in appsettings.json
                     string message = "No report available in workspace with ID " + groupId + ", Please fill a group id with existing report in appsettings.json file";
-                    Response.Redirect(String.Format("Error/?message={0}", message));
+                    Response.Redirect(String.Format("Error?message={0}", message));
                 }
             }
         }
@@ -101,27 +100,27 @@ namespace PowerBI_API_NetCore_Sample.Pages
         {
             var @params = new NameValueCollection
             {
-                //Azure AD will return an authorization code. 
+                // Azure AD will return an authorization code. 
                 {"response_type", "code"},
 
-                //Client ID is used by the application to identify themselves to the users that they are requesting permissions from. 
-                //You get the client id when you register your Azure app.
+                // Client ID is used by the application to identify themselves to the users that they are requesting permissions from. 
+                // You get the client id when you register your Azure app.
                 {"client_id", AppSettings.ApplicationId},
 
-                //Resource uri to the Power BI resource to be authorized
-                //The resource uri is hard-coded for sample purposes
+                // Resource uri to the Power BI resource to be authorized
+                // The resource uri is hard-coded for sample purposes
                 {"resource", AppSettings.ResourceUrl},
 
-                //After app authenticates, Azure AD will redirect back to the web app. In this sample, Azure AD redirects back
-                //to Default page (Default.aspx).
+                // After app authenticates, Azure AD will redirect back to the web app. In this sample, Azure AD redirects back
+                // to Default page (Default.aspx).
                 { "redirect_uri", AppSettings.RedirectUrl}
             };
 
-            //Create sign-in query string
+            // Create sign-in query string
             var queryString = HttpUtility.ParseQueryString(string.Empty);
             queryString.Add(@params);
 
-            //Redirect to Azure AD Authority
+            // Redirect to Azure AD Authority
             //  Authority Uri is an Azure resource that takes a application id and application secret to get an Access token
             //  QueryString contains 
             //      response_type of "code"
@@ -129,13 +128,13 @@ namespace PowerBI_API_NetCore_Sample.Pages
             //      resource which is the Power BI API resource to be authorized
             //      redirect_uri which is the uri that Azure AD will redirect back to after it authenticates
 
-            //Redirect to Azure AD to get an authorization code
-            Response.Redirect(String.Format(AppSettings.AuthorityUri + " ?{0}", queryString));
+            // Redirect to Azure AD to get an authorization code
+            Response.Redirect(String.Format("{0} ?{1}", AppSettings.AuthorityUri, queryString));
         }
 
         private async Task GetAccessToken(string authCode)
         {
-            using (HttpClient httpClient = new HttpClient())
+            using (var httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
@@ -153,13 +152,17 @@ namespace PowerBI_API_NetCore_Sample.Pages
                         var result = JObject.Parse(await response.Content.ReadAsStringAsync());
                         _accessToken = result.Value<string>("access_token");
                     }
+                    else
+                    {
+                        Response.Redirect(String.Format("Error?message=Can't get access token"));
+                    }
                 }
             }
         }
 
         private string VerifySettings()
         {
-            string message = string.Empty;
+            string message = null;
             Guid result;
 
             // Application Id must have a value.
@@ -190,7 +193,6 @@ namespace PowerBI_API_NetCore_Sample.Pages
                 string.IsNullOrWhiteSpace(AppSettings.RedirectUrl) || string.IsNullOrWhiteSpace(AppSettings.ResourceUrl) || string.IsNullOrWhiteSpace(AppSettings.LoggingRequestUrl))
             {
                 message = "One or more of the urls required are missing. Please check appsettings.json file. for more info check sample instructions in https://github.com/Microsoft/PowerBI-Developer-Samples";
-                //Response.Redirect(String.Format("Error/?message={0}", message));
             }
 
             return message;

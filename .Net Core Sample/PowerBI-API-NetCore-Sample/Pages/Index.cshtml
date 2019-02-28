@@ -1,19 +1,15 @@
 ﻿@page
 @model IndexModel
-@Html.HiddenFor(m => m.EmbedUrl, new { id = "embedUrl" })
-@Html.HiddenFor(m => m.AccessToken, new { id = "accessToken" })
-@Html.HiddenFor(m => m.ReportId, new { id = "reportId" })
-
 
 <script type="text/javascript">
 
-    //This code is for sample purposes only.
+    // This code is for sample purposes only.
 
-    //Configure IFrame for the Report after you have an Access Token.
+    // Configure IFrame for the Report after you have an Access Token.
     window.onload = function () {
-        var accessToken = document.getElementById('accessToken').value;
-        var embedUrl = document.getElementById('embedUrl').value;
-        var reportId = document.getElementById('reportId').value;
+        var accessToken = '@Model.AccessToken';
+        var embedUrl = '@Model.EmbedUrl';
+        var reportId = '@Model.ReportId';
 
         // Embed configuration used to describe the what and how to embed.
         // This object is used when calling powerbi.embed.
