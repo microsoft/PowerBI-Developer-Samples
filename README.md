@@ -29,18 +29,7 @@ Register an application to be used to call Power BI APIs using the [Embed Setup 
 
 ### Registration parameters per sample
 
-#### integrate-dashboard-web-app
 Redirect URL  - http://localhost:13526/Redirect
-
-Home Page URL - http://localhost:13526/
-
-#### integrate-report-web-app
-Redirect URL  - http://localhost:13526/
-
-Home Page URL - http://localhost:13526/
-
-#### integrate-tile-web-app
-Redirect URL  - http://localhost:13526/
 
 Home Page URL - http://localhost:13526/
 
@@ -50,7 +39,7 @@ Registration Example:
 
 ## Step 2 - Change Cloud.config
 
-Copy Client Id and Client secret to web.config file
+Copy Client Id and Client secret to Cloud.config file
 
 ![regexample](https://cloud.githubusercontent.com/assets/23071967/23340740/48d4f640-fc44-11e6-8f31-dd273d26a61e.png)
 
