@@ -105,6 +105,10 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="css\master.css" />
+    <Content Include="EmbedTile.aspx" />
+    <Content Include="Redirect.aspx" />
+    <Content Include="EmbedDashboard.aspx" />
+    <Content Include="EmbedReport.aspx" />
     <Content Include="Global.asax" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>
@@ -118,11 +122,11 @@
     <Content Include="Default.aspx" />
     <Content Include="scripts\powerbi.js" />
     <Content Include="scripts\powerbi.min.js" />
-    <Content Include="Site.Master" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="scripts\powerbi.js.map" />
+    <Content Include="Site.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -136,6 +140,34 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="EmbedTile.aspx.cs">
+      <DependentUpon>EmbedTile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EmbedTile.aspx.designer.cs">
+      <DependentUpon>EmbedTile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Redirect.aspx.cs">
+      <DependentUpon>Redirect.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Redirect.aspx.designer.cs">
+      <DependentUpon>Redirect.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EmbedDashboard.aspx.cs">
+      <DependentUpon>EmbedDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EmbedDashboard.aspx.designer.cs">
+      <DependentUpon>EmbedDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EmbedReport.aspx.cs">
+      <DependentUpon>EmbedReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EmbedReport.aspx.designer.cs">
+      <DependentUpon>EmbedReport.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -160,6 +192,7 @@
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

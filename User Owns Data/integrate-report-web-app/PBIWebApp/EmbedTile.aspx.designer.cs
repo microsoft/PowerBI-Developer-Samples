@@ -10,33 +10,33 @@
 namespace PBIWebApp {
     
     
-    public partial class _Default {
+    public partial class EmbedTile {
         
         /// <summary>
-        /// embedReport control.
+        /// accessToken control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button embedReport;
+        protected global::System.Web.UI.WebControls.HiddenField accessToken;
         
         /// <summary>
-        /// embedDashboard control.
+        /// getTileButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button embedDashboard;
+        protected global::System.Web.UI.WebControls.Button getTileButton;
         
         /// <summary>
-        /// embedTile control.
+        /// tileEmbedUrl control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button embedTile;
+        protected global::System.Web.UI.WebControls.TextBox tileEmbedUrl;
     }
 }
