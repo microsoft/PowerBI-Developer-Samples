@@ -1,0 +1,17 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="PBIWebApp.SiteMaster" %>
+
+<!DOCTYPE html>
+<title>Power BI - Web sample</title>
+<html lang="en">
+<body>
+    <form runat="server">
+        <div>
+            <asp:ContentPlaceHolder ID="Stylesheets" runat="server">
+                <link rel="stylesheet" href="/css/master.css" type="text/css" />
+            </asp:ContentPlaceHolder>
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html>
