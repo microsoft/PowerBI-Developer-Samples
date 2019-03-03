@@ -32,11 +32,11 @@
         // Embed the report and display it within the div container.
         var report = powerbi.embed(reportContainer, config);
 
-
         // Report.on will add an event handler which prints to Log window.
         report.on("loaded", function () {
             var logView = document.getElementById('logView');
-            logView.contentWindow.document.write("<html><body>Loaded<br/></body></html>");
+            //logView.contentWindow.document.write("<html><body>Loaded<br/></body></html>");
+            logView.value += "Loaded\n";
 
             // Report.off removes a given event handler if it exists.
             report.off("loaded");
@@ -45,7 +45,7 @@
         // Report.on will add an event handler which prints to Log window.
         report.on("rendered", function () {
             var logView = document.getElementById('logView');
-            logView.contentWindow.document.write("<html><body>Rendered<br/></body></html>");
+            logView.value += "Rendered\n";
 
             // Report.off removes a given event handler if it exists.
             report.off("rendered");
@@ -54,11 +54,8 @@
         // Report.on will add an event handler which prints to Log window.
         report.on("error", function (event) {
             var logView = document.getElementById('logView');
-            logView.contentWindow.document.write("<html><body>Error<br/></body></html>");
-            logView.contentWindow.document.write("<html><body>" + event.detail + "<br/></body></html>");
-
-            // Report.off removes a given event handler if it exists.
-            report.off("error");
+            logView.value += "Error\n";
+            logView.value += (event.detail + "\n");
         });
     };
 </script>
@@ -97,6 +94,6 @@
         <br />
         <b>Log View</b>
         <br />
-        <iframe style="width: 900px;" id="logView"></iframe>
+        <textArea style="width: 900px; height: 200px" id="logView"></textArea>
     </div>
 </body>

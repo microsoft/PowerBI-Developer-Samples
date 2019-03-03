@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerBI-API-NetCore-Sample", "PowerBI-API-NetCore-Sample\PowerBI-API-NetCore-Sample.csproj", "{ABE78D39-2D63-40F8-9BD1-F4761D6FE6A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCore-Sample", "NetCore-Sample\Embed-Sample.csproj", "{ABE78D39-2D63-40F8-9BD1-F4761D6FE6A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

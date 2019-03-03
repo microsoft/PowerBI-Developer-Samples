@@ -57,7 +57,7 @@ namespace PowerBI_API_NetCore_Sample.Pages
                 else
                 {
                     // error in settings
-                    Response.Redirect(String.Format("Error?message={0}", errorMessage));
+                    Response.Redirect($"Error?message={errorMessage}");
                 }
             }
         }
@@ -71,11 +71,18 @@ namespace PowerBI_API_NetCore_Sample.Pages
                 if (string.IsNullOrEmpty(AppSettings.GroupId))
                 {
                     // getting first group in GetGroups results
-                    groupId = (await client.Groups.GetGroupsAsync()).Value.FirstOrDefault().Id;
+                    groupId = (await client.Groups.GetGroupsAsync()).Value.FirstOrDefault()?.Id;
                 }
                 else
                 {
                     groupId = AppSettings.GroupId;
+                }
+
+                if (string.IsNullOrEmpty(groupId))
+                {
+                    // no groups available for user
+                    string message = "No group available, need to create a group and upload a report";
+                    Response.Redirect($"Error?message={message}");
                 }
 
                 // getting first report in selected group from GetReports results
@@ -91,7 +98,7 @@ namespace PowerBI_API_NetCore_Sample.Pages
                     // no reports available for user in chosen group
                     // need to upload a report or insert a specific group id in appsettings.json
                     string message = "No report available in workspace with ID " + groupId + ", Please fill a group id with existing report in appsettings.json file";
-                    Response.Redirect(String.Format("Error?message={0}", message));
+                    Response.Redirect($"Error?message={message}");
                 }
             }
         }
@@ -129,7 +136,7 @@ namespace PowerBI_API_NetCore_Sample.Pages
             //      redirect_uri which is the uri that Azure AD will redirect back to after it authenticates
 
             // Redirect to Azure AD to get an authorization code
-            Response.Redirect(String.Format("{0} ?{1}", AppSettings.AuthorityUri, queryString));
+            Response.Redirect($"{AppSettings.AuthorityUri} ?{queryString}");
         }
 
         private async Task GetAccessToken(string authCode)
@@ -154,7 +161,7 @@ namespace PowerBI_API_NetCore_Sample.Pages
                     }
                     else
                     {
-                        Response.Redirect(String.Format("Error?message=Can't get access token"));
+                        Response.Redirect("Error?message=Can't get access token");
                     }
                 }
             }
