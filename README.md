@@ -68,6 +68,21 @@ Find line:
 
 [Power BI Ideas](https://ideas.powerbi.com)
 
+# API Sample - .Net Core 2.0
+A basic UserOwnsData based sample for embed report api.
+
+You can either register a native app to run the sample or use the default public app already in the solution.
+
+If you decide to use your registered app, use the following parameters:
+
+Redirect URL  - http://localhost:21638
+
+Home Page URL - http://localhost:21638
+
+Change the ApplicationId in the the appsettings.json file.
+
+Build and Run the sample (if you are using the default app just build and run).
+
 # API Sample - NodeJS
 Contains several API calls samples for App Owns Data.
 
