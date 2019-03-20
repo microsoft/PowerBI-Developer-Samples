@@ -4,7 +4,7 @@ languages:
   - csharp
   - js
 products:
-  - .net frameworke
+  - .net framework
   - .net core
   - nodejs
 ---
