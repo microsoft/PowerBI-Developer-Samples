@@ -89,7 +89,7 @@ Redirect URL  - http://localhost:21638
 
 Home Page URL - http://localhost:21638
 
-Change the ApplicationId in the the appsettings.json file.
+Change the ApplicationId and GroupId in the the appsettings.json file.
 
 Build and Run the sample (if you are using the default app just build and run).
 
