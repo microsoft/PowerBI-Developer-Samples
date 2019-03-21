@@ -1,12 +1,11 @@
 ---
-topic: PowerBI API Samples
+topic: sample
 languages:
   - csharp
   - js
 products:
-  - .net framework
-  - .net core
-  - nodejs
+  - dotnet-core
+  - power-bi
 ---
 
 [![Build Status](https://powerbi.visualstudio.com/Embedded/_apis/build/status/Devolper-Samples-Azure%20Web%20App%20for%20ASP.NET-CI?branchName=master)](https://powerbi.visualstudio.com/Embedded/_build/latest?definitionId=2824&branchName=master)
