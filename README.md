@@ -12,7 +12,7 @@ products:
 
 ## Power BI API Code Samples
 
-In this repository you can find sample apps expaining how to use Power BI API for developers.
+In this repository you can find sample apps explaining how to use Power BI API for developers.
 
 Read this documentation to prepare your environment
 https://docs.microsoft.com/en-us/power-bi/developer/embedding-content
