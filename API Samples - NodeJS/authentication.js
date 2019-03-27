@@ -31,6 +31,7 @@ async function getAuthenticationToken() {
 
     var context = new AuthenticationContext(authorityUrl);
 
+    // use user credentials and appId to get an aad token
     let promise = () => { return new Promise(
         (resolve, reject) => {
             context.acquireTokenWithUsernamePassword(config.resourceUrl, config.username, config.password, config.appId , function(err, tokenResponse) {
