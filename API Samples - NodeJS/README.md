@@ -1,8 +1,6 @@
 # API Sample - NodeJS
 Contains several API calls samples for App Owns Data.
 
-After registering an app (as described under "App Owns Data Sample"),
+After registering an app, Fill config parameters under config.json.
 
-Fill config parameters under config.json.
-
-Use one of the methods in app-owns-data-sample.js to make the coresponding api call.
+Use one of the methods in **powerbi-api-calls-sample.js** to make the coresponding api call.
