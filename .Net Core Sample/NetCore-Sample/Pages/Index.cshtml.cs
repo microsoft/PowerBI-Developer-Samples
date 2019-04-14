@@ -66,7 +66,7 @@ namespace PowerBI_API_NetCore_Sample.Pages
         {
             using (var client = new PowerBIClient(new Uri(AppSettings.ApiUrl), new TokenCredentials(AccessToken, "Bearer")))
             {
-                string groupId;
+                Guid? groupId = null;
 
                 if (string.IsNullOrEmpty(AppSettings.GroupId))
                 {
@@ -75,10 +75,18 @@ namespace PowerBI_API_NetCore_Sample.Pages
                 }
                 else
                 {
-                    groupId = AppSettings.GroupId;
+                    if (Guid.TryParse(AppSettings.GroupId, out Guid result))
+                    {
+                        groupId = result;
+                    }
+                    else
+                    {
+                        string message = "GroupId in application settings is not a valid Guid";
+                        Response.Redirect($"Error?message={message}");
+                    }
                 }
 
-                if (string.IsNullOrEmpty(groupId))
+                if (!groupId.HasValue)
                 {
                     // no groups available for user
                     string message = "No group available, need to create a group and upload a report";
@@ -86,12 +94,12 @@ namespace PowerBI_API_NetCore_Sample.Pages
                 }
 
                 // getting first report in selected group from GetReports results
-                Report report = (await client.Reports.GetReportsInGroupAsync(groupId)).Value.FirstOrDefault();
+                Report report = (await client.Reports.GetReportsInGroupAsync(groupId.Value)).Value.FirstOrDefault();
 
                 if (report != null)
                 {
                     EmbedUrl = report.EmbedUrl;
-                    ReportId = report.Id;
+                    ReportId = report.Id.ToString();
                 }
                 else
                 {

@@ -60,8 +60,35 @@ namespace PBIWebApp
         // If reportId or WorkspaceId are empty, it will get the first user's report.
         protected void GetReport()
         {
-            var WorkspaceId = Settings.Default.WorkspaceId;
-            var reportId = Settings.Default.ReportId;
+            Guid result;
+            Guid? workspaceId = null;
+            if (!string.IsNullOrEmpty(Settings.Default.WorkspaceId))
+            {
+                if (Guid.TryParse(Settings.Default.WorkspaceId, out result))
+                {
+                    workspaceId = result;
+                }
+                else
+                {
+                    errorLabel.Text = "WorkspaceId must be a Guid object.";
+                    return;
+                }
+            }
+
+            Guid? reportId = null;
+            if (!string.IsNullOrEmpty(Settings.Default.ReportId))
+            {
+                if (Guid.TryParse(Settings.Default.ReportId, out result))
+                {
+                    reportId = result;
+                }
+                else
+                {
+                    errorLabel.Text = "ReportId must be a Guid object.";
+                    return;
+                }
+            }
+
             var powerBiApiUrl = Settings.Default.PowerBiApiUrl;
 
             using (var client = new PowerBIClient(new Uri(powerBiApiUrl), new TokenCredentials(accessToken.Value, "Bearer")))
@@ -69,13 +96,13 @@ namespace PBIWebApp
                 Report report;
 
                 // Settings' workspace ID is not empty
-                if (!string.IsNullOrEmpty(WorkspaceId))
+                if (workspaceId.HasValue)
                 {
                     // Gets a report from the workspace.
-                    report = GetReportFromWorkspace(client, WorkspaceId, reportId);
+                    report = GetReportFromWorkspace(client, workspaceId.Value, reportId);
                 }
                 // Settings' report and workspace Ids are empty, retrieves the user's first report.
-                else if (string.IsNullOrEmpty(reportId))
+                else if (!reportId.HasValue)
                 {
                     report = client.Reports.GetReports().Value.FirstOrDefault();
                     AppendErrorIfReportNull(report, "No reports found. Please specify the target report ID and workspace in the applications settings.");
@@ -90,14 +117,14 @@ namespace PBIWebApp
                 if (report != null)
                 {
                     txtEmbedUrl.Text = report.EmbedUrl;
-                    txtReportId.Text = report.Id;
+                    txtReportId.Text = report.Id.ToString();
                     txtReportName.Text = report.Name;
                 }
             }
         }
 
         // Gets the report with the specified ID from the workspace. If report ID is emty it will retrieve the first report from the workspace.
-        private Report GetReportFromWorkspace(PowerBIClient client, string WorkspaceId, string reportId)
+        private Report GetReportFromWorkspace(PowerBIClient client, Guid WorkspaceId, Guid? reportId)
         {
             // Gets the workspace by WorkspaceId.
             var workspaces = client.Groups.GetGroups();
@@ -111,19 +138,18 @@ namespace PBIWebApp
             }
 
             Report report = null;
-            if (string.IsNullOrEmpty(reportId))
+            if (!reportId.HasValue)
             {
                 // Get the first report in the workspace.
                 report = client.Reports.GetReportsInGroup(sourceWorkspace.Id).Value.FirstOrDefault();
                 AppendErrorIfReportNull(report, "Workspace doesn't contain any reports.");
             }
-
             else
             {
                 try
                 {
                     // retrieve a report by the workspace ID and report ID.
-                    report = client.Reports.GetReportInGroup(WorkspaceId, reportId);
+                    report = client.Reports.GetReportInGroup(WorkspaceId, reportId.Value);
                 }
 
                 catch(HttpOperationException)

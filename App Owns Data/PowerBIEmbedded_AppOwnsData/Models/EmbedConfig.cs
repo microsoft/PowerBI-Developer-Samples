@@ -5,7 +5,7 @@ namespace PowerBIEmbedded_AppOwnsData.Models
 {
     public class EmbedConfig
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         public string EmbedUrl { get; set; }
 
@@ -15,7 +15,7 @@ namespace PowerBIEmbedded_AppOwnsData.Models
         {
             get
             {
-                var minutesToExpiration = EmbedToken.Expiration.Value - DateTime.UtcNow;
+                var minutesToExpiration = EmbedToken.Expiration - DateTime.UtcNow;
                 return (int) minutesToExpiration.TotalMinutes;
             }
         }
