@@ -2,7 +2,7 @@
     font-family: 'Segoe UI Web Light', 'Segoe UI Light', 'Segoe WP Light', 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif
 }
 
-#reportContainer {
+#embedContainer {
     height: 600px;
     width: 100%;
     max-width: 1000px;

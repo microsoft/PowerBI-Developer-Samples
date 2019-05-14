@@ -1,0 +1,10 @@
+{
+    "authorityUrl" : "https://login.microsoftonline.com/common/",
+    "resourceUrl" : "https://analysis.windows.net/powerbi/api",
+    "apiUrl" : "https://api.powerbi.com/",
+    "appId" : "",
+    "workspaceId" : "",
+    "reportId" : "",
+    "username" : "",
+    "password" : ""
+}
