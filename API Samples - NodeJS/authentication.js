@@ -29,17 +29,33 @@ async function getAuthenticationToken() {
     var cas = JSON.parse(casjson);
     https.globalAgent.options.ca = cas;
 
-    var context = new AuthenticationContext(authorityUrl);
-
+    var promise = undefined;
     // use user credentials and appId to get an aad token
-    let promise = () => { return new Promise(
-        (resolve, reject) => {
-            context.acquireTokenWithUsernamePassword(config.resourceUrl, config.username, config.password, config.appId , function(err, tokenResponse) {
-                if (err) reject(err);
-                resolve(tokenResponse);
-            })
-        });
-    };
+    if (config.authenticationType == "MasterUser")
+    {
+        var context = new AuthenticationContext(authorityUrl);
+        promise = () => { return new Promise(
+            (resolve, reject) => {
+                context.acquireTokenWithUsernamePassword(config.resourceUrl, config.username, config.password, config.appId , function(err, tokenResponse) {
+                    if (err) reject(err);
+                    resolve(tokenResponse);
+                })
+            });
+        };
+    }
+    else if (config.authenticationType == "ServicePrincipal")
+    {
+        authorityUrl = authorityUrl.replace('common', config.tenantId);
+        var context = new AuthenticationContext(authorityUrl);
+        promise = () => { return new Promise(
+            (resolve, reject) => {
+                context.acquireTokenWithClientCredentials(config.resourceUrl, config.appId, config.applicationSecret, function(err, tokenResponse) {
+                    if (err) reject(err);
+                    resolve(tokenResponse);
+                })
+            });
+        };
+    }
 
     var res;
     await promise().then(
