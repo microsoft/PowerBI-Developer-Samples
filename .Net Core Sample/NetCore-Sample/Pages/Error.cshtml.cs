@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace PowerBI_API_NetCore_Sample.Pages
@@ -14,12 +11,12 @@ namespace PowerBI_API_NetCore_Sample.Pages
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
-        public void OnGet()
+        public void OnGet([FromQuery]string message)
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-            if (PageContext.HttpContext.Request.Query.ContainsKey("message"))
+            if (!string.IsNullOrEmpty(message))
             {
-                Message = Request.Query["message"][0];
+                Message = message;
             }
         }
     }

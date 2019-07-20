@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.PowerBI.Api.V2;
 using Microsoft.PowerBI.Api.V2.Models;
@@ -22,13 +23,13 @@ namespace PowerBI_API_NetCore_Sample.Pages
             AppSettings = appSettings;
         }
 
-        public async Task OnGet()
+        public async Task<IActionResult> OnGet()
         {
             AccessToken = await HttpContext.GetTokenAsync("access_token");
-            await EmbedReport();
+            return await EmbedReport();
         }
 
-        private async Task EmbedReport()
+        private async Task<IActionResult> EmbedReport()
         {
             using (var client = new PowerBIClient(new Uri(AppSettings.ApiUrl), new TokenCredentials(AccessToken, "Bearer")))
             {
@@ -48,7 +49,7 @@ namespace PowerBI_API_NetCore_Sample.Pages
                 {
                     // no groups available for user
                     string message = "No group available, need to create a group and upload a report";
-                    Response.Redirect($"Error?message={message}");
+                    return Error(message);
                 }
 
                 // getting first report in selected group from GetReports results
@@ -64,9 +65,14 @@ namespace PowerBI_API_NetCore_Sample.Pages
                     // no reports available for user in chosen group
                     // need to upload a report or insert a specific group id in appsettings.json
                     string message = "No report available in workspace with ID " + groupId + ", Please fill a group id with existing report in appsettings.json file";
-                    Response.Redirect($"Error?message={message}");
+                    return Error(message);
                 }
             }
+
+            // Everything went fine, display the report
+            return Page();
+
+            IActionResult Error(string errorMessage) => RedirectToPage("Error", new { message = errorMessage });
         }
     }
 }
