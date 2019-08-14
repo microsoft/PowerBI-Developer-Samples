@@ -10,6 +10,14 @@ function validateConfig(){
     var guid = require('guid');
     var config = require(__dirname + '/config.json');
 
+    if(!config.authenticationType){
+        return "authenticationType is empty. please choose PowerUser or ServicePrincipal in config.json";
+    }
+
+    if(config.authenticationType != 'MasterUser' && config.authenticationType != 'ServicePrincipal'){
+        return "authenticationType is wrong. please choose PowerUser or ServicePrincipal in config.json";
+    }
+
     if(!config.appId){
         return "ApplicationId is empty. please register your application as Native app in https://dev.powerbi.com/apps and fill client Id in config.json";
     }
@@ -30,12 +38,29 @@ function validateConfig(){
         return "AuthorityUrl is empty. Please fill valid AuthorityUrl under config.json";
     }
 
-    if (!config.username || !config.username.trim()){
-        return "Username is empty. Please fill Power BI username in config.json";
-    }
+    if(config.authenticationType === 'MasterUser')
+    {
+        if(!config.username || !config.username.trim()){
+            return "Username is empty. Please fill Power BI username in config.json";
+        }
 
-    if (!config.password || !config.password.trim()){
-        return "Password is empty. Please fill password of Power BI username in config.json";
+        if(!config.password || !config.password.trim()){
+            return "Password is empty. Please fill password of Power BI username in config.json";
+        }
+    }
+    else if(config.authenticationType === 'ServicePrincipal')
+    {
+        if (!config.applicationSecret || !config.applicationSecret.trim()){
+            return "applicationSecret is empty. Please fill Power BI ServicePrincipal applicationSecret in config.json";
+        }
+
+        if(!config.tenantId){
+            return "tenantId is empty. Please select a group you own and fill its Id in config.json";
+        }
+
+        if(!guid.isGuid(config.tenantId)){
+            return "tenantId must be a Guid object. Please select a workspace you own and fill its Id in config.json";
+        }
     }
 }
 
