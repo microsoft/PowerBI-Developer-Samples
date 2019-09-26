@@ -18,7 +18,7 @@ namespace PBIWebApp
     * In addition, the sample uses a single web page so that all code is in one location. However, you could refactor the code into
     * your own production model.
     */
-    public partial class EmbedTile : Page
+    public partial class EmbedTile : System.Web.UI.Page
     {
         string baseUri = Properties.Settings.Default.PowerBiDataset;
         public AuthenticationResult authResult { get; set; }
