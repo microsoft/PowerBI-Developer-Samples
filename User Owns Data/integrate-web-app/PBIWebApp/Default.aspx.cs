@@ -17,7 +17,7 @@ namespace PBIWebApp
     * In addition, the sample uses a single web page so that all code is in one location. However, you could refactor the code into
     * your own production model.
     */
-    public partial class _Default : Page
+    public partial class _Default : System.Web.UI.Page
     {
         string baseUri = Settings.Default.PowerBiDataset;
 
