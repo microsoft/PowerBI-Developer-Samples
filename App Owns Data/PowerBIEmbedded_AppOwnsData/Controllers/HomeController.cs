@@ -47,6 +47,19 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             }
         }
 
+        public async Task<ActionResult> EmbedQandA(string username, string roles)
+        {
+            var embedResult = await m_embedService.EmbedQandA();
+            if (embedResult)
+            {
+                return View(m_embedService.EmbedConfig);
+            }
+            else
+            {
+                return View(m_embedService.EmbedConfig);
+            }
+        }
+
         public async Task<ActionResult> EmbedDashboard()
         {
             var embedResult = await m_embedService.EmbedDashboard();

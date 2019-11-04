@@ -203,6 +203,7 @@
     </Content>
     <None Include="Project_Readme.html" />
     <Content Include="scripts\powerbi.js.map" />
+    <Content Include="Views\Home\EmbedQandA.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

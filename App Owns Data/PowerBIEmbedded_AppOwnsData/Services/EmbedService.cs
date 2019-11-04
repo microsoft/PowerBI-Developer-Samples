@@ -139,6 +139,57 @@ namespace PowerBIEmbedded_AppOwnsData.Services
 
             return true;
         }
+        
+        public async Task<bool> EmbedQandA()
+        {
+
+            // Get token credentials for user
+            var getCredentialsResult = await GetTokenCredentials();
+            if (!getCredentialsResult)
+            {
+                // The error message set in GetTokenCredentials
+                return false;
+            }
+
+            try
+            {
+                // Create a Power BI Client object. It will be used to call Power BI APIs.
+                using (var client = new PowerBIClient(new Uri(ApiUrl), m_tokenCredentials))
+                {
+                    // Get a datasetid
+                    var datasets = await client.Datasets.GetDatasetsInGroupAsync(WorkspaceId);
+                    var datasetId = datasets.Value.FirstOrDefault().Id;
+
+                    GenerateTokenRequest generateTokenRequestParameters;
+                    // This is how you create embed token with effective identities
+                   
+                    // Generate Embed Token for reports without effective identities.
+                    generateTokenRequestParameters = new GenerateTokenRequest(accessLevel: "view");
+
+                    var tokenResponse = await client.Datasets.GenerateTokenInGroupAsync(WorkspaceId, datasetId, generateTokenRequestParameters);
+
+                    if (tokenResponse == null)
+                    {
+                        m_embedConfig.ErrorMessage = "Failed to generate embed token.";
+                        return false;
+                    }
+
+                    // Generate Embed Configuration.
+                    m_embedConfig.EmbedToken = tokenResponse;
+                    //m_embedConfig.EmbedUrl = "https://app.powerbi.com/qnaEmbed";
+                    m_embedConfig.EmbedUrl = string.Format("https://app.powerbi.com/qnaEmbed?groupId={0}", datasetId);
+                    m_embedConfig.Id = datasetId.ToString();
+                }
+            }
+            catch (HttpOperationException exc)
+            {
+                m_embedConfig.ErrorMessage = string.Format("Status: {0} ({1})\r\nResponse: {2}\r\nRequestId: {3}", exc.Response.StatusCode, (int)exc.Response.StatusCode, exc.Response.Content, exc.Response.Headers["RequestId"].FirstOrDefault());
+                return false;
+            }
+
+            return true;
+        }
+        
 
         public async Task<bool> EmbedDashboard()
         {
