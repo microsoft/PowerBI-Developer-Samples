@@ -94,9 +94,13 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                         return false;
                     }
 
-                    var datasets = await client.Datasets.GetDatasetByIdInGroupAsync(WorkspaceId, report.DatasetId);
-                    m_embedConfig.IsEffectiveIdentityRequired = datasets.IsEffectiveIdentityRequired;
-                    m_embedConfig.IsEffectiveIdentityRolesRequired = datasets.IsEffectiveIdentityRolesRequired;
+                    if (report.DatasetId != null)
+                    {
+                        var datasets = await client.Datasets.GetDatasetByIdInGroupAsync(WorkspaceId, report.DatasetId);
+                        m_embedConfig.IsEffectiveIdentityRequired = datasets.IsEffectiveIdentityRequired;
+                        m_embedConfig.IsEffectiveIdentityRolesRequired = datasets.IsEffectiveIdentityRolesRequired;
+                    }
+
                     GenerateTokenRequest generateTokenRequestParameters;
                     // This is how you create embed token with effective identities
                     if (!string.IsNullOrWhiteSpace(username))
