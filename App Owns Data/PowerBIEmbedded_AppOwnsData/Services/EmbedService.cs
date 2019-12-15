@@ -53,7 +53,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
 
         public async Task<bool> EmbedReport(string username, string roles)
         {
-            
+
             // Get token credentials for user
             var getCredentialsResult = await GetTokenCredentials();
             if (!getCredentialsResult)
@@ -103,7 +103,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
 
                     GenerateTokenRequest generateTokenRequestParameters;
                     // This is how you create embed token with effective identities
-                    if (!string.IsNullOrWhiteSpace(username))
+                    if (!string.IsNullOrWhiteSpace(username) && report.DatasetId != null)
                     {
                         var rls = new EffectiveIdentity(username, new List<string> { report.DatasetId });
                         if (!string.IsNullOrWhiteSpace(roles))
