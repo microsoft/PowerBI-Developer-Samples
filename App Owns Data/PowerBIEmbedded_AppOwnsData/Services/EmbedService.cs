@@ -68,7 +68,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                 using (var client = new PowerBIClient(new Uri(ApiUrl), m_tokenCredentials))
                 {
                     // Get a list of reports.
-                    var reports = await client.Reports.GetReportsInGroupAsync(WorkspaceId);
+                    var reports = await client.Reports.GetReportsInGroupAsync(new Guid(WorkspaceId));
 
                     // No reports retrieved for the given workspace.
                     if (reports.Value.Count() == 0)
@@ -85,7 +85,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                     }
                     else
                     {
-                        report = reports.Value.FirstOrDefault(r => r.Id.Equals(ReportId, StringComparison.InvariantCultureIgnoreCase));
+                        report = reports.Value.FirstOrDefault(r => r.Id.ToString().Equals(ReportId, StringComparison.InvariantCultureIgnoreCase));
                     }
 
                     if (report == null)
@@ -94,7 +94,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                         return false;
                     }
 
-                    var datasets = await client.Datasets.GetDatasetByIdInGroupAsync(WorkspaceId, report.DatasetId);
+                    var datasets = await client.Datasets.GetDatasetInGroupAsync(new Guid(WorkspaceId), report.DatasetId);
                     m_embedConfig.IsEffectiveIdentityRequired = datasets.IsEffectiveIdentityRequired;
                     m_embedConfig.IsEffectiveIdentityRolesRequired = datasets.IsEffectiveIdentityRolesRequired;
                     GenerateTokenRequest generateTokenRequestParameters;
@@ -117,8 +117,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                         generateTokenRequestParameters = new GenerateTokenRequest(accessLevel: "view");
                     }
 
-                    var tokenResponse = await client.Reports.GenerateTokenInGroupAsync(WorkspaceId, report.Id, generateTokenRequestParameters);
-
+                    var tokenResponse = await client.Reports.GenerateTokenInGroupAsync(new Guid(WorkspaceId), report.Id, generateTokenRequestParameters);
                     if (tokenResponse == null)
                     {
                         m_embedConfig.ErrorMessage = "Failed to generate embed token.";
@@ -128,7 +127,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                     // Generate Embed Configuration.
                     m_embedConfig.EmbedToken = tokenResponse;
                     m_embedConfig.EmbedUrl = report.EmbedUrl;
-                    m_embedConfig.Id = report.Id;
+                    m_embedConfig.Id = report.Id.ToString();
                 }
             }
             catch (HttpOperationException exc)
@@ -156,7 +155,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                 using (var client = new PowerBIClient(new Uri(ApiUrl), m_tokenCredentials))
                 {
                     // Get a list of dashboards.
-                    var dashboards = await client.Dashboards.GetDashboardsInGroupAsync(WorkspaceId);
+                    var dashboards = await client.Dashboards.GetDashboardsInGroupAsync(new Guid(WorkspaceId));
 
                     // Get the first report in the workspace.
                     var dashboard = dashboards.Value.FirstOrDefault();
@@ -169,7 +168,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
 
                     // Generate Embed Token.
                     var generateTokenRequestParameters = new GenerateTokenRequest(accessLevel: "view");
-                    var tokenResponse = await client.Dashboards.GenerateTokenInGroupAsync(WorkspaceId, dashboard.Id, generateTokenRequestParameters);
+                    var tokenResponse = await client.Dashboards.GenerateTokenInGroupAsync(new Guid(WorkspaceId), dashboard.Id, generateTokenRequestParameters);
 
                     if (tokenResponse == null)
                     {
@@ -182,7 +181,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                     {
                         EmbedToken = tokenResponse,
                         EmbedUrl = dashboard.EmbedUrl,
-                        Id = dashboard.Id
+                        Id = dashboard.Id.ToString()
                     };
 
                     return true;
@@ -212,7 +211,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                 using (var client = new PowerBIClient(new Uri(ApiUrl), m_tokenCredentials))
                 {
                     // Get a list of dashboards.
-                    var dashboards = await client.Dashboards.GetDashboardsInGroupAsync(WorkspaceId);
+                    var dashboards = await client.Dashboards.GetDashboardsInGroupAsync(new Guid(WorkspaceId));
 
                     // Get the first report in the workspace.
                     var dashboard = dashboards.Value.FirstOrDefault();
@@ -223,14 +222,14 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                         return false;
                     }
 
-                    var tiles = await client.Dashboards.GetTilesInGroupAsync(WorkspaceId, dashboard.Id);
+                    var tiles = await client.Dashboards.GetTilesInGroupAsync(new Guid(WorkspaceId), dashboard.Id);
 
                     // Get the first tile in the workspace.
                     var tile = tiles.Value.FirstOrDefault();
 
                     // Generate Embed Token for a tile.
                     var generateTokenRequestParameters = new GenerateTokenRequest(accessLevel: "view");
-                    var tokenResponse = await client.Tiles.GenerateTokenInGroupAsync(WorkspaceId, dashboard.Id, tile.Id, generateTokenRequestParameters);
+                    var tokenResponse = await client.Tiles.GenerateTokenInGroupAsync(new Guid(WorkspaceId), dashboard.Id, tile.Id, generateTokenRequestParameters);
 
                     if (tokenResponse == null)
                     {
@@ -243,8 +242,8 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                     {
                         EmbedToken = tokenResponse,
                         EmbedUrl = tile.EmbedUrl,
-                        Id = tile.Id,
-                        dashboardId = dashboard.Id
+                        Id = tile.Id.ToString(),
+                        dashboardId = dashboard.Id.ToString()
                     };
 
                     return true;

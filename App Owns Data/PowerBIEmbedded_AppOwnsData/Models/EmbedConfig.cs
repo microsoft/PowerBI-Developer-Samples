@@ -15,7 +15,7 @@ namespace PowerBIEmbedded_AppOwnsData.Models
         {
             get
             {
-                var minutesToExpiration = EmbedToken.Expiration.Value - DateTime.UtcNow;
+                var minutesToExpiration = EmbedToken.Expiration - DateTime.UtcNow;
                 return (int) minutesToExpiration.TotalMinutes;
             }
         }
