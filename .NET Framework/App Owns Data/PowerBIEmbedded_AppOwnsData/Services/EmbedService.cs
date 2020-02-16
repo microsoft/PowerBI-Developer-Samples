@@ -62,7 +62,6 @@ namespace PowerBIEmbedded_AppOwnsData.Services
 
         public async Task<bool> EmbedReport(string username, string roles)
         {
-
             // Get token credentials for user
             var getCredentialsResult = await GetTokenCredentials();
             if (!getCredentialsResult)
