@@ -5,8 +5,8 @@ using System.Web.UI;
 using System.Collections.Specialized;
 using PBIWebApp.Properties;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Microsoft.PowerBI.Api.V2;
-using Microsoft.PowerBI.Api.V2.Models;
+using Microsoft.PowerBI.Api;
+using Microsoft.PowerBI.Api.Models;
 using Microsoft.Rest;
 
 namespace PBIWebApp
