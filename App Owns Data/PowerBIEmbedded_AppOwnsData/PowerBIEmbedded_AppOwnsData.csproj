@@ -53,9 +53,8 @@
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.4.5.0\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.PowerBI.Api, Version=3.7.1.20005, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.PowerBI.Api.3.7.1-beta\lib\netstandard2.0\Microsoft.PowerBI.Api.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.PowerBI.Api, Version=3.9.0.20044, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.PowerBI.Api.3.9.0\lib\netstandard2.0\Microsoft.PowerBI.Api.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Rest.ClientRuntime.2.3.18\lib\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>

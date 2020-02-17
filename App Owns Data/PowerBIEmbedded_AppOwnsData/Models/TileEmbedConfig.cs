@@ -1,4 +1,4 @@
-using Microsoft.PowerBI.Api.V2.Models;
+using Microsoft.PowerBI.Api.Models;
 using System;
 
 namespace PowerBIEmbedded_AppOwnsData.Models
