@@ -1,22 +1,22 @@
-var auth = require(__dirname +'/authentication.js');
-var config = require(__dirname + '/config.json');
+var auth = require(__dirname + '/authentication.js');
 var utils = require(__dirname + '/utils.js');
+var config = require('./config.js');
 
-async function getReport () {
+exports.getReport = async (req, res, next) => {
     // validate configuration info
-    res = utils.validateConfig();
-    if(res){
-       console.log("error: "  + res);
-       return;
+    validationResults = utils.validateConfig();
+    if (validationResults) {
+        console.log("error: " + validationResults);
+        return;
     }
 
     // get aad token to use for sending api requests
     tokenResponse = await auth.getAuthenticationToken();
-    if(('' + tokenResponse).indexOf('Error') > -1){
+    if (('' + tokenResponse).indexOf('Error') > -1) {
         console.log('' + tokenResponse);
         return;
     }
-    
+
     var token = tokenResponse.accessToken;
     console.log("Returned accessToken: " + token);
 
@@ -26,75 +26,85 @@ async function getReport () {
     // get the requested report from the requested api workspace.
     // if report not specified - returns the first report in the workspace.
     // the request's results will be printed to console.
-    return await utils.sendGetReportRequestAsync(requestParams.url, requestParams.options);
-}
+    const reportResponse = await utils.sendGetReportRequestAsync(requestParams.url, requestParams.options);
+    return res.json(reportResponse)
+};
 
-async function generateEmbedToken(){
+exports.generateEmbedToken = async (req, res, next) => {
     // validate configuration info
-    res = utils.validateConfig();
-    if(res){
-       console.log("error: "  + res);
-       return;
+    validationResults = utils.validateConfig();
+    if (validationResults) {
+        console.log("error: " + validationResults);
+        return;
     }
 
     // get aad token to use for sending api requests
     tokenResponse = await auth.getAuthenticationToken();
-    if(('' + tokenResponse).indexOf('Error') > -1){
+    if (('' + tokenResponse).indexOf('Error') > -1) {
         console.log('' + tokenResponse);
         return;
     }
-    
+
     var token = tokenResponse.accessToken;
     var authHeader = utils.getAuthHeader(token);
 
     // get report id to use in GenerateEmbedToken requestd
     var reportId;
-    if(!config.reportId){
+    if (!config.params.reportId) {
         console.log("Getting default report from workspace for generating embed token...")
 
         var reportParams = utils.createGetReportRequestParams(token)
         reportResp = await utils.sendGetReportRequestAsync(reportParams.url, reportParams.options);
-        if(!reportResp) {
+        if (!reportResp) {
             return;
         }
         reportId = reportResp.id
-    } else{
-        reportId = config.reportId;
-    } 
+    } else {
+        reportId = config.params.reportId;
+    }
 
     var headers = {
         'Authorization': authHeader,
-        'Content-Type': 'application/json',        
+        'Content-Type': 'application/json',
     };
 
     var options = {
-            headers: headers,
-            method: 'POST',
-            body: JSON.stringify({"accessLevel": "View"})
+        headers: headers,
+        method: 'POST',
+        body: JSON.stringify({ "accessLevel": "View" })
     };
 
-    var url = config.apiUrl + 'v1.0/myorg/groups/' + config.workspaceId + '/reports/' + reportId + '/GenerateToken';
+    var url = config.params.apiUrl + 'v1.0/myorg/groups/' + config.params.workspaceId + '/reports/' + reportId + '/GenerateToken';
 
     // generate powerbi embed token to use for embed report.
     // the returned token will be printed to console.
-    return await utils.sendGenerateEmbedTokenRequestAsync(url, options);
+    const embedTokenResponse = await utils.sendGenerateEmbedTokenRequestAsync(url, options);
+    return res.json(embedTokenResponse);
 }
 
-async function generateEmbedTokenWithRls(username, roles){
+exports.generateEmbedTokenWithRls = async (req, res, next) => {
+    if (!req.query.username) {
+        return res.json("username must be suplied as url query paramters")
+    }
+
+    if (!req.query.roles) {
+        return res.json("roles must be suplied as url query paramters")
+    }
+
     // validate configuration info
-    res = utils.validateConfig();
-    if(res){
-       console.log("error: "  + res);
-       return;
+    validationResults = utils.validateConfig();
+    if (validationResults) {
+        console.log("error: " + validationResults);
+        return;
     }
 
     // get aad token to use for sending api requests
     tokenResponse = await auth.getAuthenticationToken();
-    if(('' + tokenResponse).indexOf('Error') > -1){
+    if (('' + tokenResponse).indexOf('Error') > -1) {
         console.log('' + tokenResponse);
         return;
     }
-    
+
     var token = tokenResponse.accessToken;
     var authHeader = utils.getAuthHeader(token);
 
@@ -107,7 +117,7 @@ async function generateEmbedTokenWithRls(username, roles){
     var datasetId = reportResp.datasetId;
     var datasetResp = await utils.sendGetDatasetRequestAsync(token, datasetId);
 
-    if(!datasetResp.isEffectiveIdentityRequired){
+    if (!datasetResp.isEffectiveIdentityRequired) {
         console.log("error: the given dataset doesn't support rls");
         return;
     }
@@ -115,9 +125,9 @@ async function generateEmbedTokenWithRls(username, roles){
     // creating effective identity
     var identities = [
         {
-            'username' : username,
-            'roles' : roles,
-            'datasets' : [datasetId]
+            'username': req.query.username,
+            'roles': req.query.roles,
+            'datasets': [datasetId]
         }
     ];
 
@@ -128,18 +138,20 @@ async function generateEmbedTokenWithRls(username, roles){
 
     var headers = {
         'Authorization': authHeader,
-        'Content-Type': 'application/json',       
+        'Content-Type': 'application/json',
     };
 
     var options = {
-            headers: headers,
-            method: 'POST',
-            body: JSON.stringify(body)
+        headers: headers,
+        method: 'POST',
+        body: JSON.stringify(body)
     };
 
-    var url = config.apiUrl + 'v1.0/myorg/groups/' + config.workspaceId + '/reports/' + reportId + '/GenerateToken';
+    var url = config.params.apiUrl + 'v1.0/myorg/groups/' + config.params.workspaceId + '/reports/' + reportId + '/GenerateToken';
 
     // generate powerbi embed token, with the specified effective identity, to use for embed report.
     // the returned token will be printed to console.
-    return await utils.sendGenerateEmbedTokenRequestAsync(url, options);
+    const embedTokenResponse = await utils.sendGenerateEmbedTokenRequestAsync(url, options);
+    return res.json(embedTokenResponse);
+
 }
