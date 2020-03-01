@@ -2,11 +2,11 @@ var auth = require(__dirname +'/authentication.js');
 var config = require(__dirname + '/config.json');
 var utils = require(__dirname + '/utils.js');
 
-async function getReport () {
+exports.getReport = async function (req, res, next) {
     // validate configuration info
-    res = utils.validateConfig();
-    if(res){
-       console.log("error: "  + res);
+    var validationResults = utils.validateConfig();
+    if(validationResults){
+       console.log("error: "  + validationResults);
        return;
     }
 
@@ -26,14 +26,15 @@ async function getReport () {
     // get the requested report from the requested api workspace.
     // if report not specified - returns the first report in the workspace.
     // the request's results will be printed to console.
-    return await utils.sendGetReportRequestAsync(requestParams.url, requestParams.options);
+    const reportResponse = await utils.sendGetReportRequestAsync(requestParams.url, requestParams.options);
+    return res.json(reportResponse);
 }
 
-async function generateEmbedToken(){
+exports.generateEmbedToken = async function (req, res, next) {
     // validate configuration info
-    res = utils.validateConfig();
-    if(res){
-       console.log("error: "  + res);
+    var validationResults = utils.validateConfig();
+    if(validationResults){
+       console.log("error: "  + validationResults);
        return;
     }
 
@@ -77,14 +78,23 @@ async function generateEmbedToken(){
 
     // generate powerbi embed token to use for embed report.
     // the returned token will be printed to console.
-    return await utils.sendGenerateEmbedTokenRequestAsync(url, options);
+    const embedTokenResponse = await utils.sendGenerateEmbedTokenRequestAsync(url, options);
+    return res.json(embedTokenResponse);
 }
 
-async function generateEmbedTokenWithRls(username, roles){
+exports.generateEmbedTokenWithRls = async function (req, res, next) {
+    if (!req.query.username) {
+        return res.json("username must be suplied as url query paramters")
+    }
+
+    if (!req.query.roles) {
+        return res.json("roles must be suplied as url query paramters")
+    }
+
     // validate configuration info
-    res = utils.validateConfig();
-    if(res){
-       console.log("error: "  + res);
+    var validationResults = utils.validateConfig();
+    if(validationResults){
+       console.log("error: "  + validationResults);
        return;
     }
 
@@ -115,8 +125,8 @@ async function generateEmbedTokenWithRls(username, roles){
     // creating effective identity
     var identities = [
         {
-            'username' : username,
-            'roles' : roles,
+            'username' : req.query.username,
+            'roles' : req.query.roles,
             'datasets' : [datasetId]
         }
     ];
@@ -141,5 +151,6 @@ async function generateEmbedTokenWithRls(username, roles){
 
     // generate powerbi embed token, with the specified effective identity, to use for embed report.
     // the returned token will be printed to console.
-    return await utils.sendGenerateEmbedTokenRequestAsync(url, options);
+    const embedTokenResponse = await utils.sendGenerateEmbedTokenRequestAsync(url, options);
+    return res.json(embedTokenResponse);
 }
