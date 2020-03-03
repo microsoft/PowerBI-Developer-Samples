@@ -6,7 +6,7 @@
 
 1. .NET Core 3.1
 
-2. IDE (Recommended is Visual Studio Code)
+2. IDE (Recommended is Visual Studio Code and Visual Studio)
 
   
 
@@ -22,15 +22,9 @@
 
 ### Run the application on localhost
 
-1. Open Visual Studio Code.
+1. Open the app in IDE.
 
-2. Open _.NET Core/App Owns Data/DotNetCorePaas_ folder.
-
-3. Open integrated terminal and type the below command to start the application.<br>
-
-   `dotnet run`
-
-4. Open __localhost:5001__ in browser or follow the direction in the output log.
+2. Build and run the application.
 
 
 
