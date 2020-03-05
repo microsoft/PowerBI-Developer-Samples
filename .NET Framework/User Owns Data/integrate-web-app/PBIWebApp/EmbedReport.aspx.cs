@@ -5,8 +5,8 @@ using System.Web.UI;
 using System.Collections.Specialized;
 using PBIWebApp.Properties;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Microsoft.PowerBI.Api.V2;
-using Microsoft.PowerBI.Api.V2.Models;
+using Microsoft.PowerBI.Api;
+using Microsoft.PowerBI.Api.Models;
 using Microsoft.Rest;
 
 namespace PBIWebApp
@@ -17,7 +17,7 @@ namespace PBIWebApp
     * In addition, the sample uses a single web page so that all code is in one location. However, you could refactor the code into
     * your own production model.
     */
-    public partial class EmbedReport : Page
+    public partial class EmbedReport : System.Web.UI.Page
     {
         string baseUri = Settings.Default.PowerBiDataset;
 
@@ -60,8 +60,10 @@ namespace PBIWebApp
         // If reportId or WorkspaceId are empty, it will get the first user's report.
         protected void GetReport()
         {
-            var WorkspaceId = Settings.Default.WorkspaceId;
-            var reportId = Settings.Default.ReportId;
+            Guid workspaceId = GetParamGuid(Settings.Default.WorkspaceId);
+
+            Guid reportId = GetParamGuid(Settings.Default.ReportId);
+
             var powerBiApiUrl = Settings.Default.PowerBiApiUrl;
 
             using (var client = new PowerBIClient(new Uri(powerBiApiUrl), new TokenCredentials(accessToken.Value, "Bearer")))
@@ -69,13 +71,13 @@ namespace PBIWebApp
                 Report report;
 
                 // Settings' workspace ID is not empty
-                if (!string.IsNullOrEmpty(WorkspaceId))
+                if (workspaceId != Guid.Empty)
                 {
                     // Gets a report from the workspace.
-                    report = GetReportFromWorkspace(client, WorkspaceId, reportId);
+                    report = GetReportFromWorkspace(client, workspaceId, reportId);
                 }
                 // Settings' report and workspace Ids are empty, retrieves the user's first report.
-                else if (string.IsNullOrEmpty(reportId))
+                else if (reportId == Guid.Empty)
                 {
                     report = client.Reports.GetReports().Value.FirstOrDefault();
                     AppendErrorIfReportNull(report, "No reports found. Please specify the target report ID and workspace in the applications settings.");
@@ -90,14 +92,14 @@ namespace PBIWebApp
                 if (report != null)
                 {
                     txtEmbedUrl.Text = report.EmbedUrl;
-                    txtReportId.Text = report.Id;
+                    txtReportId.Text = report.Id.ToString();
                     txtReportName.Text = report.Name;
                 }
             }
         }
 
         // Gets the report with the specified ID from the workspace. If report ID is emty it will retrieve the first report from the workspace.
-        private Report GetReportFromWorkspace(PowerBIClient client, string WorkspaceId, string reportId)
+        private Report GetReportFromWorkspace(PowerBIClient client, Guid WorkspaceId, Guid reportId)
         {
             // Gets the workspace by WorkspaceId.
             var workspaces = client.Groups.GetGroups();
@@ -111,7 +113,7 @@ namespace PBIWebApp
             }
 
             Report report = null;
-            if (string.IsNullOrEmpty(reportId))
+            if (reportId == Guid.Empty)
             {
                 // Get the first report in the workspace.
                 report = client.Reports.GetReportsInGroup(sourceWorkspace.Id).Value.FirstOrDefault();
@@ -126,7 +128,7 @@ namespace PBIWebApp
                     report = client.Reports.GetReportInGroup(WorkspaceId, reportId);
                 }
 
-                catch(HttpOperationException)
+                catch (HttpOperationException)
                 {
                     errorLabel.Text = $"Report with ID: '{reportId}' not found in the workspace with ID: '{WorkspaceId}', Please check the report ID.";
 
@@ -143,5 +145,13 @@ namespace PBIWebApp
                 errorLabel.Text = errorMessage;
             }
         }
+
+        private static Guid GetParamGuid(string param)
+        {
+            Guid paramGuid = Guid.Empty;
+            Guid.TryParse(param, out paramGuid);
+            return paramGuid;
+        }
+
     }
 }

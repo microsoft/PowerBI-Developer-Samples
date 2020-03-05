@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Microsoft.PowerBI.Api.V2;
-using Microsoft.PowerBI.Api.V2.Models;
+using Microsoft.PowerBI.Api;
+using Microsoft.PowerBI.Api.Models;
 using Microsoft.Rest;
 using PowerBIEmbedded_AppOwnsData.Models;
 using System;
@@ -20,8 +20,8 @@ namespace PowerBIEmbedded_AppOwnsData.Services
         private static readonly string ResourceUrl = ConfigurationManager.AppSettings["resourceUrl"];
         private static readonly string ApplicationId = ConfigurationManager.AppSettings["applicationId"];
         private static readonly string ApiUrl = ConfigurationManager.AppSettings["apiUrl"];
-        private static readonly string WorkspaceId = ConfigurationManager.AppSettings["workspaceId"];
-        private static readonly string ReportId = ConfigurationManager.AppSettings["reportId"];
+        private static readonly Guid WorkspaceId = GetParamGuid(ConfigurationManager.AppSettings["workspaceId"]);
+        private static readonly Guid ReportId = GetParamGuid(ConfigurationManager.AppSettings["reportId"]);
 
         private static readonly string AuthenticationType = ConfigurationManager.AppSettings["AuthenticationType"];
         private static readonly NameValueCollection sectionConfig = ConfigurationManager.GetSection(AuthenticationType) as NameValueCollection;
@@ -51,9 +51,16 @@ namespace PowerBIEmbedded_AppOwnsData.Services
             m_tileEmbedConfig = new TileEmbedConfig();
         }
 
+        private static Guid GetParamGuid(string param)
+        {
+            Guid paramGuid = Guid.Empty;
+            Guid.TryParse(param, out paramGuid);
+            return paramGuid;
+        }
+
         public async Task<bool> EmbedReport(string username, string roles)
         {
-            
+
             // Get token credentials for user
             var getCredentialsResult = await GetTokenCredentials();
             if (!getCredentialsResult)
@@ -78,14 +85,14 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                     }
 
                     Report report;
-                    if (string.IsNullOrWhiteSpace(ReportId))
+                    if (ReportId == Guid.Empty)
                     {
                         // Get the first report in the workspace.
                         report = reports.Value.FirstOrDefault();
                     }
                     else
                     {
-                        report = reports.Value.FirstOrDefault(r => r.Id.Equals(ReportId, StringComparison.InvariantCultureIgnoreCase));
+                        report = reports.Value.FirstOrDefault(r => r.Id == ReportId);
                     }
 
                     if (report == null)
@@ -94,7 +101,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                         return false;
                     }
 
-                    var datasets = await client.Datasets.GetDatasetByIdInGroupAsync(WorkspaceId, report.DatasetId);
+                    var datasets = await client.Datasets.GetDatasetInGroupAsync(WorkspaceId, report.DatasetId);
                     m_embedConfig.IsEffectiveIdentityRequired = datasets.IsEffectiveIdentityRequired;
                     m_embedConfig.IsEffectiveIdentityRolesRequired = datasets.IsEffectiveIdentityRolesRequired;
                     GenerateTokenRequest generateTokenRequestParameters;
@@ -128,7 +135,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                     // Generate Embed Configuration.
                     m_embedConfig.EmbedToken = tokenResponse;
                     m_embedConfig.EmbedUrl = report.EmbedUrl;
-                    m_embedConfig.Id = report.Id;
+                    m_embedConfig.Id = report.Id.ToString();
                 }
             }
             catch (HttpOperationException exc)
@@ -182,7 +189,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                     {
                         EmbedToken = tokenResponse,
                         EmbedUrl = dashboard.EmbedUrl,
-                        Id = dashboard.Id
+                        Id = dashboard.Id.ToString()
                     };
 
                     return true;
@@ -243,8 +250,8 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                     {
                         EmbedToken = tokenResponse,
                         EmbedUrl = tile.EmbedUrl,
-                        Id = tile.Id,
-                        dashboardId = dashboard.Id
+                        Id = tile.Id.ToString(),
+                        dashboardId = dashboard.Id.ToString()
                     };
 
                     return true;
@@ -277,16 +284,11 @@ namespace PowerBIEmbedded_AppOwnsData.Services
             }
 
             // Workspace Id must have a value.
-            if (string.IsNullOrWhiteSpace(WorkspaceId))
+            if (WorkspaceId == Guid.Empty)
             {
-                return "WorkspaceId is empty. Please select a group you own and fill its Id in web.config";
+                return "WorkspaceId is empty or not a valid Guid. Please fill its Id correctly in web.config";
             }
 
-            // Workspace Id must be a Guid object.
-            if (!Guid.TryParse(WorkspaceId, out result))
-            {
-                return "WorkspaceId must be a Guid object. Please select a workspace you own and fill its Id in web.config";
-            }
 
             if (AuthenticationType.Equals("MasterUser"))
             {

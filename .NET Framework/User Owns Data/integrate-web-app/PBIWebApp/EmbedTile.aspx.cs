@@ -5,8 +5,8 @@ using System.Web.UI;
 using System.Collections.Specialized;
 using PBIWebApp.Properties;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Microsoft.PowerBI.Api.V2;
-using Microsoft.PowerBI.Api.V2.Models;
+using Microsoft.PowerBI.Api;
+using Microsoft.PowerBI.Api.Models;
 using Microsoft.Rest;
 using Newtonsoft.Json;
 
@@ -18,7 +18,7 @@ namespace PBIWebApp
     * In addition, the sample uses a single web page so that all code is in one location. However, you could refactor the code into
     * your own production model.
     */
-    public partial class EmbedTile : Page
+    public partial class EmbedTile : System.Web.UI.Page
     {
         string baseUri = Properties.Settings.Default.PowerBiDataset;
         public AuthenticationResult authResult { get; set; }
@@ -37,7 +37,7 @@ namespace PBIWebApp
 
                 //Get first dashboard. Sample assumes one dashboard with one tile
                 string dashboardId = GetDashboard(0);
-                
+
                 //You can get the Dashboard ID with the Get Dashboards operation. Or go to your dashboard, and get it from the url for the dashboard.
                 //The dashboard id is at the end if the url. For example, https://msit.powerbi.com/groups/me/dashboards/00b7e871-cb98-48ed-bddc-0000c000e000              
                 //In this sample, you get the first tile in the first dashbaord. In a production app, you would create a more robost
