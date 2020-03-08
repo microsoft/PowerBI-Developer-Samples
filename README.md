@@ -5,12 +5,12 @@ This repository contains Power BI Embedded solutions in 5 different frameworks t
 
 Available Power BI Embedded solutions:
   * App Owns Data - aka Embed for your customers
-    * .NET framework
+    * .NET Framework
     * Python
     * Java
-    * Node JS
+    * Node JS (only Embed token generation)
   * User Owns Data - aka Embed for your organization
-    * .NET framework
+    * .NET Framework
     * .NET Core
 
 **Note:** README.md files for the samples are present in their respective folders.
