@@ -87,8 +87,8 @@ namespace PowerBIEmbedded_AppOwnsData.Services
                     Report report;
                     if (ReportId == Guid.Empty)
                     {
-                        // Get the first report in the workspace.
-                        report = reports.Value.FirstOrDefault();
+                        m_embedConfig.ErrorMessage = "Please provide a report ID for the selected workspace. Make sure that the report ID is valid.";
+                        return false;
                     }
                     else
                     {
@@ -97,7 +97,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
 
                     if (report == null)
                     {
-                        m_embedConfig.ErrorMessage = "No report with the given ID was found in the workspace. Make sure ReportId is valid.";
+                        m_embedConfig.ErrorMessage = "No report with the given ID was found in the workspace. Make sure that the report ID is valid.";
                         return false;
                     }
 

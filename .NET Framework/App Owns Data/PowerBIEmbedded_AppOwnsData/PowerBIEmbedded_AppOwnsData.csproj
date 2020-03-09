@@ -190,7 +190,7 @@
     <Content Include="Views\Home\EmbedReport.cshtml" />
     <Content Include="Views\Home\EmbedTile.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Home\LiveDemoLink.cshtml" />
+    <Content Include="Views\Home\AdditionalLinks.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
