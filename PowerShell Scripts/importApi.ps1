@@ -8,11 +8,11 @@
 #####################################################################################
 
 #region Parameters
-$clientId = "" #app client id
+$clientId = "" # AAD App Id (client id)
 $groupID = "me" # the ID of the workspace where you want to import. Use "me" if you want to import to your "My workspace"
 $datasetName = "demo1.pbix" # the name of the dataset we will import, the value passed must contain the file extension .pbix or .xlsx
 $flPath = "C:\temp\sample\" # the path for the file
-$fl = "Test.pbix" #the filename(with extension) which will be imported
+$fl = "Test.pbix" # the filename(with extension) which will be imported
 $xlsxmode ="connect" # applicable if you're trying to import a xlsx file. This is the mode for the xlsx file import, you can have "connect" or "import"
 
 $redirectUri = "urn:ietf:wg:oauth:2.0:oob"
@@ -28,10 +28,10 @@ $enc = [System.Text.Encoding]::GetEncoding("iso-8859-1")
 Try{
     if ($fl -ne $null){
         $rpExt=$fl.split(".")[-1]
-        if ($rpExt -eq "xlsx" -or $rpExt -eq "pbix"){ #confirm that the file being imported is either xlsx or pbix
+        if ($rpExt -eq "xlsx" -or $rpExt -eq "pbix"){ # confirm that the file being imported is either xlsx or pbix
             if ($rpExt -eq "xlsx"){
-                if ($xlsxmode -eq "connect" -or $xlsxmode -eq "import"){  #confirm if xlsx, if the mode is correct
-                        if (!(Test-Path -Path ($flpath + $fl))) { #confirm if the filpath is valid and if the file exists.
+                if ($xlsxmode -eq "connect" -or $xlsxmode -eq "import"){  # confirm if xlsx, if the mode is correct
+                        if (!(Test-Path -Path ($flpath + $fl))) { # confirm if the filpath is valid and if the file exists.
                             Write-Host "The file cannot be accessed, please confirm the filepath is valid, the file exists and the user has permissions to access it"
                             Break            
                         }
@@ -46,7 +46,7 @@ Try{
             if ($groupID -eq "me" -or $groupID -eq $null) {
 	            $groupsPath = "myorg"
             } else {
-                #groupid is not empty, me or null, so we need to ensure it's a valid guid
+                # groupid is not empty, me or null, so we need to ensure it's a valid guid
 	            [regex]$guidRegex = '(?im)^[{(]?[0-9A-F]{8}[-]?(?:[0-9A-F]{4}[-]?){3}[0-9A-F]{12}[)}]?$'
 	                                
 	            if ($groupID -match $guidRegex){ 
@@ -96,7 +96,7 @@ function GetAuthToken{
         }
 }
 
-function GetBody{#function to prepare the body
+function GetBody{# function to prepare the body
 	Param(
 			 [Parameter(Mandatory=$true, Position=0)]
 			 [string] $nb,	#boundary
@@ -156,7 +156,7 @@ function Import{
     }
 }
 
-function GetImportResult{#Get the result for the import
+function GetImportResult{# Get the result for the import
 	Param(
 			 [Parameter(Mandatory=$true, Position=0)]
 			 [string] $id
@@ -166,10 +166,10 @@ function GetImportResult{#Get the result for the import
     
     Try{
 
-        $state="Publishing"; #initial state
+        $state="Publishing"; # initial state
         do{ 
-            Start-Sleep -s 2 #sleep 2 seconds between each attempt and retry
-            $response = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET -Verbose #invoke the rest method to get the import result
+            Start-Sleep -s 2 # sleep 2 seconds between each attempt and retry
+            $response = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET -Verbose # invoke the rest method to get the import result
             $state=$response.importState
 
           }while ($state -eq "Publishing")
@@ -194,7 +194,7 @@ function GetImportResult{#Get the result for the import
 Try{
     # Get the auth token from AAD
     $token = GetAuthToken
-    $nb = "--SamplePowerShellBoundary"  #boundary generation
+    $nb = "--SamplePowerShellBoundary"  # boundary generation
 
     # Building Rest API header with authorization token
     $authHeader = @{
@@ -206,14 +206,14 @@ Try{
 
     Write-Host "Building the request header finished with success." -ForegroundColor Green
 
-    $body = GetBody $nb $rpExt #get the body for the post request
+    $body = GetBody $nb $rpExt # get the body for the post request
 
     if ($null -ne $body){ 
         Write-Host "Building the request body finished with success." -ForegroundColor Green
-        $resp = Import($groupsPath) #call the import function
+        $resp = Import($groupsPath) # call the import function
         if ($null -ne $resp) {
             Write-Host "The Import request finished with success, ImportId:$resp" -ForegroundColor Green
-            GetImportResult($resp) #check the result
+            GetImportResult($resp) # check the result
         }
     }
 
