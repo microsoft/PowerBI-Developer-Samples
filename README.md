@@ -13,6 +13,8 @@ Available Power BI Embedded solutions:
     * .NET Framework
     * .NET Core
 
+This repository contains samples for calling the Power BI REST APIs using PowerShell.
+
 **Note:** README.md files for the samples are present in their respective folders.
 
 ## Issues
