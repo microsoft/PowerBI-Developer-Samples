@@ -1,12 +1,5 @@
 #Sample PowerShell Script for usage of PowerBI Rest API https://docs.microsoft.com/en-us/rest/api/power-bi/imports/postimport
 
-########################### README ##################################################
-#This is a SAMPLE powershell script that you can use as REFERENCE to CREATE YOUR OWN CODE.
-#Please note that this source code is freeware and is provided on an 'as is' basis without warranties of any kind,
-#whether express or implied, including without limitation warranties that the code is free of defect,fit for a particular purpose or non - infringing.
-#The entire risk as to the quality and performance of the code is with the end user.
-#####################################################################################
-
 #region Parameters
 $clientId = "" # AAD App Id (client id)
 $groupID = "me" # the ID of the workspace where you want to import. Use "me" if you want to import to your "My workspace"
@@ -36,7 +29,7 @@ Try {
                         Break            
                     }
 
-                }else {
+                } else {
                     Write-Host "The mode is invalid for xlsx import, you must choose connect or import"
                     Break        
                 }
@@ -54,19 +47,19 @@ Try {
 	                                
 	            if ($groupID -match $guidRegex) { 
                     $groupsPath = "myorg/groups/$groupID"
-                }else {
+                } else {
                     Write-Host "You need to specify a valid workspace id"
                     Break                
 	            }
 
             }
             
-        }else {
+        } else {
             Write-Host "The file to import must be a pbix or xlsx file"
             Break
         }
 
-	}else {
+	} else {
 		Write-Host "The file parameter was not set, please set the file name and extension"
         Break
 	}
@@ -93,7 +86,7 @@ function GetAuthToken {
         $authResult = $authContext.AcquireToken($resourceAppIdURI, $clientId, $redirectUri, "Auto")
         return $authResult
 
-    }Catch {
+    } Catch {
         $ErrorMessage = $_.Exception.Message
         Write-Host "An exception has occurred on GetAuthToken function, exception details:$endLine Message:$ErrorMessage$endLine" -ForegroundColor Red
         Break
@@ -120,11 +113,16 @@ function GetBody {# function to prepare the body
 			"",
 			"--$nb",
 			'Content-Disposition: form-data;name="connectionType"',
-			"",$xlsxmode,"--$nb","Content-Disposition: form-data; name='publish-file'; filename='$datasetName'","Content-Type: application/octet-stream$endLine",
+			"",
+            $xlsxmode,
+            "--$nb",
+            "Content-Disposition: form-data; name='publish-file'; filename='$datasetName'",
+            "Content-Type: application/octet-stream$endLine",
 			$flE,
-			"--$nb--$endLine") -join $endLine
+			"--$nb--$endLine"
+            ) -join $endLine
 
-	    }elseif ($fExt -eq "pbix") {
+	    } elseif ($fExt -eq "pbix") {
 		    $flE = $enc.GetString($flB)
 		    $bodyLines = (
 			"$nb",
@@ -136,7 +134,7 @@ function GetBody {# function to prepare the body
 
         return $bodyLines
 
-    }Catch {
+    } Catch {
         $ErrorMessage = $_.Exception.Message
         Write-Host "An exception has occurred on GetBody function, exception details:$endLine Message:$ErrorMessage$endLine" -ForegroundColor Red
         Break
@@ -151,10 +149,10 @@ function Import {
 	)
 	#Call the Import API
     Try {
-	    $uri = "https://api.powerbi.com/v1.0/$groupsPath/imports?nameConflict=Abort&datasetDisplayName=$datasetName"
+	    $uri = "https://api.powerbi.com/v1.0/$groupsPath/imports?nameConflict=Abort&datasetDisplayName=$datasetName" # there are other options available to handle the nameConflict - please refer to https://docs.microsoft.com/en-us/rest/api/power-bi/imports/postimport#importconflicthandlermode to see all the options available
 	    $response = Invoke-RestMethod -Uri $uri -Headers $authHeader -Body $body -Method POST -Verbose
 	    return $response.id
-    }Catch {
+    } Catch {
         Write-Host "An exception has occurred on calling the Import function, exception details:" -ForegroundColor Red
         Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ -ForegroundColor Red
 		Write-Host "RequestId:" $_.Exception.Response.Headers["RequestId"] -ForegroundColor Red
@@ -185,7 +183,7 @@ function GetImportResult {# Get the result for the import
         Write-Host "Getting the Import result finished with success:" -ForegroundColor Green
         Write-Host $response
 
-    }Catch {
+    } Catch {
         Write-Host "An exception has occurred on calling the GetImportResult function, exception details:" -ForegroundColor Red
         Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ -ForegroundColor Red
         Write-Host "RequestId:" $_.Exception.Response.Headers["RequestId"] -ForegroundColor Red
@@ -225,7 +223,7 @@ Try {
 
     }
 
-}Catch {
+} Catch {
     $ErrorMessage = $_.Exception.Message
     Write-Host "An exception has occurred on the script execution, exception details:$endLine Message:$ErrorMessage$endLine" -ForegroundColor Red
     Break
