@@ -25,89 +25,96 @@ $enc = [System.Text.Encoding]::GetEncoding("iso-8859-1")
 
 #region Validation of the input parameters =======================================
 
-Try{
-    if ($fl -ne $null){
+Try {
+    if ($fl -ne $null) {
         $rpExt=$fl.split(".")[-1]
-        if ($rpExt -eq "xlsx" -or $rpExt -eq "pbix"){ # confirm that the file being imported is either xlsx or pbix
-            if ($rpExt -eq "xlsx"){
-                if ($xlsxmode -eq "connect" -or $xlsxmode -eq "import"){  # confirm if xlsx, if the mode is correct
-                        if (!(Test-Path -Path ($flpath + $fl))) { # confirm if the filpath is valid and if the file exists.
-                            Write-Host "The file cannot be accessed, please confirm the filepath is valid, the file exists and the user has permissions to access it"
-                            Break            
-                        }
+        if ($rpExt -eq "xlsx" -or $rpExt -eq "pbix") { # confirm that the file being imported is either xlsx or pbix
+            if ($rpExt -eq "xlsx") {
+                if ($xlsxmode -eq "connect" -or $xlsxmode -eq "import") {  # confirm if xlsx, if the mode is correct
+                    if (!(Test-Path -Path ($flpath + $fl))) { # confirm if the filpath is valid and if the file exists.
+                        Write-Host "The file cannot be accessed, please confirm the filepath is valid, the file exists and the user has permissions to access it"
+                        Break            
+                    }
+
                 }else {
                     Write-Host "The mode is invalid for xlsx import, you must choose connect or import"
                     Break        
                 }
+
             }
 
             # properly format groups path
             $groupsPath = ""
             if ($groupID -eq "me" -or $groupID -eq $null) {
-	            $groupsPath = "myorg"
+                $groupsPath = "myorg"
+
             } else {
                 # groupid is not empty, me or null, so we need to ensure it's a valid guid
 	            [regex]$guidRegex = '(?im)^[{(]?[0-9A-F]{8}[-]?(?:[0-9A-F]{4}[-]?){3}[0-9A-F]{12}[)}]?$'
 	                                
-	            if ($groupID -match $guidRegex){ 
+	            if ($groupID -match $guidRegex) { 
                     $groupsPath = "myorg/groups/$groupID"
                 }else {
                     Write-Host "You need to specify a valid workspace id"
-                    Break
-                                 
+                    Break                
 	            }
+
             }
             
         }else {
             Write-Host "The file to import must be a pbix or xlsx file"
             Break
         }
+
 	}else {
 		Write-Host "The file parameter was not set, please set the file name and extension"
         Break
-         
 	}
-}Catch
-    {
+
+}Catch {
         $ErrorMessage = $_.Exception.Message
         Write-Host "An exception has occurred on the validation of the input parameters, exception details:$endLine Message:$ErrorMessage$endLine"  -ForegroundColor Red
         Break
-    }
+}
+
 #endregion Validation of the input parameters
 Write-Host "Validation of the input parameters finished with success." -ForegroundColor Green 
 
 #region Function definitions =======================================
 # Call to the Active Directory Authentication Library to authenticate against AAD
-function GetAuthToken{
-       Try{
-           if (-not (Get-Module AzureRm.Profile)) {
-             Import-Module AzureRm.Profile
-           }
-
-           $authContext = New-Object "Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext" -ArgumentList $authority
-           $authResult = $authContext.AcquireToken($resourceAppIdURI, $clientId, $redirectUri, "Auto")
-
-           return $authResult
-        }Catch
-        {
-            $ErrorMessage = $_.Exception.Message
-            Write-Host "An exception has occurred on GetAuthToken function, exception details:$endLine Message:$ErrorMessage$endLine" -ForegroundColor Red
-            Break
+function GetAuthToken {
+    Try {
+        
+        if (-not (Get-Module AzureRm.Profile)) {
+            Import-Module AzureRm.Profile
         }
+
+        $authContext = New-Object "Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext" -ArgumentList $authority
+        $authResult = $authContext.AcquireToken($resourceAppIdURI, $clientId, $redirectUri, "Auto")
+        return $authResult
+
+    }Catch {
+        $ErrorMessage = $_.Exception.Message
+        Write-Host "An exception has occurred on GetAuthToken function, exception details:$endLine Message:$ErrorMessage$endLine" -ForegroundColor Red
+        Break
+    }
+
 }
 
-function GetBody{# function to prepare the body
+function GetBody {# function to prepare the body
 	Param(
 			 [Parameter(Mandatory=$true, Position=0)]
 			 [string] $nb,	#boundary
              [Parameter(Mandatory=$true, Position=1)]
 			 [string] $fExt	#fileExtension
 	)
-       $bodyLines = ""
-       $endLine = [System.Environment]::NewLine
-    Try{
+
+    $bodyLines = ""
+    $endLine = [System.Environment]::NewLine
+    
+    Try {
 	    $flB = [IO.File]::ReadAllBytes($flPath+$fl)	
-	    if ($fExt -eq "xlsx"){
+	    if ($fExt -eq "xlsx") {
             $flE = $enc.GetString($flB)
 		    $bodyLines = (
 			"",
@@ -116,7 +123,8 @@ function GetBody{# function to prepare the body
 			"",$xlsxmode,"--$nb","Content-Disposition: form-data; name='publish-file'; filename='$datasetName'","Content-Type: application/octet-stream$endLine",
 			$flE,
 			"--$nb--$endLine") -join $endLine
-	    }elseif ($fExt -eq "pbix"){
+
+	    }elseif ($fExt -eq "pbix") {
 		    $flE = $enc.GetString($flB)
 		    $bodyLines = (
 			"$nb",
@@ -125,9 +133,10 @@ function GetBody{# function to prepare the body
 			$flE,
 			"$nb--$endLine") -join $endLine
 	    }
+
         return $bodyLines
-    }Catch
-    {
+
+    }Catch {
         $ErrorMessage = $_.Exception.Message
         Write-Host "An exception has occurred on GetBody function, exception details:$endLine Message:$ErrorMessage$endLine" -ForegroundColor Red
         Break
@@ -135,18 +144,17 @@ function GetBody{# function to prepare the body
 
 }
 
-function Import{
+function Import {
 	Param(
 			 [Parameter(Mandatory=$true, Position=0)]
 			 [string] $groupsPath	#groupsPath
 	)
 	#Call the Import API
-    Try{
+    Try {
 	    $uri = "https://api.powerbi.com/v1.0/$groupsPath/imports?nameConflict=Abort&datasetDisplayName=$datasetName"
 	    $response = Invoke-RestMethod -Uri $uri -Headers $authHeader -Body $body -Method POST -Verbose
 	    return $response.id
-    }Catch
-    {
+    }Catch {
         Write-Host "An exception has occurred on calling the Import function, exception details:" -ForegroundColor Red
         Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ -ForegroundColor Red
 		Write-Host "RequestId:" $_.Exception.Response.Headers["RequestId"] -ForegroundColor Red
@@ -156,7 +164,7 @@ function Import{
     }
 }
 
-function GetImportResult{# Get the result for the import
+function GetImportResult {# Get the result for the import
 	Param(
 			 [Parameter(Mandatory=$true, Position=0)]
 			 [string] $id
@@ -164,34 +172,33 @@ function GetImportResult{# Get the result for the import
     
     $uri = "https://api.powerbi.com/v1.0/$groupsPath/imports/$id"
     
-    Try{
+    Try {
 
         $state="Publishing"; # initial state
-        do{ 
+        do { 
             Start-Sleep -s 2 # sleep 2 seconds between each attempt and retry
             $response = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET -Verbose # invoke the rest method to get the import result
             $state=$response.importState
 
-          }while ($state -eq "Publishing")
+        } while ($state -eq "Publishing")
 
-          Write-Host "Getting the Import result finished with success:" -ForegroundColor Green
-          Write-Host $response
+        Write-Host "Getting the Import result finished with success:" -ForegroundColor Green
+        Write-Host $response
 
-    }Catch
-    {
-         Write-Host "An exception has occurred on calling the GetImportResult function, exception details:" -ForegroundColor Red
-         Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ -ForegroundColor Red
-		 Write-Host "RequestId:" $_.Exception.Response.Headers["RequestId"] -ForegroundColor Red
-		 Write-Host "ActivityId:" $_.Exception.Response.Headers["ActivityId"] -ForegroundColor Red
-         Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription -ForegroundColor Red
+    }Catch {
+        Write-Host "An exception has occurred on calling the GetImportResult function, exception details:" -ForegroundColor Red
+        Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ -ForegroundColor Red
+        Write-Host "RequestId:" $_.Exception.Response.Headers["RequestId"] -ForegroundColor Red
+        Write-Host "ActivityId:" $_.Exception.Response.Headers["ActivityId"] -ForegroundColor Red
+        Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription -ForegroundColor Red
 
-         Break
+        Break
     }
 }
 
 #endregion Function definitions
 
-Try{
+Try {
     # Get the auth token from AAD
     $token = GetAuthToken
     $nb = "--SamplePowerShellBoundary"  # boundary generation
@@ -208,17 +215,17 @@ Try{
 
     $body = GetBody $nb $rpExt # get the body for the post request
 
-    if ($null -ne $body){ 
+    if ($null -ne $body) { 
         Write-Host "Building the request body finished with success." -ForegroundColor Green
         $resp = Import($groupsPath) # call the import function
         if ($null -ne $resp) {
             Write-Host "The Import request finished with success, ImportId:$resp" -ForegroundColor Green
             GetImportResult($resp) # check the result
         }
+
     }
 
-}Catch
-{
+}Catch {
     $ErrorMessage = $_.Exception.Message
     Write-Host "An exception has occurred on the script execution, exception details:$endLine Message:$ErrorMessage$endLine" -ForegroundColor Red
     Break
