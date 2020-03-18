@@ -1,4 +1,4 @@
-﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
+﻿using Microsoft.Identity.Client;
 using Microsoft.PowerBI.Api;
 using Microsoft.PowerBI.Api.Models;
 using Microsoft.Rest;
@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Linq;
+using System.Security;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -18,6 +19,7 @@ namespace PowerBIEmbedded_AppOwnsData.Services
     {
         private static readonly string AuthorityUrl = ConfigurationManager.AppSettings["authorityUrl"];
         private static readonly string ResourceUrl = ConfigurationManager.AppSettings["resourceUrl"];
+        private static readonly string[] Scope = ConfigurationManager.AppSettings["scope"].Split(';');
         private static readonly string ApplicationId = ConfigurationManager.AppSettings["applicationId"];
         private static readonly string ApiUrl = ConfigurationManager.AppSettings["apiUrl"];
         private static readonly Guid WorkspaceId = GetParamGuid(ConfigurationManager.AppSettings["workspaceId"]);
@@ -326,21 +328,51 @@ namespace PowerBIEmbedded_AppOwnsData.Services
             AuthenticationResult authenticationResult = null;
             if (AuthenticationType.Equals("MasterUser"))
             {
-                var authenticationContext = new AuthenticationContext(AuthorityUrl);
+                IPublicClientApplication clientApp = PublicClientApplicationBuilder
+                                                                    .Create(ApplicationId)
+                                                                    .WithAuthority(AuthorityUrl)
+                                                                    .Build();
+                var userAccounts = await clientApp.GetAccountsAsync();
 
-                // Authentication using master user credentials
-                var credential = new UserPasswordCredential(Username, Password);
-                authenticationResult = authenticationContext.AcquireTokenAsync(ResourceUrl, ApplicationId, credential).Result;
+                try
+                {
+                    authenticationResult = await clientApp.AcquireTokenSilent(Scope, userAccounts.FirstOrDefault()).ExecuteAsync();
+                }
+                catch (MsalUiRequiredException)
+                {
+                    try
+                    {
+                        SecureString password = new SecureString();
+                        foreach (var key in Password)
+                        {
+                            password.AppendChar(key);
+                        }
+                        authenticationResult = await clientApp.AcquireTokenByUsernamePassword(Scope, Username, password).ExecuteAsync();
+                    }
+                    catch (MsalException)
+                    {
+                        throw;
+                    }
+                }
             }
-            else
+            else if (AuthenticationType.Equals("ServicePrincipal"))
             {
                 // For app only authentication, we need the specific tenant id in the authority url
-                var tenantSpecificURL = AuthorityUrl.Replace("common", Tenant);
-                var authenticationContext = new AuthenticationContext(tenantSpecificURL);
+                var tenantSpecificURL = AuthorityUrl.Replace("organizations", Tenant);
 
-                // Authentication using app credentials
-                var credential = new ClientCredential(ApplicationId, ApplicationSecret);
-                authenticationResult = await authenticationContext.AcquireTokenAsync(ResourceUrl, credential);
+                IConfidentialClientApplication clientApp = ConfidentialClientApplicationBuilder
+                                                                                .Create(ApplicationId)
+                                                                                .WithClientSecret(ApplicationSecret)
+                                                                                .WithAuthority(tenantSpecificURL)
+                                                                                .Build();
+                try
+                {
+                    authenticationResult = await clientApp.AcquireTokenForClient(Scope).ExecuteAsync();
+                }
+                catch (MsalException)
+                {
+                    throw;
+                }
             }
 
             return authenticationResult;

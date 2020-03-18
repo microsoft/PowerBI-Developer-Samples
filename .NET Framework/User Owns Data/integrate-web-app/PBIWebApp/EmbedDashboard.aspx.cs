@@ -3,7 +3,6 @@ using System;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using System.Collections.Specialized;
 using Newtonsoft.Json;
 using PBIWebApp.Properties;
@@ -28,7 +27,7 @@ namespace PBIWebApp
                 signInButton.Visible = false;
 
                 //Set user and token from authentication result
-                userLabel.Text = Utils.authResult.UserInfo.DisplayableId;
+                userLabel.Text = Utils.authResult.Account.Username;
                 accessTokenTextbox.Text = Utils.authResult.AccessToken;
             }
         }

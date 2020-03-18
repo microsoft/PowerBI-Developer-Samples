@@ -2,13 +2,13 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PBIWebApp.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ApplicationID" Type="System.String" Scope="Application">
+  <Setting Name="ApplicationID" Type="System.String" Scope="Application">
       <Value Profile="(Default)">{Enter your app ApplicationID}</Value>
-    </Setting>
+    </Setting>    
     <Setting Name="PowerBiAPIResource" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://analysis.windows.net/powerbi/api</Value>
     </Setting>
-    <Setting Name="ApplicationSecret" Type="System.String" Scope="Application">
+	<Setting Name="ApplicationSecret" Type="System.String" Scope="Application">
       <Value Profile="(Default)">{Enter your app SecretKey}</Value>
     </Setting>
     <Setting Name="AADAuthorityUri" Type="System.String" Scope="Application">
@@ -22,6 +22,13 @@
     </Setting>
     <Setting Name="PowerBiApiUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://api.powerbi.com/</Value>
+    </Setting>
+    <Setting Name="Scope" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;https://analysis.windows.net/powerbi/api/Report.Read.All&lt;/string&gt;
+  &lt;string&gt;https://analysis.windows.net/powerbi/api/Dashboard.Read.All&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="WorkspaceId" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />

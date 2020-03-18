@@ -4,12 +4,12 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Microsoft.Identity.Client;
 using System.Threading.Tasks;
 
 namespace PBIWebApp
 {
-    public partial class Redirect : System.Web.UI.Page
+    public partial class Redirect : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -17,23 +17,46 @@ namespace PBIWebApp
             string redirectUri = $"{Properties.Settings.Default.RedirectUrl}Redirect";
             string authorityUri = Properties.Settings.Default.AADAuthorityUri;
 
+            // Use Tenant Id in single tenant authentication scenario
+            string tenantId = Properties.Settings.Default.TenantId;
+            Guid emptyGuid = Guid.Empty;
+
+            // Check whether Tenant Id is a valid guid and accordingly take action
+            if (!string.IsNullOrWhiteSpace(tenantId) && Guid.TryParse(tenantId, out emptyGuid))
+            {
+                // Update Authority URI
+                authorityUri = authorityUri.Replace("common", tenantId);
+            }
+            else if (!string.IsNullOrWhiteSpace(tenantId) && !Guid.TryParse(tenantId, out emptyGuid))
+            {
+                throw new Exception("Please enter a valid Tenant Id in configuration");
+            }
+
             // Get the auth code
             string code = Request.Params["code"];
 
             if (code != null)
             {
-                // Get auth token from auth code       
-                TokenCache TC = new TokenCache();
-
-                AuthenticationContext AC = new AuthenticationContext(authorityUri, TC);
-                ClientCredential cc = new ClientCredential
-                    (Properties.Settings.Default.ApplicationID,
-                    Properties.Settings.Default.ApplicationSecret);
-
-                AuthenticationResult AR = AC.AcquireTokenByAuthorizationCodeAsync(code, new Uri(redirectUri), cc).Result;
+                IConfidentialClientApplication clientApp = ConfidentialClientApplicationBuilder
+                                                                                .Create(Properties.Settings.Default.ApplicationID)
+                                                                                .WithRedirectUri(redirectUri)
+                                                                                .WithAuthority(authorityUri)
+                                                                                .WithClientSecret(Properties.Settings.Default.ApplicationSecret)
+                                                                                .Build();
+                AuthenticationResult authResult = null;
+                try
+                {
+                    string[] scope = new string[Properties.Settings.Default.Scope.Count];
+                    Properties.Settings.Default.Scope.CopyTo(scope, 0);
+                    authResult = clientApp.AcquireTokenByAuthorizationCode(scope, code).ExecuteAsync().Result;
+                }
+                catch (MsalException)
+                {
+                    throw;
+                }
 
                 //Set Session "authResult" index string to the AuthenticationResult
-                Session[Utils.authResultString] = AR;
+                Session[Utils.authResultString] = authResult;
 
                 //Get the authentication result from the session
                 Utils.authResult = (AuthenticationResult)Session[Utils.authResultString];

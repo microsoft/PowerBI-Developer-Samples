@@ -4,7 +4,7 @@ using System.Web;
 using System.Web.UI;
 using System.Collections.Specialized;
 using PBIWebApp.Properties;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Microsoft.Identity.Client;
 using Microsoft.PowerBI.Api;
 using Microsoft.PowerBI.Api.Models;
 using Microsoft.Rest;
@@ -120,18 +120,28 @@ namespace PBIWebApp
             //Note: If you use a redirect back to Default, as in this sample, you need to add a forward slash
             //such as http://localhost:13526/
 
-            // Get auth token from auth code       
-            TokenCache TC = new TokenCache();
+            string authorityUri = Properties.Settings.Default.AADAuthorityUri;
 
             //Values are hard-coded for sample purposes
-            string authority = Properties.Settings.Default.AADAuthorityUri;
-            AuthenticationContext AC = new AuthenticationContext(authority, TC);
-            ClientCredential cc = new ClientCredential(clientID, clientSecret);
+            IConfidentialClientApplication clientApp = ConfidentialClientApplicationBuilder
+                                                                                .Create(Properties.Settings.Default.ApplicationID)
+                                                                                .WithRedirectUri(redirectUri)
+                                                                                .WithAuthority(authorityUri)
+                                                                                .WithClientSecret(clientSecret)
+                                                                                .Build();
+            AuthenticationResult authResult = null;
+            try
+            {
+                string[] scope = new string[Properties.Settings.Default.Scope.Count];
+                Properties.Settings.Default.Scope.CopyTo(scope, 0);
+                authResult = clientApp.AcquireTokenByAuthorizationCode(scope, authorizationCode).ExecuteAsync().Result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
-            //Set token from authentication result
-            return AC.AcquireTokenByAuthorizationCodeAsync(
-                authorizationCode,
-                new Uri(redirectUri), cc).Result.AccessToken;
+            return authResult.AccessToken;
         }
     }
 }
