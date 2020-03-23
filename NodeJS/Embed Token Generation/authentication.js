@@ -44,7 +44,7 @@ async function getAuthenticationToken() {
     await promise().then(
         tokenResponse => res = tokenResponse
     ).catch(
-        err => res = err 
+        err => res = err
     );
 
     return res;

@@ -14,7 +14,7 @@ async function getReport () {
         console.log('' + tokenResponse);
         return;
     }
-    
+
     var token = tokenResponse.accessToken;
     console.log("Returned accessToken: " + token);
 
@@ -35,7 +35,7 @@ async function generateEmbedToken(){
         console.log('' + tokenResponse);
         return;
     }
-    
+
     var token = tokenResponse.accessToken;
     var authHeader = utils.getAuthHeader(token);
 
@@ -51,11 +51,11 @@ async function generateEmbedToken(){
         reportId = reportResp.id
     } else{
         reportId = config.reportId;
-    } 
+    }
 
     var headers = {
         'Authorization': authHeader,
-        'Content-Type': 'application/json',        
+        'Content-Type': 'application/json',
     };
 
     var options = {
@@ -81,7 +81,7 @@ async function generateEmbedTokenWithRls(username, roles){
         console.log('' + tokenResponse);
         return;
     }
-    
+
     var token = tokenResponse.accessToken;
     var authHeader = utils.getAuthHeader(token);
 
@@ -112,7 +112,7 @@ async function generateEmbedTokenWithRls(username, roles){
 
     var headers = {
         'Authorization': authHeader,
-        'Content-Type': 'application/json',       
+        'Content-Type': 'application/json',
     };
 
     var options = {
