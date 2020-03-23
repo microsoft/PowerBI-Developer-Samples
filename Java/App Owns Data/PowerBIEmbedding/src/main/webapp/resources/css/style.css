@@ -1,0 +1,29 @@
+header {
+    background-color: #007FFF;
+    height: 75px;
+    width: 100%;
+}
+
+header > div {
+    color: #FFFFFF;
+    font: bold 1.6em "segoe ui", arial, sans-serif;
+    margin-left: 46px;
+    padding-top: 19px;
+}
+
+main {
+    margin: 0 auto;
+    width: 100%;
+}
+
+section#text-container > div > div {
+    font: 1.2em "segoe ui", arial, sans-serif;
+}
+
+section#report-container {
+    height: 700px;
+}
+
+footer > p {
+    font: 1em "segoe ui", arial, sans-serif;
+}

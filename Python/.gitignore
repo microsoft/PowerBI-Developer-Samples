@@ -1,0 +1,22 @@
+.vscode/
+*.py[co]
+*.DS_*
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+pip-log.txt
+.coverage
+.tox
+*.mo
+venv
+*.pyc
+build

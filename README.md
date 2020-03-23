@@ -10,39 +10,24 @@ products:
 
 [![Build Status](https://powerbi.visualstudio.com/Embedded/_apis/build/status/Devolper-Samples-Azure%20Web%20App%20for%20ASP.NET-CI?branchName=master)](https://powerbi.visualstudio.com/Embedded/_build/latest?definitionId=2824&branchName=master)
 
-## Power BI API Code Samples
-
-In this repository you can find sample apps explaining how to use Power BI API for developers.
-
-Read this documentation to prepare your environment
-https://docs.microsoft.com/en-us/power-bi/developer/embedding-content
-
-Use one of the following samples to expirience the API.
-
-You can use the instructions in each sample's directory to learn how to register an app, configure and run the sample.
+This repository contains Power BI Embedded solutions in 5 different frameworks to suit different scenarios as per requirements.
+In addition, it has samples for calling the Power BI REST APIs using PowerShell.
 
 
-## Troubleshooting
+Available Power BI Embedded solutions:
+  * App Owns Data - aka Embed for your customers
+    * .NET Framework
+    * Python
+    * Java
+    * Node JS (only Embed token generation)
+  * User Owns Data - aka Embed for your organization
+    * .NET Framework
+    * .NET Core
 
-### Visual Studio 2013
-To resolve a 'CS0012:Predefined type 'System.Object' is not defined or imported' error, please update web.config.
 
-Find line:
- ```xml
- <compilation debug="true" targetFramework="4.5"/>
- ```
- 
- And modify it to:
- 
- ```xml
- <compilation debug="true" targetFramework="4.5">
-  <assemblies>     
-    <add assembly="System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />   
-  </assemblies>
-</compilation>
-```
+**Note:** README.md files for the samples are present in their respective folders.
 
 ## Issues
-[Power BI Support Page](https://powerbi.microsoft.com/en-us/support/)
+[Power BI Support page](https://powerbi.microsoft.com/en-us/support/)
 
 [Power BI Ideas](https://ideas.powerbi.com)
