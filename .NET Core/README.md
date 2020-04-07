@@ -4,7 +4,7 @@
 
 ### Requirements
 
-1. .NET Core 3.1
+1. [.NET Core 3.1 SDK](https://aka.ms/netcore31)
 
 2. IDE (Recommended is Visual Studio Code or Visual Studio 2019)
 
@@ -12,11 +12,9 @@
 
 ### Embed a Power BI report
 
-1. Refer to the [documentation](https://aka.ms/RegisterPowerBIApp) (for Master User) and register a Power BI app [here](https://app.powerbi.com/embedsetup/AppOwnsData). Refer to the [documentation](https://aka.ms/AA7lze8) (for Service Principal).
+1. For Master user, register a Native app [here](https://aka.ms/embedsetup/AppOwnsData) and for Service Principal, register a Server-side web app by following [this](https://aka.ms/EmbedServicePrincipal). Refer to [documentation](https://aka.ms/RegisterPowerBIApp).
 
-2. Put required values in the [appsettings.json](App%20Owns%20Data/DotNetCorePaaS/appsettings.json) file related to AAD app, Power BI report, workspace, dataset, and user account information. Refer [ConfigurationModel.cs](App%20Owns%20Data/DotNetCorePaaS/Models/ConfigurationModel.cs) for more info on config parameters.
-
-3. Save and restart the application.
+2. Put required values in the [appsettings.json](App%20Owns%20Data/DotNetCorePaaS/appsettings.json) file related to AAD app, Power BI report, workspace, and user account information. Refer [ConfigurationModel.cs](App%20Owns%20Data/DotNetCorePaaS/Models/ConfigurationModel.cs) for more info on config parameters.
 
   
 
@@ -40,3 +38,7 @@
     | groupId   | The group or workspace Id in Power BI containing the reports, dashboards and tiles you want to embed. |
 
 2. Build and run the application
+
+## Important
+
+For security reasons, in a real world application, password or secret should not be stored in config. Instead, consider securing credentials with an application such as Key Vault.

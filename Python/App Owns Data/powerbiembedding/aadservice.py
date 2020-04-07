@@ -19,7 +19,8 @@ def getaccesstoken():
                 # Make a client call if Access token is not available in cache
                 response = clientapp.acquire_token_by_username_password(app.config['POWER_BI_USER'], app.config['POWER_BI_PASS'], scopes=app.config['SCOPE'])     
         elif app.config['AUTHENTICATION_MODE'].lower() == 'serviceprincipal':
-            clientapp = msal.ConfidentialClientApplication(app.config['CLIENT_ID'], client_credential=app.config['CLIENT_SECRET'], authority=app.config['AUTHORITY'])
+            authority = app.config['AUTHORITY'].replace('organizations', app.config['TENANT_ID'])
+            clientapp = msal.ConfidentialClientApplication(app.config['CLIENT_ID'], client_credential=app.config['CLIENT_SECRET'], authority=authority)
             
             # Retrieve Access token from cache if available
             response = clientapp.acquire_token_silent(scopes=app.config['SCOPE'], account=None)

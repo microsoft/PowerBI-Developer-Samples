@@ -3,30 +3,35 @@
 
 
 ### Requirements
+   
+1. [Node JS](https://nodejs.org/en/download/)
 
-1. Node JS
-
-2. IDE (Recommended is Visual Studio Code)
+2. IDE
 
   
 
-### Embed a Power BI report
+### Generate Embed token
 
-1. Refer to the [documentation](https://aka.ms/RegisterPowerBIApp) and register a Power BI app [here](https://app.powerbi.com/apps).
+1. For Master user, register a Native app [here](https://aka.ms/embedsetup/AppOwnsData). Refer to [documentation](https://aka.ms/RegisterPowerBIApp).
 
-2. Put required values in the [config.json](Embed%20Token%20Generation/config.json) file related to AAD app, Power BI report, workspace, dataset, and user account information.
-
-3. Save and restart the application.
+2. Put required values in the [config.json](Embed%20Token%20Generation/config.json) file related to AAD app, Power BI report, workspace, and user account information.
 
   
 
 ### Run the application to generate Embed token
 
-1. Open Visual Studio Code.
+1. Open IDE.
 
 2. Open _NodeJS/Embed Token Generation_ folder.
 
-3. Open integrated terminal and type the below command to start the application.<br>
+3. Open terminal and install required dependencies by executing the following command.<br>
+   `npm install`
+   
+4.  Execute the below command to start the application.<br>
    `node app-owns-data-sample.js`
 
-4. See the output logs for generated Embed token.
+5. See the output logs for generated Embed token.
+
+### Important
+
+For security reasons, in a real world application, password or secret should not be stored in config. Instead, consider securing credentials with an application such as Key Vault.

@@ -2,13 +2,13 @@ class BaseConfig(object):
     # Can be set to 'MasterUser' or 'ServicePrincipal'
     AUTHENTICATION_MODE = 'MasterUser'
 
-    # Workspace Id for which Embed token needs to be generated
+    # Workspace Id in which the report is present
     WORKSPACE_ID = ''
     
     # Report Id for which Embed token needs to be generated
     REPORT_ID = ''
     
-    # Id of the Azure tenant in which AAD app is hosted
+    # Id of the Azure tenant in which AAD app and Power BI report is hosted. Required only for ServicePrincipal authentication mode.
     TENANT_ID = ''
     
     # Client Id (Application Id) of the AAD app
@@ -21,10 +21,10 @@ class BaseConfig(object):
     SCOPE = ['https://analysis.windows.net/powerbi/api/.default']
     
     # URL used for initiating authorization request
-    AUTHORITY = 'https://login.microsoftonline.com/' + TENANT_ID
+    AUTHORITY = 'https://login.microsoftonline.com/organizations'
     
-    # Master user email address. Required only for MasterUser authentication mode
+    # Master user email address. Required only for MasterUser authentication mode.
     POWER_BI_USER = ''
     
-    # Master user email password. Required only for MasterUser authentication mode
+    # Master user email password. Required only for MasterUser authentication mode.
     POWER_BI_PASS = ''

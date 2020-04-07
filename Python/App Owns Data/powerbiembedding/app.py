@@ -40,7 +40,7 @@ def checkconfig():
     '''Returns a message to user for a missing configuration'''
     if app.config['AUTHENTICATION_MODE'] == '':
         return 'Please specify one the two authentication modes'
-    if app.config['TENANT_ID'] == '':
+    if app.config['AUTHENTICATION_MODE'].lower() == 'serviceprincipal' and app.config['TENANT_ID'] == '':
         return 'Tenant ID is not provided in the config.py file'
     elif app.config['REPORT_ID'] == '':
         return 'Report ID is not provided in config.py file'

@@ -29,7 +29,7 @@
             {
                 message = "Client Id is not set in appsettings.json file";
             }
-            else if (string.IsNullOrWhiteSpace(appSettings.Value.TenantId))
+            else if (isAuthModeServicePrincipal && string.IsNullOrWhiteSpace(appSettings.Value.TenantId))
             {
                 message = "Tenant Id is not set in appsettings.json file";
             }

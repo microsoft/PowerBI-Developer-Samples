@@ -1,37 +1,76 @@
-# Power BI Embedded sample in Spring MVC framework
+# Power BI Embedded Sample in Spring MVC framework
 
 ## Requirements
-* [JRE (or JDK)](https://www.oracle.com/technetwork/java/javase/downloads/index.html)<br/>
-    To check if you have working JRE: Open cmd prompt/terminal, and run: ```java -version```<br/>
-* [Eclipse](https://www.eclipse.org/downloads/)
-* [Apache Tomcat](https://tomcat.apache.org/download-90.cgi)
-	
+1. [JDK (or JRE)](https://www.oracle.com/java/technologies/javase-jdk8-downloads.html)<br/>
+Find the steps to add Java path to environment variable [here](https://docs.oracle.com/javase/7/docs/webnotes/install/windows/jdk-installation-windows.html#path)<br/>
+    To check if you have working JDK execute `java -version` in terminal
+
+2. [Eclipse IDE](https://www.eclipse.org/downloads/packages/) (Download **Eclipse for Enterprise Java Developers**)
+
+3. [Apache Tomcat](https://tomcat.apache.org/download-90.cgi) (Download binary distributions)
+
 ## Embed a Power BI report
-1. Refer to the [documentation](https://aka.ms/RegisterPowerBIApp) and register a Power BI app [here](https://app.powerbi.com/apps).
-1. Put required values in the __config/Config.java__ file related to AAD app, Power BI report, workspace, dataset, and user account information.
-1. Save and run the application.
+1. For Master user, register a Native app [here](https://aka.ms/embedsetup/AppOwnsData) and for Service Principal, register a Server-side web app by following [this](https://aka.ms/EmbedServicePrincipal). Refer to [documentation](https://aka.ms/RegisterPowerBIApp).
+	
+2. Put required values in the [Config.java](App%20Owns%20Data/PowerBIEmbedding/src/main/java/com/embedsample/appownsdata/config/Config.java) file related to AAD app, Power BI report, workspace, and user account information.
 
-## Steps to build and run:
+## Steps to build and run
 
-1. Open Eclipse
+1. Open Eclipse and Click Window > Show View > Select __Servers__.
+
+2. Setup Tomcat server
+    1. Go to Servers tab, click __No servers are available. Click this link to create new server...__
+    2. Select v9.0 Tomcat version from Apache
+    3. Click __Next__
+    4. Click browse, then select the folder which contains Tomcat
+    5. Select JRE which is available through system variable
+    6. Click __Finish__
+    7. There should be a tomcat server now in the Servers tab
 
 1. To import project,
-Select File > Open Projects from File System...
+Click File > Open Project from File System > Click on Directory > Select [PowerBIEmbedding](App%20Owns%20Data/PowerBIEmbedding) folder > Finish
     
-1. Add tomcat server to the project
-    1. Right click Project's name from Project Explorer > Click Properties.
-    1. Select __Targeted Runtimes__
-    1. If there are no runtimes in the list, 
-        1. Click New
-        1. Select a Tomcat version from Apache directory
-        1. Click Next
-        1. Select JRE (leave as default if already available)
-        1. Click Finish
-    1. Select __Apache Tomcat__ (or any other runtime) from the list.
-    1. Click Apply and Close
+1. Let Maven finish downloading the dependencies automatically in background.
 
-1. Run the project
-    1. Right click Project's name from Project Explorer
-    1. Select Run As > Run on Server
-    1. Select the created server and click Finish
-    1. Report embedding page (http://\<BASE_URL\>/appownsdatasample) should load.
+2. Add Tomcat server to the project
+    1. Right click __PowerBIEmbedding__ (project's name) from Project Explorer and then click __Properties__
+    2. Select __Targeted Runtimes__
+    3. Select __Apache Tomcat__ from the list
+    4. Click on Apply and Close
+
+3. Run the project
+    1. Right click project's name from Project Explorer
+    2. Select Run As > __Run on Server__
+    3. Select the created server and click __Finish__
+    4. http://localhost:8080/appownsdatasample should open in browser
+
+## Important
+
+For security reasons, in a real world application, password or secrets should not be stored in config. Instead, consider securing credentials with an application such as Key Vault.
+
+## Troubleshoot
+
+Windows shows "File path too long" during Eclipse IDE setup extraction.
+
+> Skip the files during extraction whose paths are too long
+
+Windows shows error popup while trying to run the *eclipse.exe* file.
+
+> Check the size of the extracted Eclipse setup folder. It should be ~599 MB.
+
+Eclipse shows "Building has encountered a problem" or "Maven is not configured properly" error after importing the project.
+
+> 1. Delete folder named 2.6 from __%userprofile%\\.m2\repository\org\apache\maven\plugins\maven-resources-plugin\\__ directory
+> 2. Right click project's name from Project Explorer > Maven > Update Project > Check Force Update of Snapshots/Releases > Click Ok
+
+Eclipse shows "The server cannot be started because one or more of the ports are invalid. Open the server editor and correct the invalid ports." error while starting the Tomcat server.
+
+> 1. Click on Servers tab on the event log area of the IDE
+> 2. Double click on the server name which says "Tomcat v9.0 Server at localhost..."
+> 3. Set the Tomcat admin port to any available port (for e.g. 8079)
+
+"Run on Server" option is not visible for running the project.
+
+> 1. Right click on the project > Properties > Project Facets
+> 2. Select Dynamic Web Module, Java, and JavaScript options are selected.
+> 3. Click on Apply and Close.
