@@ -1,6 +1,19 @@
-#Sample PowerShell Script for usage of PowerBI Rest API https://docs.microsoft.com/en-us/rest/api/power-bi/imports/postimport
+# This sample script calls the Power BI API to programmatically import a pbix or xlsx file to a workspace
 
-#region Parameters
+# For documentation, please see:
+# https://docs.microsoft.com/en-us/rest/api/power-bi/imports
+
+# Instructions:
+# 1. Install PowerShell (https://msdn.microsoft.com/en-us/powershell/scripting/setup/installing-windows-powershell) 
+#    and the Azure PowerShell cmdlets (Install-Module AzureRM)
+# 2. Run PowerShell as an administrator
+# 3. Follow the instructions below to fill in the client ID
+# 4. Change PowerShell directory to where this script is saved
+# 5. > ./importApi.ps1
+
+# Parameters - fill these in before running the script!
+# ======================================================
+
 $clientId = "" # AAD App Id (client id)
 $groupID = "me" # the ID of the workspace where you want to import. Use "me" if you want to import to your "My workspace"
 $datasetName = "demo1.pbix" # the name of the dataset we will import, the value passed must contain the file extension .pbix or .xlsx
