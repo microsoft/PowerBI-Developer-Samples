@@ -2,7 +2,7 @@
 
 This is a basic UserOwnsData based sample for embed report api.
 
-You can either register a native app to run the sample or use the default public app already in the solution.
+You can either register a server-side web application to run the sample or use the default public app already in the solution.
 
 If you decide to use your registered app, use the following parameters:
 
