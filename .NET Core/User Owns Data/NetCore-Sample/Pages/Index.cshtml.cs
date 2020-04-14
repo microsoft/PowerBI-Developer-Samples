@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.PowerBI.Api.V2;
@@ -145,14 +144,17 @@ namespace PowerBI_API_NetCore_Sample.Pages
             {
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
-                var requestBody = $"resource={HttpUtility.UrlEncode(AppSettings.ResourceUrl)}" +
-                                  $"&redirect_uri=" + AppSettings.RedirectUrl +
-                                  $"&client_id={AppSettings.ApplicationId}" +
-                                  $"&grant_type=authorization_code" +
-                                  $"&code = " + authCode;
-
+                var authenticationCredentials = new Dictionary<string, string>
+                {
+                    { "client_id", AppSettings.ApplicationId },
+                    { "client_secret", AppSettings.ApplicationSecret },
+                    { "grant_type", "authorization_code" },
+                    { "code", authCode },
+                    { "redirect_uri", AppSettings.RedirectUrl },
+                };
+                
                 using (var response = await httpClient.PostAsync(AppSettings.LoggingRequestUrl,
-                    new StringContent(requestBody, Encoding.UTF8, "application/x-www-form-urlencoded")))
+                    new FormUrlEncodedContent(authenticationCredentials)))
                 {
                     if (response.IsSuccessStatusCode)
                     {
