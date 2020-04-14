@@ -1,15 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
-using Microsoft.PowerBI.Api.V2;
-using Microsoft.PowerBI.Api.V2.Models;
+using Microsoft.PowerBI.Api;
+using Microsoft.PowerBI.Api.Models;
 using Microsoft.Rest;
 using Newtonsoft.Json.Linq;
 
@@ -66,7 +65,7 @@ namespace PowerBI_API_NetCore_Sample.Pages
         {
             using (var client = new PowerBIClient(new Uri(AppSettings.ApiUrl), new TokenCredentials(AccessToken, "Bearer")))
             {
-                string groupId;
+                Guid? groupId;
 
                 if (string.IsNullOrEmpty(AppSettings.GroupId))
                 {
@@ -75,10 +74,10 @@ namespace PowerBI_API_NetCore_Sample.Pages
                 }
                 else
                 {
-                    groupId = AppSettings.GroupId;
+                    groupId = new Guid(AppSettings.GroupId);
                 }
 
-                if (string.IsNullOrEmpty(groupId))
+                if (!groupId.HasValue)
                 {
                     // no groups available for user
                     string message = "No group available, need to create a group and upload a report";
@@ -86,12 +85,12 @@ namespace PowerBI_API_NetCore_Sample.Pages
                 }
 
                 // getting first report in selected group from GetReports results
-                Report report = (await client.Reports.GetReportsInGroupAsync(groupId)).Value.FirstOrDefault();
+                Report report = (await client.Reports.GetReportsInGroupAsync(groupId.Value)).Value.FirstOrDefault();
 
                 if (report != null)
                 {
                     EmbedUrl = report.EmbedUrl;
-                    ReportId = report.Id;
+                    ReportId = report.Id.ToString();
                 }
                 else
                 {
@@ -145,14 +144,17 @@ namespace PowerBI_API_NetCore_Sample.Pages
             {
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
-                var requestBody = $"resource={HttpUtility.UrlEncode(AppSettings.ResourceUrl)}" +
-                                  $"&redirect_uri=" + AppSettings.RedirectUrl +
-                                  $"&client_id={AppSettings.ApplicationId}" +
-                                  $"&grant_type=authorization_code" +
-                                  $"&code = " + authCode;
-
+                var authenticationCredentials = new Dictionary<string, string>
+                {
+                    { "client_id", AppSettings.ApplicationId },
+                    { "client_secret", AppSettings.ApplicationSecret },
+                    { "grant_type", "authorization_code" },
+                    { "code", authCode },
+                    { "redirect_uri", AppSettings.RedirectUrl },
+                };
+                
                 using (var response = await httpClient.PostAsync(AppSettings.LoggingRequestUrl,
-                    new StringContent(requestBody, Encoding.UTF8, "application/x-www-form-urlencoded")))
+                    new FormUrlEncodedContent(authenticationCredentials)))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -175,15 +177,21 @@ namespace PowerBI_API_NetCore_Sample.Pages
             // Application Id must have a value.
             if (string.IsNullOrWhiteSpace(AppSettings.ApplicationId))
             {
-                message = "ApplicationId is empty. please register your application as Native app in https://dev.powerbi.com/apps and fill application Id in appsettings.json";
+                message = "ApplicationId is empty. Please register your application as Server-side web application in https://dev.powerbi.com/apps and fill application Id in appsettings.json";
             }
             else
             {
                 // Application Id must be a Guid object.
                 if (!Guid.TryParse(AppSettings.ApplicationId, out result))
                 {
-                    message = "ApplicationId must be a Guid object. please register your application as Native app in https://dev.powerbi.com/apps and fill application Id in appsettings.json";
+                    message = "ApplicationId must be a Guid object. Please register your application as Server-side web application in https://dev.powerbi.com/apps and fill application Id in appsettings.json";
                 }
+            }
+
+            // Application Secret must have a value.
+            if (string.IsNullOrWhiteSpace(AppSettings.ApplicationSecret))
+            {
+                message = "ApplicationSecret is empty. Please register your application as Server-side web application in https://dev.powerbi.com/apps and fill Application Secret in appsettings.json";
             }
 
             // Workspace Id must be a Guid object.
