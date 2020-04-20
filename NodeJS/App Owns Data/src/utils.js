@@ -1,4 +1,4 @@
-var config = require(__dirname + "/../config/config.json");
+let config = require(__dirname + "/../config/config.json");
 
 function getAuthHeader(accessToken) {
 
@@ -10,7 +10,7 @@ function validateConfig() {
 
     // Validation function to check whether the Configurations are available in the config.json file or not
 
-    var guid = require("guid");
+    let guid = require("guid");
 
     if (!config.authenticationMode) {
         return "AuthenticationMode is empty. Please choose MasterUser or ServicePrincipal in config.json.";

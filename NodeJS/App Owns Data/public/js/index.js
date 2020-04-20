@@ -1,5 +1,5 @@
-var models = window["powerbi-client"].models;
-var reportContainer = $("#report-container").get(0);
+let models = window["powerbi-client"].models;
+let reportContainer = $("#report-container").get(0);
 
 // Initialize iframe for embedding report
 powerbi.bootstrap(reportContainer, { type: "report" });
@@ -12,7 +12,7 @@ $.ajax({
     success: function(embedData) {
 
         // Create a config object with type of the object, Embed details and Token Type
-        var reportLoadConfig = {
+        let reportLoadConfig = {
             type: "report",
             tokenType: models.TokenType.Embed,
             accessToken: embedData.accessToken,
@@ -24,7 +24,7 @@ $.ajax({
         tokenExpiry = embedData.expiry;
 
         // Embed Power BI report when Access token and Embed URL are available
-        var report = powerbi.embed(reportContainer, reportLoadConfig);
+        let report = powerbi.embed(reportContainer, reportLoadConfig);
 
         // Clear any other loaded handler events
         report.off("loaded");
@@ -47,7 +47,7 @@ $.ajax({
 
         // Handle embed errors
         report.on("error", function(event) {
-            var errorMsg = event.detail;
+            let errorMsg = event.detail;
             console.error(errorMsg);
             return;
         });
@@ -56,23 +56,23 @@ $.ajax({
     error: function(err) {
 
         // Show error container
-        var errorContainer = $(".error-container");
+        let errorContainer = $(".error-container");
         $(".embed-container").hide();
         errorContainer.show();
 
         // Get the error message from err object
-        var errMsg = JSON.parse(err.responseText)['error'];
+        let errMsg = JSON.parse(err.responseText)['error'];
 
         // Split the message with \r\n delimiter to get the errors from the error message
-        var errorLines = errMsg.split("\r\n");
+        let errorLines = errMsg.split("\r\n");
 
         // Create error header
-        var errHeader = document.createElement("p");
-        var strong = document.createElement("strong");
-        var node = document.createTextNode("Error Details:");
+        let errHeader = document.createElement("p");
+        let strong = document.createElement("strong");
+        let node = document.createTextNode("Error Details:");
 
         // Get the error container
-        var errContainer = errorContainer.get(0);
+        let errContainer = errorContainer.get(0);
 
         // Add the error header in the container
         strong.appendChild(node);
@@ -81,8 +81,8 @@ $.ajax({
 
         // Create <p> as per the length of the array and append them to the container
         errorLines.forEach(element => {
-            var errorContent = document.createElement("p");
-            var node = document.createTextNode(element);
+            let errorContent = document.createElement("p");
+            let node = document.createTextNode(element);
             errorContent.appendChild(node);
             errContainer.appendChild(errorContent);
         });

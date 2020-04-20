@@ -1,18 +1,18 @@
 const getAuthenticationToken = async function() {
 
     // Use ADAL.js for authentication
-    var adal = require("adal-node");
+    let adal = require("adal-node");
 
-    var AuthenticationContext = adal.AuthenticationContext;
+    let AuthenticationContext = adal.AuthenticationContext;
 
     // Create a config variable that store credentials from config.json
-    var config = require(__dirname + "/../config/config.json");
+    let config = require(__dirname + "/../config/config.json");
 
-    var authorityUrl = config.authorityUri;
+    let authorityUrl = config.authorityUri;
 
     // Check for the MasterUser Authentication
     if (config.authenticationMode.toLowerCase() === "masteruser") {
-        var context = new AuthenticationContext(authorityUrl);
+        let context = new AuthenticationContext(authorityUrl);
 
         return new Promise(
             (resolve, reject) => {
@@ -31,7 +31,7 @@ const getAuthenticationToken = async function() {
         // Check for ServicePrincipal Authentication
     } else if (config.authenticationMode.toLowerCase() === "serviceprincipal") {
         authorityUrl = authorityUrl.replace("common", config.tenantId);
-        var context = new AuthenticationContext(authorityUrl);
+        let context = new AuthenticationContext(authorityUrl);
 
         return new Promise(
             (resolve, reject) => {

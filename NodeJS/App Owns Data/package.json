@@ -17,8 +17,8 @@
         "express": "^4.17.1",
         "guid": "0.0.12",
         "jquery": "^3.4.1",
+        "node-fetch": "^2.6.0",
         "path": "^0.12.7",
-        "request": "^2.88.2",
         "powerbi-client": "^2.11.0"
     },
     "devDependencies": {

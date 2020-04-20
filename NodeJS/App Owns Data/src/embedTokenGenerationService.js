@@ -1,7 +1,7 @@
-var auth = require(__dirname + "/authentication.js");
-var config = require(__dirname + "/../config/config.json");
-var utils = require(__dirname + "/utils.js");
-var request = require("request");
+let auth = require(__dirname + "/authentication.js");
+let config = require(__dirname + "/../config/config.json");
+let utils = require(__dirname + "/utils.js");
+const fetch = require('node-fetch');
 
 async function generateEmbedToken() {
 
@@ -14,30 +14,20 @@ async function generateEmbedToken() {
         };
     }
 
-    var tokenResponse = null;
-    var errorResponse = null;
+    let tokenResponse = null;
+    let errorResponse = null;
 
     // Call the function to get the response from the authentication request
-    await auth.getAuthenticationToken().then(
-        res => tokenResponse = res
-    ).catch(
+    try {
+        tokenResponse = await auth.getAuthenticationToken();
+    } catch (err) {
+        if (err.hasOwnProperty('error_description') && err.hasOwnProperty('error')) {
+            errorResponse = err.error_description;
+        } else {
 
-        // Handle errors in authentication
-        err => {
-
-            // Catch errors in authentication
-            if (err.hasOwnProperty('error_description') && err.hasOwnProperty('error')) {
-                errorResponse = err.error_description;
-            } else {
-
-                // Invalid PowerBI Username provided
-                errorResponse = err.toString();
-            }
+            // Invalid PowerBI Username provided
+            errorResponse = err.toString();
         }
-    );
-
-    // Check for Invalid Authentication and return the errors to the UI
-    if (errorResponse) {
         return {
             "status": 401,
             "error": errorResponse
@@ -45,88 +35,73 @@ async function generateEmbedToken() {
     }
 
     // Extract AccessToken from the response
-    var token = tokenResponse.accessToken;
+    let token = tokenResponse.accessToken;
 
-    const getReportEmbedDetails = async function(token, workspaceId, reportId) {
-        return new Promise(function(resolve, reject) {
-            const reportUrl = "https://api.powerbi.com/v1.0/myorg/groups/" + workspaceId + "/reports/" + reportId;
-            const headers = {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Authorization": utils.getAuthHeader(token)
-            };
+    // embedData will be used for resolution of the Promise
+    let embedData = null;
 
-            request.get({
-                url: reportUrl,
-                headers: headers
-            }, function(err, result, body) {
+    // Call the function to get the Report Embed details
+    try {
+        embedData = await getReportEmbedDetails(token, config.workspaceId, config.reportId);
 
-                // Handle all the error cases
-                if (result.statusCode !== 200) {
-                    return reject(result);
-                }
-                try {
-                    // Parsing the body using JSON.parse()
-                    const bodyObj = JSON.parse(body);
-                    resolve(bodyObj);
-                } catch (err) {
-                    reject(err);
-                }
-            });
-        });
-    }
-
-    // embedData will be used for resolving the promise, embedError will be used for the rejection of the promise
-    var embedData = null;
-    var embedError = null;
-    await getReportEmbedDetails(token, config.workspaceId, config.reportId)
-        .then(bodyObj => embedData = bodyObj)
-        .catch(err => embedError = err);
-
-    // If the embedError object is not null then it will be error
-    if (embedError) {
+        // Call the function to get the Embed Token
+        let embedToken = await getReportEmbedToken(token, embedData);
         return {
-            "status": 500,
-            "error": 'Invalid Workspace ID or Report ID. Please change it in config.json.'
+            "accessToken": embedToken.token,
+            "embedUrl": embedData.embedUrl,
+            "expiry": embedToken.expiration,
+            "status": 200
+        };
+    } catch (err) {
+        return {
+            "status": err.status,
+            "error": 'Error while retrieving report embed details\r\n' + err.statusText + '\r\nRequestId: \n' + err.headers.get('requestid')
         }
     }
+}
 
-    const getReportEmbedToken = async function() {
-        return new Promise(function(resolve, reject) {
-            const embedTokenUrl = "https://api.powerbi.com/v1.0/myorg/GenerateToken";
-            const headers = {
-                "Content-Type": "application/json",
-                "Authorization": utils.getAuthHeader(token)
-            };
-
-            const formData = {
-                "datasets": [{
-                    "id": embedData.datasetId
-                }],
-                "reports": [{
-                    "id": embedData.id
-                }]
-            };
-
-            request.post({
-                url: embedTokenUrl,
-                form: formData,
-                headers: headers,
-
-            }, function(err, result, body) {
-                if (err) return reject(err);
-                const bodyObj = JSON.parse(body);
-                resolve(bodyObj);
-            });
-        })
-    }
-    var embedToken = await getReportEmbedToken();
-
-    return {
-        "accessToken": embedToken.token,
-        "embedUrl": embedData.embedUrl,
-        "expiry": embedToken.expiration,
-        "status": 200
+async function getReportEmbedDetails(token, workspaceId, reportId) {
+    const reportUrl = "https://api.powerbi.com/v1.0/myorg/groups/" + workspaceId + "/reports/" + reportId;
+    const headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": utils.getAuthHeader(token)
     };
+
+    // Used node-fetch to call the PowerBI REST API
+    let result = await fetch(reportUrl, {
+        method: 'GET',
+        headers: headers,
+    })
+    if (!result.ok)
+        throw result;
+    return result.json();
+}
+
+async function getReportEmbedToken(token, embedData) {
+    const embedTokenUrl = "https://api.powerbi.com/v1.0/myorg/GenerateToken";
+    const headers = {
+        "Content-Type": "application/json",
+        "Authorization": utils.getAuthHeader(token)
+    };
+
+    const formData = {
+        "datasets": [{
+            "id": embedData.datasetId
+        }],
+        "reports": [{
+            "id": embedData.id
+        }]
+    };
+
+    // Used node-fetch to call the PowerBI REST API
+    let result = await fetch(embedTokenUrl, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(formData)
+    });
+    if (!result.ok)
+        throw result;
+    return result.json();
 }
 
 module.exports = {

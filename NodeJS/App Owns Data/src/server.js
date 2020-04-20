@@ -1,5 +1,5 @@
-var path = require('path');
-var embedToken = require(__dirname + '/embedTokenGenerationService.js');
+let path = require('path');
+let embedToken = require(__dirname + '/embedTokenGenerationService.js');
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
@@ -26,7 +26,7 @@ app.get('/', function(req, res) {
 app.get('/getEmbedToken', async function(req, res) {
 
     // Get the details like Embed URL, Access token and Expiry
-    var result = await embedToken.generateEmbedToken();
+    let result = await embedToken.generateEmbedToken();
 
     // result.status specified the statusCode that will be sent along with the result object
     res.status(result.status).send(result);
