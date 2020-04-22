@@ -18,6 +18,7 @@ function initializeEventHandlers() {
             reportDisplayText.show();
             dashboardWrapper.hide();
             tileWrapper.hide();
+            $(".report-wrapper").css({ "background-color": "#EAEAEA" });
             reportWrapper.show();
 
             // Repopulate select list for report select event

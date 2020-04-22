@@ -86,9 +86,9 @@
 }
 
 .report-container {
-    background-color: #EAEAEA;
     height: 70vh;
     padding: 0;
+    width: calc(70vh * 1.7778) /* 16:9 aspect ratio */
 }
 
 .report-wrapper {

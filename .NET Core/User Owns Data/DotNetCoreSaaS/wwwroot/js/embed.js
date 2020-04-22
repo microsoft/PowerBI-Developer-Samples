@@ -20,7 +20,10 @@ function embedReport(embedParam) {
                 type: embedType,
                 tokenType: models.TokenType.Aad,
                 accessToken: embedParam.accessToken,
-                embedUrl: embedUrl
+                embedUrl: embedUrl,
+                settings: {
+                    background: models.BackgroundType.Transparent
+                }
             };
 
             // Embed Power BI report
@@ -32,6 +35,7 @@ function embedReport(embedParam) {
             // Triggers when a report schema is successfully loaded
             report.on("loaded", function () {
                 reportDisplayText.hide();
+                $(".report-wrapper").css({ "background-color": "transparent" });
                 reportContainer.show();
                 console.log("Report load successful");
             });
@@ -94,22 +98,22 @@ function embedDashboard(embedParam) {
                 dashboardContainer.show();
                 console.log("Dashboard load successful");
             });
-
+            
             // Clear any other tileClicked handler events
             dashboard.off("tileClicked");
-
+            
             // Handle tileClicked event
             dashboard.on("tileClicked", function (event) {
                 console.log("Tile clicked");
             });
-
+            
             // Clear any other error handler event
             dashboard.off("error");
-
+            
             // Below patch of code is for handling errors that occur during embedding
             dashboard.on("error", function (event) {
                 var errorMsg = event.detail;
-
+                
                 // Use errorMsg variable to log error in any destination of choice
                 console.error(errorMsg);
                 return;
@@ -123,11 +127,11 @@ function embedDashboard(embedParam) {
 
 // Embed Power BI tile
 function embedTile(embedParam) {
-
+    
     // For setting type of token in embed config
     var models = window["powerbi-client"].models;
     var embedType = "tile";
-
+    
     $.ajax({
         type: "GET",
         url: "/embedinfo/tileembedurl",
@@ -141,13 +145,13 @@ function embedTile(embedParam) {
                 embedUrl: embedUrl,
                 dashboardId: embedParam.dashboardId
             };
-
+            
             // Embed Power BI tile
             var tile = powerbi.embed(tileContainer.get(0), tileConfig);
-
+            
             // Clear any other tileLoaded handler events
             tile.off("tileLoaded");
-
+            
             // Handle tileLoad event
             tile.on("tileLoaded", function (event) {
                 tileDisplayText.hide();
