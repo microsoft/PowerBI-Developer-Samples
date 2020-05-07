@@ -18,6 +18,8 @@ function initializeEventHandlers() {
             reportDisplayText.show();
             dashboardWrapper.hide();
             tileWrapper.hide();
+            $(".report-wrapper").removeClass("transparent-bg");
+            $(".report-wrapper").addClass("colored-bg");
             reportWrapper.show();
 
             // Repopulate select list for report select event

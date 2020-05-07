@@ -20,7 +20,13 @@ function embedReport(embedParam) {
                 type: embedType,
                 tokenType: models.TokenType.Aad,
                 accessToken: embedParam.accessToken,
-                embedUrl: embedUrl
+                embedUrl: embedUrl,
+                /*
+                // Enable this setting to remove gray shoulders from embedded report
+                settings: {
+                    background: models.BackgroundType.Transparent
+                }
+                */
             };
 
             // Embed Power BI report
@@ -32,6 +38,7 @@ function embedReport(embedParam) {
             // Triggers when a report schema is successfully loaded
             report.on("loaded", function () {
                 reportDisplayText.hide();
+                $(".report-wrapper").addClass("transparent-bg");
                 reportContainer.show();
                 console.log("Report load successful");
             });

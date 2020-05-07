@@ -21,9 +21,14 @@ section#text-container > div > div {
 }
 
 section#report-container {
-    height: 700px;
+    height: 70vh;
+    width: calc(70vh * 1.7778); /* 16:9 aspect ratio */
 }
 
 footer > p {
     font: 1em "segoe ui", arial, sans-serif;
+}
+
+iframe {
+    border: none;
 }

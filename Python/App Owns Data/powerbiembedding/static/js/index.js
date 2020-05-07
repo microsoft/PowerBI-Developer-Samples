@@ -3,6 +3,12 @@ $(function () {
     var reportLoadConfig = {
         type: "report",
         tokenType: models.TokenType.Embed,
+        /*
+        // Enable this setting to remove gray shoulders from embedded report
+        settings: {
+            background: models.BackgroundType.Transparent
+        }
+        */
     };
     var reportContainer = $("#report-container").get(0);
     

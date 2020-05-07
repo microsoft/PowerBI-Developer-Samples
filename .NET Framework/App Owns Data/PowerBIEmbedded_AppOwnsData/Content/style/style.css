@@ -3,19 +3,13 @@
 }
 
 #embedContainer {
-    height: 600px;
-    width: 100%;
-    max-width: 1000px;
+    height: calc(80vw * 0.5625); /* 16:9 aspect ratio */
+    width: 80%;
 }
 
 #dashboardContainer {
-    height: 920px;
-    width: 100%;
-    max-width: 1320px;
-}
-
-#dashboardContainer iframe{
-    border: none;
+    height: calc(80vw * 0.5625); /* 16:9 aspect ratio */
+    width: 80%;
 }
 
 #buttonsWrapper {
@@ -52,4 +46,8 @@ a:hover, a:visited, a:link, a:active {
 
 .infoBox {
     margin-top: 30px;
+}
+
+iframe {
+    border: none;
 }

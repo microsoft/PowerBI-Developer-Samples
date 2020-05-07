@@ -128,7 +128,7 @@
                 <input type="button" id="bEmbedDashboardAction" value="Embed Dashboard" />
             </div>
 
-            <div id="dashboardContainer" width: 100% hight: 100% ></div>
+            <div id="dashboardContainer"></div>
         </asp:Panel>
     </div>
 

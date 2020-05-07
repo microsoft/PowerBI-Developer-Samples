@@ -24,12 +24,17 @@
             // This object is used when calling powerbi.embed.
             // This also includes settings and options such as filters.
             // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+
+            var models = window["powerbi-client"].models;
             var config = {
                 type: 'report',
+                tokenType: models.TokenType.Aad,
                 accessToken: accessToken,
                 embedUrl: embedUrl,
                 id: reportId,
                 settings: {
+                    // Enable this setting to remove gray shoulders from embedded report
+                    // background: models.BackgroundType.Transparent,
                     filterPaneEnabled: true,
                     navContentPaneEnabled: true
                 }

@@ -16,7 +16,13 @@ $.ajax({
             type: "report",
             tokenType: models.TokenType.Embed,
             accessToken: embedData.accessToken,
-            embedUrl: embedData.embedUrl
+            embedUrl: embedData.embedUrl,
+            /*
+            // Enable this setting to remove gray shoulders from embedded report
+            settings: {
+                background: models.BackgroundType.Transparent
+            }
+            */
         };
 
         // Use the token expiry to regenerate Embed token for seamless end user experience

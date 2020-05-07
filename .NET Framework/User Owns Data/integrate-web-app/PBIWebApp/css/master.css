@@ -36,6 +36,8 @@ input[type="submit"], input[type="button"] {
 
 #reportContainer {
     background-color: #f5f8fa;
+    height: calc(100vw * 0.5625); /* 16:9 aspect ratio */
+    width: 100%;
 }
 
 #logView {
@@ -117,8 +119,8 @@ input[type="submit"], input[type="button"] {
 }
 
 #dashboardContainer {
-    width: 90%;
-    height: 800px;
+    height: calc(100vw * 0.5625); /* 16:9 aspect ratio */
+    width: 100%;
 }
 
 .stepHr {
@@ -131,4 +133,8 @@ p, table {
 
 .error{
     color: #FF0000;
+}
+
+iframe {
+   border: none; 
 }
