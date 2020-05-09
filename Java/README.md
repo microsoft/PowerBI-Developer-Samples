@@ -9,10 +9,15 @@ Find the steps to add Java path to environment variable [here](https://docs.orac
 
 3. [Apache Tomcat](https://tomcat.apache.org/download-90.cgi) (Download binary distributions)
 
-## Embed a Power BI report
-1. For Master user, register a Native app [here](https://aka.ms/embedsetup/AppOwnsData) and for Service Principal, register a Server-side web app by following [this](https://aka.ms/EmbedServicePrincipal). Refer to [documentation](https://aka.ms/RegisterPowerBIApp).
+
+## Set up a Power BI app
+
+1. For Master user, register a Native app [here](https://aka.ms/embedsetup/AppOwnsData) and for Service Principal, register a Server-side web app by following [this](https://aka.ms/EmbedServicePrincipal).
+
+    Select "Read all datasets" and "Read all reports" permissions during Power BI app setup. Refer to the[documentation](https://aka.ms/RegisterPowerBIApp) for registering a Power BI app. 
+
+    Refer to the [documentation](https://aka.ms/PowerBIPermissions) for the complete list of Power BI permissions.
 	
-2. Put required values in the [Config.java](App%20Owns%20Data/PowerBIEmbedding/src/main/java/com/embedsample/appownsdata/config/Config.java) file related to AAD app, Power BI report, workspace, and user account information.
 
 ## Steps to build and run
 
@@ -25,20 +30,22 @@ Find the steps to add Java path to environment variable [here](https://docs.orac
     4. Click browse, then select the folder which contains Tomcat
     5. Select JRE which is available through system variable
     6. Click __Finish__
-    7. There should be a tomcat server now in the Servers tab
+    7. There should be a Tomcat server now in the Servers tab
 
 1. To import project,
 Click File > Open Project from File System > Click on Directory > Select [PowerBIEmbedding](App%20Owns%20Data/PowerBIEmbedding) folder > Finish
     
-1. Let Maven finish downloading the dependencies automatically in background.
+2. Let Maven finish automatically downloading the dependencies in background.
 
-2. Add Tomcat server to the project
+3. Add Tomcat server to the project
     1. Right click __PowerBIEmbedding__ (project's name) from Project Explorer and then click __Properties__
     2. Select __Targeted Runtimes__
     3. Select __Apache Tomcat__ from the list
     4. Click on Apply and Close
 
-3. Run the project
+4. Fill in the required parameters in [Config.java](App%20Owns%20Data/PowerBIEmbedding/src/main/java/com/embedsample/appownsdata/config/Config.java) file related to AAD app, Power BI report, workspace, and user account information.
+
+5. Run the project
     1. Right click project's name from Project Explorer
     2. Select Run As > __Run on Server__
     3. Select the created server and click __Finish__

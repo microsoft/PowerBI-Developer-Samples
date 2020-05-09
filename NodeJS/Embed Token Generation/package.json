@@ -1,0 +1,24 @@
+{
+    "name": "embed-token-sample",
+    "version": "1.0.0",
+    "description": "Generate Embed Token",
+    "main": "./app-owns-data-sample.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nodemon ./app-owns-data-sample.js",
+        "start": "nodemon ./app-owns-data-sample.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "adal-node": "^0.2.1",
+        "body-parser": "^1.19.0",
+        "express": "^4.17.1",
+        "guid": "0.0.12",
+        "path": "^0.12.7",
+        "request": "^2.88.2"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.2"
+    }
+}

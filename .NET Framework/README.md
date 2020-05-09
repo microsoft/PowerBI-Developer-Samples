@@ -1,4 +1,4 @@
-# Power BI Embedded Sample in .NET framework
+# Power BI Embedded Sample in .NET Framework
 
 Read this documentation to prepare your environment: https://aka.ms/EmbedForCustomer
 
@@ -8,11 +8,9 @@ Read this documentation to prepare your environment: https://aka.ms/EmbedForCust
 
 In web.config:
 
-- For authentication with master user credential choose MasterUser as AuthenticationType.
+- For authentication with master user credential choose MasterUser as AuthenticationType. Register an app [here](https://aka.ms/embedsetup/appownsdata)
 
-- For authentication with app secret choose ServicePrincipal as AuthenticationType (Preview).
-
-More details here: https://aka.ms/EmbedServicePrincipal
+- For authentication with app secret choose ServicePrincipal as AuthenticationType. For more details refer to https://aka.ms/EmbedServicePrincipal
 
 To embed reports, dashboards and tiles, the following details must be specified within web.config:
 
@@ -20,10 +18,15 @@ To embed reports, dashboards and tiles, the following details must be specified 
 |-------------------|-------------------------------------------------------------------------------------------------------|
 | applicationId     | Id of the AAD application registered as a Native app.                                                 |
 | workspaceId       | The group or workspace Id in Power BI containing the reports, dashboards and tiles you want to embed. |
-| pbiUsername       | A Power BI username (e.g. Email). The user must be an admin of the group above. (For Master User Only)|
-| pbiPassword       | The password of the Power BI user above. (For Master User Only)                                       |
-| applicationSecret | Secret Key of the AAD application registered as a NATIVE app. (For Service Principal Only)           |
-| tenant            | Tenant Id of the application. (For Service Principal Only)                                         |
+| pbiUsername       | A Power BI username (e.g. Email). The user must be an admin of the group above. (For Master User only)|
+| pbiPassword       | The password of the Power BI user above. (For Master User only)                                       |
+| applicationSecret | Secret Key of the AAD application registered as a Server-side web app. (For Service Principal only)            |
+| tenant            | Tenant Id of the application. (For Service Principal Only)                                            |
+
+Following permissions need to be configured in the AAD app:
+
+1. Report.Read.All
+2. Dashboard.Read.All
 
 # User Owns Data
 
@@ -38,13 +41,19 @@ Follow these steps to run PowerBI.com Integrate samples:
 
 ## Step 1 - App Registration
 
-Register an application to be used to call Power BI APIs using the [Embed Setup Tool](https://aka.ms/embedsetup/UserOwnsData)
+1. Register an application to be used to call Power BI APIs using the [Embed Setup Tool](https://aka.ms/embedsetup/UserOwnsData)
+2. Enable Access token option under “Implicit grant” in Authentication section of AAD app
 
 ### Registration parameters per sample
 
 Redirect URL  - http://localhost:13526/Redirect
 
 Home Page URL - http://localhost:13526/
+
+### App permissions to be configured in AAD app
+
+1. Report.Read.All
+2. Dashboard.Read.All
 
 Registration Example:
 

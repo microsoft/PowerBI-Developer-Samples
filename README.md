@@ -3,6 +3,8 @@ topic: sample
 languages:
   - csharp
   - js
+  - python
+  - java
 products:
   - dotnet-core
   - power-bi
@@ -17,9 +19,10 @@ In addition, it has samples for calling the Power BI REST APIs using PowerShell.
 Available Power BI Embedded solutions:
   * App Owns Data - aka Embed for your customers
     * .NET Framework
+    * .NET Core
     * Python
     * Java
-    * Node JS (only Embed token generation)
+    * Node JS
   * User Owns Data - aka Embed for your organization
     * .NET Framework
     * .NET Core
