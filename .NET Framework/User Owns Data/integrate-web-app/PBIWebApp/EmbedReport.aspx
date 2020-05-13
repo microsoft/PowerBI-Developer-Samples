@@ -103,7 +103,7 @@
     <div>
         Embedded Report
         <br />
-        <div ID="reportContainer" style="width: 900px; height: 500px"></div>
+        <div ID="reportContainer"></div>
     </div>
 
     <div>

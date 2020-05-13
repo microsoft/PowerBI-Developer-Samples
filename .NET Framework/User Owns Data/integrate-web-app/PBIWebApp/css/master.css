@@ -34,10 +34,16 @@ input[type="submit"], input[type="button"] {
     font-weight: bold;
 }
 
-#reportContainer {
-    background-color: #f5f8fa;
-    height: calc(100vw * 0.5625); /* 16:9 aspect ratio */
-    width: 100%;
+#reportContainer, #dashboardContainer {
+    width: 60%;
+    min-width: 500px;
+    height: calc(0.5625 * 60vw); /* 16:9 aspect ratio */
+}
+
+@media only screen and (max-width: 950px) {
+        #reportContainer, #dashboardContainer {
+        height: calc(0.5625 * 565px); /* 16:9 aspect ratio */
+    }
 }
 
 #logView {
@@ -116,11 +122,6 @@ input[type="submit"], input[type="button"] {
 
 #embedInputs input[type=button] {
     margin-top: 20px;
-}
-
-#dashboardContainer {
-    height: calc(100vw * 0.5625); /* 16:9 aspect ratio */
-    width: 100%;
 }
 
 .stepHr {

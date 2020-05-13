@@ -21,8 +21,13 @@ section#text-container > div > div {
 }
 
 section#report-container {
-    height: 70vh;
-    width: calc(70vh * 1.7778); /* 16:9 aspect ratio */
+    height: calc(0.5625 * 60vw); /* 16:9 aspect ratio */
+}
+
+@media only screen and (max-width: 575px) {
+    section#report-container {
+        height: calc(0.5625 * 100vw); /* 16:9 aspect ratio */
+    }
 }
 
 footer > p {

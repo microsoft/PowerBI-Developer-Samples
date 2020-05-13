@@ -22,8 +22,7 @@ main {
 }
 
 #report-container {
-    height: 70vh;
-    width: calc(70vh * 1.7778); /* 16:9 aspect ratio */
+    height: calc(0.5625 * 61vw); /* 16:9 aspect ratio */
 }
 
 footer > p {
@@ -32,4 +31,10 @@ footer > p {
 
 iframe {
     border: none;
+}
+
+@media only screen and (max-width: 574px) {
+    #report-container {
+        height: calc(0.5625 * 100vw); /* 16:9 aspect ratio */
+    }
 }

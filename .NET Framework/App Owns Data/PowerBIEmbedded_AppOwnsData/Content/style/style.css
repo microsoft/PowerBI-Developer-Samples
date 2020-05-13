@@ -3,13 +3,21 @@
 }
 
 #embedContainer {
-    height: calc(80vw * 0.5625); /* 16:9 aspect ratio */
-    width: 80%;
+    min-width: 800px;
+    height: calc(0.5625 * 64vw); /* 16:9 aspect ratio */    
+    width: 60%;
 }
 
 #dashboardContainer {
-    height: calc(80vw * 0.5625); /* 16:9 aspect ratio */
-    width: 80%;
+    min-width: 800px;
+    height: calc(0.5625 * 64vw); /* 16:9 aspect ratio */    
+    width: 60%;
+}
+
+@media only screen and (max-width: 1333.33px) {
+        #embedContainer, #dashboardContainer {
+        height: calc(0.5625 * 870px); /* 16:9 aspect ratio */
+    }
 }
 
 #buttonsWrapper {
