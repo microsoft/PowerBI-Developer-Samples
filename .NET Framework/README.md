@@ -2,7 +2,7 @@
 
 Read this documentation to prepare your environment: https://aka.ms/EmbedForCustomer
 
-# App Owns Data
+# Embed for your customers
 
 ## Choose Authentication method
 
@@ -28,7 +28,7 @@ Following permissions need to be configured in the AAD app:
 1. Report.Read.All
 2. Dashboard.Read.All
 
-# User Owns Data
+# Embed for your organization
 
 ## Source code for integrate a report / dashboard / tile into an app walkthrough
 

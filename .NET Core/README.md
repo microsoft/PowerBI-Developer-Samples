@@ -9,7 +9,7 @@
 **Note:** Visual Studio version >=16.5 is required to use .NET Core SDK 3.1
 
 
-## App Owns Data
+## Embed for your customers
 
 ### Set up a Power BI app
 
@@ -21,14 +21,14 @@
 
 ### Run the application on localhost
 
-1. Open the [DotNetCorePaaS.sln](App%20Owns%20Data/DotNetCorePaaS.sln) file in Visual Studio 2019. If you are using Visual Studio Code then, open [DotNetCorePaaS](App%20Owns%20Data/DotNetCorePaaS) folder.
+1. Open the [DotNetCorePaaS.sln](Embed%20for%20your%20customers/DotNetCorePaaS.sln) file in Visual Studio 2019. If you are using Visual Studio Code then, open [DotNetCorePaaS](Embed%20for%20your%20customers/DotNetCorePaaS) folder.
 
-2. Fill in the required parameters in [appsettings.json](App%20Owns%20Data/DotNetCorePaaS/appsettings.json) file. Refer to [ConfigurationModel.cs](App%20Owns%20Data%2FDotNetCorePaaS%2FModels%2FConfigurationModel.cs) for more info on the config parameters.
+2. Fill in the required parameters in [appsettings.json](Embed%20for%20your%20customers/DotNetCorePaaS/appsettings.json) file. Refer to [ConfigurationModel.cs](Embed%20for%20your%20customers/DotNetCorePaaS/Models/ConfigurationModel.cs) for more info on the config parameters.
 
 3. Build and run the application.
 
 
-## User Owns Data
+## Embed for your organization
 
 ### Set up a Power BI app
 
@@ -42,9 +42,9 @@
 
 ### Run the application on localhost
 
-1. Open the [DotNetCoreSaaS.sln](User%20Owns%20Data/DotNetCoreSaaS.sln) file in Visual Studio 2019. If you are using Visual Studio Code then, open [DotNetCoreSaaS](User%20Owns%20Data/DotNetCoreSaaS) folder.
+1. Open the [DotNetCoreSaaS.sln](Embed%20for%20your%20organization/DotNetCoreSaaS.sln) file in Visual Studio 2019. If you are using Visual Studio Code then, open [DotNetCoreSaaS](Embed%20for%20your%20organization/DotNetCoreSaaS) folder.
 
-2. Fill in the required parameters in [authConfig.js](User%20Owns%20Data/DotNetCoreSaaS/wwwroot/js/authConfig.js) file related to AAD app.
+2. Fill in the required parameters in [authConfig.js](Embed%20for%20your%20organization/DotNetCoreSaaS/wwwroot/js/authConfig.js) file related to AAD app.
 
 3. Build and run the application.
 

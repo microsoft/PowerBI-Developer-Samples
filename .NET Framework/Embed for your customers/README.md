@@ -1,4 +1,4 @@
-# App Owns Data samples
+# Embed for your customers
 
 Read this documentation to prepare your environment
 https://docs.microsoft.com/en-us/power-bi/developer/embedding-content

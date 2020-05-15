@@ -20,7 +20,7 @@ Select the required permissions while registering the app. Complete list of Powe
 
 1. Open the IDE
 
-2. Put required values in the [User Owns data/src/Config.ts](User%20Owns%20data\src\Config.ts) file:
+2. Put required values in the [Config.ts](Embed%20for%20your%20organization\src\Config.ts) file:
 To embed a report the following details must be specified within Config.ts:
 
     | Detail       | Description                                                                 |

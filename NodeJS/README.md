@@ -1,6 +1,6 @@
 # Power BI Embedded Sample in Node JS
 
-## App Owns Data
+## Embed for your customers
 
 ### Requirements
    
@@ -20,12 +20,12 @@
 
 1. Open IDE.
  
-2. Open [App Owns Data](App%20%Owns%20Data) folder.
+2. Open [App Owns Data](Embed%20for%20your%20customers) folder.
 
 3. Open terminal and install required dependencies by executing the following command.<br>
    `npm install`
    
-4. Fill in the required parameters in [config.json](App%20Owns%20Data/config/config.json) file related to AAD app, Power BI report, workspace, and user account information.
+4. Fill in the required parameters in [config.json](Embed%20for%20your%20customers/config/config.json) file related to AAD app, Power BI report, workspace, and user account information.
 
 5. Run the following command in CMD/PowerShell to start the application.<br>
    `npm start`

@@ -1,4 +1,4 @@
-# User Owns Data samples
+# Embed for your organization
 
 Follow these steps to run PowerBI.com Integrate samples:
 

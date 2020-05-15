@@ -33,7 +33,7 @@ Find the steps to add Java path to environment variable [here](https://docs.orac
     7. There should be a Tomcat server now in the Servers tab
 
 1. To import project,
-Click File > Open Project from File System > Click on Directory > Select [PowerBIEmbedding](App%20Owns%20Data/PowerBIEmbedding) folder > Finish
+Click File > Open Project from File System > Click on Directory > Select [PowerBIEmbedding](Embed%20for%20your%20customers/PowerBIEmbedding) folder > Finish
     
 2. Let Maven finish automatically downloading the dependencies in background.
 
@@ -43,7 +43,7 @@ Click File > Open Project from File System > Click on Directory > Select [PowerB
     3. Select __Apache Tomcat__ from the list
     4. Click on Apply and Close
 
-4. Fill in the required parameters in [Config.java](App%20Owns%20Data/PowerBIEmbedding/src/main/java/com/embedsample/appownsdata/config/Config.java) file related to AAD app, Power BI report, workspace, and user account information.
+4. Fill in the required parameters in [Config.java](Embed%20for%20your%20customers/PowerBIEmbedding/src/main/java/com/embedsample/appownsdata/config/Config.java) file related to AAD app, Power BI report, workspace, and user account information.
 
 5. Run the project
     1. Right click project's name from Project Explorer
