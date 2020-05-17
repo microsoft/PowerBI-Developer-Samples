@@ -1,42 +1,63 @@
 # Power BI Embedded Sample in .NET Core
 
-## App Owns Data
+## Requirements
 
-### Requirements
+1. [.NET Core 3.1 SDK](https://aka.ms/netcore31)
 
-1. .NET Core 3.1
+2. IDE/ Code Editor (Recommended is Visual Studio Code or Visual Studio 2019)
+<br>
+**Note:** Visual Studio version >=16.5 is required to use .NET Core SDK 3.1
 
-2. IDE (Recommended is Visual Studio Code or Visual Studio 2019)
 
-  
+## Embed for your customers
 
-### Embed a Power BI report
+### Set up a Power BI app
 
-1. Refer to the [documentation](https://aka.ms/RegisterPowerBIApp) (for Master User) and register a Power BI app [here](https://app.powerbi.com/embedsetup/AppOwnsData). Refer to the [documentation](https://aka.ms/AA7lze8) (for Service Principal).
+1. For Master user, register a Native app [here](https://aka.ms/embedsetup/AppOwnsData) and for Service Principal, register a Server-side web app by following [this](https://aka.ms/EmbedServicePrincipal).
 
-2. Put required values in the [appsettings.json](App%20Owns%20Data/DotNetCorePaaS/appsettings.json) file related to AAD app, Power BI report, workspace, dataset, and user account information. Refer [ConfigurationModel.cs](App%20Owns%20Data/DotNetCorePaaS/Models/ConfigurationModel.cs) for more info on config parameters.
-
-3. Save and restart the application.
-
-  
+    Select "Read all datasets" and "Read all reports" permissions during Power BI app setup. Refer to the [documentation](https://aka.ms/RegisterPowerBIApp) for registering a Power BI app. 
+    
+    Refer to the [documentation](https://aka.ms/PowerBIPermissions) for the complete list of Power BI permissions.
 
 ### Run the application on localhost
 
-1. Open the [DotNetCorePaaS.sln](App%20Owns%20Data/DotNetCorePaaS.sln) file in Visual Studio 2019. If you are using Visual Studio Code then, open [DotNetCorePaaS](App%20Owns%20Data/DotNetCorePaaS) folder.
+1. Open the [DotNetCorePaaS.sln](Embed%20for%20your%20customers/DotNetCorePaaS.sln) file in Visual Studio 2019. If you are using Visual Studio Code then, open [DotNetCorePaaS](Embed%20for%20your%20customers/DotNetCorePaaS) folder.
 
-2. Populate [appsettings.json](App%20Owns%20Data/DotNetCorePaaS/appsettings.json) file.
+2. Fill in the required parameters in [appsettings.json](Embed%20for%20your%20customers/DotNetCorePaaS/appsettings.json) file. Refer to [ConfigurationModel.cs](Embed%20for%20your%20customers/DotNetCorePaaS/Models/ConfigurationModel.cs) for more info on the config parameters.
 
 3. Build and run the application.
 
 
+## Embed for your organization
 
-## User Owns Data
+### Set up a Power BI app
 
-1. To embed reports, dashboards and tiles, the following details must be specified within [appsettings.json](User%20Owns%20Data/NetCore-Sample/appsettings.json):
+1. Register a Server-side web app [here](https://aka.ms/embedsetup/userownsdata). Refer to the [documentation](https://aka.ms/PowerBIPermissions) for the complete list of Power BI permissions.
+   
+2. Go to the AAD app in [Azure portal](https://aka.ms/AppRegistrations) that was created in the previous step and click on "Authentication".
+   
+3. Under "Implicit grant", enable the Access token option.
 
-    | Detail        | Description                                                                                           |
-    |---------------|-------------------------------------------------------------------------------------------------------|
-    | applicationId | Id of the AAD application registered as a NATIVE app.                                                 |
-    | groupId   | The group or workspace Id in Power BI containing the reports, dashboards and tiles you want to embed. |
+4. Under "Redirect URIs", add https://localhost:5000
 
-2. Build and run the application
+### Run the application on localhost
+
+1. Open the [DotNetCoreSaaS.sln](Embed%20for%20your%20organization/DotNetCoreSaaS.sln) file in Visual Studio 2019. If you are using Visual Studio Code then, open [DotNetCoreSaaS](Embed%20for%20your%20organization/DotNetCoreSaaS) folder.
+
+2. Fill in the required parameters in [authConfig.js](Embed%20for%20your%20organization/DotNetCoreSaaS/wwwroot/js/authConfig.js) file related to AAD app.
+
+3. Build and run the application.
+
+#### Supported browsers:
+
+1. Google Chrome
+   
+2. Microsoft Edge Chromium
+
+3. Mozilla Firefox
+
+4. Internet Explorer
+
+## Important
+
+For security reasons, in a real world application, password or secret should not be stored in config. Instead, consider securing credentials with an application such as Key Vault.

@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Power BI Embedded sample</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+
+<body>
+    <div class="overlay">
+        <div class="signin-container">
+            <p>Sign in to Power BI</p>
+            <button class="sign-in">Sign in</button>
+        </div>
+    </div>
+
+    <div class="outer-div">
+        <header class="row">
+            <div class="heading col-lg-6 col-md-6">Power BI Embedded Sample</div>
+            <div class="user-info col-lg-6 col-md-6">
+            </div>
+        </header>
+        <div class="row config-container">
+            <div id="text-container" class="row col-lg-11 col-md-12">
+
+                <!-- Show radio buttons for Embed types -->
+                <div class="col-lg-4 col-md-12">
+                    <label>Choose embed type</label><br>
+
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="report" name="embedType" value="report" checked>
+                        <label class="custom-control-label" for="report">Report</label>
+                    </div>
+
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="dashboard" name="embedType" value="dashboard">
+                        <label class="custom-control-label" for="dashboard">Dashboard</label>
+                    </div>
+
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="tile" name="embedType" value="tile">
+                        <label class="custom-control-label" for="tile">Tile</label>
+                    </div>
+                </div>
+
+                <div class="row col-lg-8 col-md-12">
+
+                    <!-- Show select list for workspace(s) -->
+                    <div class="row col-lg-4 col-md-12">
+                        <label for="workspace-select">Choose workspace</label><br>
+                        <select id="workspace-select" class="select-list col-lg-10 col-md-12" disabled>
+                            <option id="workspace-default-option" value="" disabled selected>Choose workspace</option>
+                        </select>
+                    </div>
+
+                    <!-- Show select list for report(s) -->
+                    <div id="report-div" class="row col-lg-4 col-md-12">
+                        <label for="report-select">Choose report</label><br>
+                        <select id="report-select" class="select-list col-lg-10 col-md-12" disabled>
+                            <option value="" disabled selected>Choose report</option>
+                        </select>
+                    </div>
+
+                    <!-- Show select list for dashboard(s) -->
+                    <div id="dashboard-div" class="row col-lg-4 col-md-12" hidden>
+                        <label for="dashboard-select">Choose dashboard</label><br>
+                        <select id="dashboard-select" class="select-list col-lg-10 col-md-12" disabled>
+                            <option value="" disabled selected>Choose dashboard</option>
+                        </select>
+                    </div>
+
+                    <!-- Show select list for tile(s) -->
+                    <div id="tile-div" class="row col-lg-4 col-md-12" hidden>
+                        <label for="tile-select">Choose tile</label><br>
+                        <select id="tile-select" class="select-list col-lg-10 col-md-12" disabled>
+                            <option value="" disabled selected>Choose tile</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="button-container col-lg-1 col-md-12">
+                <button class="embed-button" disabled>Embed</button>
+            </div>
+        </div>
+
+        <!-- Show errors to the user -->
+        <div id="error-container">
+        </div>
+
+        <!-- Placeholder div when Power BI report is not embedded -->
+        <div class="report-wrapper col-lg-12 col-md-12 mt-12">
+            <div id="report-container" class="report-container col-lg-12 col-md-12 mt-12" hidden></div>
+            <div class="report-display-text col-lg-12 col-md-12">Select workspace and report</div>
+        </div>
+
+        <!-- Placeholder div when Power BI dashboard is not embedded -->
+        <div class="dashboard-wrapper col-lg-12 col-md-12 mt-12" hidden>
+            <div id="dashboard-container" class="dashboard-container col-lg-12 col-md-12 mt-12" hidden></div>
+            <div class="dashboard-display-text col-lg-12 col-md-12">Select workspace and dashboard</div>
+        </div>
+
+        <!-- Placeholder div when Power BI tile is not embedded -->
+        <div class="tile-wrapper col-lg-12 col-md-12 mt-12" hidden>
+            <div id="tile-container" class="tile-container col-lg-12 col-md-12 mt-12" hidden></div>
+            <div class="tile-display-text col-lg-12 col-md-12">Select workspace, dashboard and tile</div>
+        </div>
+    </div>
+
+    <!-- Reference to JS files -->
+    <script src="/lib/msal/dist/msal.min.js"></script>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/lib/powerbi-client/dist/powerbi.min.js"></script>
+    <script src="/lib/bluebird/js/browser/bluebird.min.js"></script>
+    <script src="/js/error.js"></script>
+    <script src="/js/authConfig.js"></script>
+    <script src="/js/config.js"></script>
+    <script src="/js/globals.js"></script>
+    <script src="/js/data.js"></script>
+    <script src="/js/login.js"></script>
+    <script src="/js/embed.js"></script>
+    <script src="/js/events.js"></script>
+    <script src="/js/index.js"></script>
+</body>
+</html>
