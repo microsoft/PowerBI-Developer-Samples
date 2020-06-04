@@ -3,7 +3,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <link rel="stylesheet" href="/css/master.css" type="text/css" />
     <script src="https://npmcdn.com/es6-promise@3.2.1"></script>
-    <script type="text/javascript" src="scripts/powerbi.js"></script>
+    <script type="text/javascript" src="scripts/powerbi.js?v=2.12.1"></script>
 
     <script type="text/javascript">
 
