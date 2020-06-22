@@ -1,0 +1,19 @@
+#reportContainer {
+    background: #EAEAEA;
+    color: #6E6E6E;
+    font: Lighter 40px Segoe UI;    
+    height: calc(0.5625 * 65vw); /* 16:9 aspect ratio */
+    min-width: 800px;
+    text-align: center;
+    width: 100%;
+}
+
+@media only screen and (max-width: 1333.33px) {
+        #reportContainer {
+        height: calc(0.5625 * 870px); /* 16:9 aspect ratio */
+    }
+}
+
+iframe {
+    border: none;
+}

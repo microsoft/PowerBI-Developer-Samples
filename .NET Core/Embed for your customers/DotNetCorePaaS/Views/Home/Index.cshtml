@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Power BI Embedded sample</title>
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <header class="embed-container col-lg-12 col-md-12 col-sm-12 shadow">
+        <p>
+            Power BI Embedded Sample
+        </p>
+    </header>
+    <main class="row">
+        <section id="text-container" class="embed-container col-lg-4 col-md-4 col-sm-4 mb-5 ml-5 mt-5">
+            <div>
+                <p>This sample is developed using .NET Core.
+                    <br>
+                    In order to see a different report, make changes to the <i>appsettings.json</i> file.
+                </p>
+                <p>Code is present in the following files:
+                    <ol>
+                        <li>ConfigurationModel.cs</li>
+                        <li>EmbedInfoController.cs</li>
+                        <li>AadService.cs</li>
+                        <li>PbiEmbedService.cs</li>
+                        <li>ConfigValidatorService.cs</li>
+                        <li>Index.cshtml.cs</li>
+                        <li>index.js</li>
+                        <li>index.css</li>
+                    </ol>
+                </p>
+            </div>
+        </section>
+        <section id="report-container" class="embed-container col-lg-offset-4 col-lg-7 col-md-offset-5 col-md-7 col-sm-offset-5 col-sm-7 mt-5">
+        </section>
+
+        <!-- Used to display report embed error messages -->
+        <section class="error-container m-5">
+        </section>
+    </main>
+    <footer class="embed-container col-lg-12 col-md-12 col-sm-12 mb-0 mt-4">
+        <p class="text-center">
+            For Live demo and more code samples please visit <a
+            href="https://aka.ms/pbijs">https://aka.ms/pbijs</a>
+            <br>
+            For JavaScript API, please visit <a
+            href="https://aka.ms/PowerBIjs">https://aka.ms/PowerBIjs</a>
+        </p>
+    </footer>
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="lib/powerbi/dist/powerbi.min.js"></script>
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

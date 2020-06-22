@@ -1,0 +1,76 @@
+﻿@model PowerBIEmbedded_AppOwnsData.Models.TileEmbedConfig
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://npmcdn.com/es6-promise@3.2.1"></script>
+<script src="~/scripts/powerbi.js"></script>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div id="errorWrapper">
+        <h2>
+            Error
+        </h2>
+        @Model.ErrorMessage
+    </div>
+
+    return;
+}
+
+<h2>Embedded Tile</h2>
+<div>
+    The following tile is the first tile found in the first dashboard in given group. Please feel free to change the code to match your needs.
+</div>
+<div id="tileContainer"></div>
+
+@if (string.IsNullOrEmpty(Model.EmbedUrl))
+{
+    return;
+}
+
+<div class="infoBox">
+    Code is in files:<br />
+    1) HomeController.cs<br />
+    2) EmbedTile.cshtml
+</div>
+
+@Html.Partial("AdditionalLinks")
+
+<script>
+    // Read embed application token from Model
+    var accessToken = "@Model.EmbedToken.Token";
+
+    // Read embed URL from Model
+    var embedUrl = "@Html.Raw(Model.EmbedUrl)";
+
+    // Read tile Id from Model
+    var embedTileId = "@Model.Id";
+
+    // Read dashboard Id from Model
+    var embedDashboardeId = "@Model.dashboardId";
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Embed configuration used to describe the what and how to embed.
+    // This object is used when calling powerbi.embed.
+    // This also includes settings and options such as filters.
+    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+    var config = {
+        type: 'tile',
+        tokenType: models.TokenType.Embed,
+        accessToken: accessToken,
+        embedUrl: embedUrl,
+        id: embedTileId,
+        dashboardId: embedDashboardeId
+    };
+
+    // Get a reference to the embedded tile HTML element
+    var tileContainer = $('#tileContainer')[0];
+
+    // Embed the tile and display it within the div container.
+    var tile = powerbi.embed(tileContainer, config);
+</script>
