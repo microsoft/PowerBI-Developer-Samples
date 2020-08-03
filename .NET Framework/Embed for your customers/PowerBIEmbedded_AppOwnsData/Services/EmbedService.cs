@@ -18,7 +18,6 @@ namespace PowerBIEmbedded_AppOwnsData.Services
     public class EmbedService : IEmbedService
     {
         private static readonly string AuthorityUrl = ConfigurationManager.AppSettings["authorityUrl"];
-        private static readonly string ResourceUrl = ConfigurationManager.AppSettings["resourceUrl"];
         private static readonly string[] Scope = ConfigurationManager.AppSettings["scope"].Split(';');
         private static readonly string ApplicationId = ConfigurationManager.AppSettings["applicationId"];
         private static readonly string ApiUrl = ConfigurationManager.AppSettings["apiUrl"];
