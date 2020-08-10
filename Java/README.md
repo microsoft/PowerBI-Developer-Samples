@@ -1,7 +1,7 @@
 # Power BI Embedded Sample in Spring MVC framework
 
 ## Requirements
-1. [JDK (or JRE)](https://www.oracle.com/java/technologies/javase-jdk8-downloads.html)<br/>
+1. [JDK (or JRE)](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)<br/>
 Find the steps to add Java path to environment variable [here](https://docs.oracle.com/javase/7/docs/webnotes/install/windows/jdk-installation-windows.html#path)<br/>
     To check if you have working JDK execute `java -version` in terminal
 
@@ -14,7 +14,7 @@ Find the steps to add Java path to environment variable [here](https://docs.orac
 
 1. For Master user, register a Native app [here](https://aka.ms/embedsetup/AppOwnsData) and for Service Principal, register a Server-side web app by following [this](https://aka.ms/EmbedServicePrincipal).
 
-    Select "Read all datasets" and "Read all reports" permissions during Power BI app setup. Refer to the[documentation](https://aka.ms/RegisterPowerBIApp) for registering a Power BI app. 
+    Select "Read all datasets" and "Read all reports" permissions during Power BI app setup. Refer to the [documentation](https://aka.ms/RegisterPowerBIApp) for registering a Power BI app. 
 
     Refer to the [documentation](https://aka.ms/PowerBIPermissions) for the complete list of Power BI permissions.
 	
