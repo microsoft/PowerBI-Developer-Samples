@@ -1,18 +1,28 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
 namespace DotNetCorePaaS.Controllers
 {
-    using System;
     using DotNetCorePaaS.Models;
-    using DotNetCorePaaS.Service;
+    using DotNetCorePaaS.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
+    using System;
+    using System.Text.Json;
 
     public class EmbedInfoController : Controller
     {
-        private readonly IOptions<ConfigurationModel> appSettings;
+        private readonly PbiEmbedService pbiEmbedService;
+        private readonly IOptions<AzureAd> azureAd;
+        private readonly IOptions<PowerBI> powerBI;
 
-        public EmbedInfoController(IOptions<ConfigurationModel> appSettings)
+        public EmbedInfoController(PbiEmbedService pbiEmbedService, IOptions<AzureAd> azureAd, IOptions<PowerBI> powerBI)
         {
-            this.appSettings = appSettings;
+            this.pbiEmbedService = pbiEmbedService;
+            this.azureAd = azureAd;
+            this.powerBI = powerBI;
         }
 
         /// <summary>
@@ -24,15 +34,16 @@ namespace DotNetCorePaaS.Controllers
         {
             try
             {
-                string configValidationResult = ConfigValidatorService.ValidateConfig(appSettings);
+                // Validate whether all the required configurations are provided in appsettings.json
+                string configValidationResult = ConfigValidatorService.ValidateConfig(azureAd, powerBI);
                 if (configValidationResult != null)
                 {
                     HttpContext.Response.StatusCode = 400;
                     return configValidationResult;
                 }
-                string accessToken = AadService.GetAccessToken(appSettings);
-                string embedInfo = PbiEmbedService.GetEmbedParam(accessToken, appSettings);
-                return embedInfo;
+
+                EmbedParams embedParams = pbiEmbedService.GetEmbedParams(new Guid(powerBI.Value.WorkspaceId), new Guid(powerBI.Value.ReportId));
+                return JsonSerializer.Serialize<EmbedParams>(embedParams);
             }
             catch (Exception ex)
             {

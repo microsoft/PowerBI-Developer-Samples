@@ -1,4 +1,9 @@
-﻿namespace DotNetCorePaaS.Controllers
+﻿// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
+namespace DotNetCorePaaS.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
 

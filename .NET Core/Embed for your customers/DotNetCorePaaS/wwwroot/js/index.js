@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
 $(function () {
     var models = window["powerbi-client"].models;
     var reportContainer = $("#report-container").get(0);
@@ -13,19 +18,19 @@ $(function () {
             reportLoadConfig = {
                 type: "report",
                 tokenType: models.TokenType.Embed,
-                accessToken: embedData.accessToken,
-                embedUrl: embedData.embedUrl,
-                /*
+                accessToken: embedData.EmbedToken.Token,
+                // You can embed different reports as per your need
+                embedUrl: embedData.EmbedReport[0].EmbedUrl,
+
                 // Enable this setting to remove gray shoulders from embedded report
-                settings: {
-                    background: models.BackgroundType.Transparent
-                }
-                */
+                // settings: {
+                //     background: models.BackgroundType.Transparent
+                // }
             };
 
             // Use the token expiry to regenerate Embed token for seamless end user experience
             // Refer https://aka.ms/RefreshEmbedToken
-            tokenExpiry = embedData.embedTokenExpiry;
+            tokenExpiry = embedData.EmbedToken.Expiration;
             
             // Embed Power BI report when Access token and Embed URL are available
             var report = powerbi.embed(reportContainer, reportLoadConfig);

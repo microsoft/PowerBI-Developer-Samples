@@ -1,6 +1,12 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
 namespace DotNetCorePaaS
 {
     using DotNetCorePaaS.Models;
+    using DotNetCorePaaS.Services;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -19,8 +25,15 @@ namespace DotNetCorePaaS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Register AadService and PbiEmbedService for dependency injection
+            services.AddScoped(typeof(AadService))
+                    .AddScoped(typeof(PbiEmbedService));
+
             services.AddControllersWithViews();
-            services.Configure<ConfigurationModel>(Configuration.GetSection("EmbedSettings"));
+
+            // Loading appsettings.json in C# Model classes
+            services.Configure<AzureAd>(Configuration.GetSection("AzureAd"))
+                    .Configure<PowerBI>(Configuration.GetSection("PowerBI"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
