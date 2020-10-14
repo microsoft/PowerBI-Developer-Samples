@@ -1,44 +1,51 @@
 namespace DotNetCoreSaaS.Controllers
 {
-    using System;
-    using System.Net.Http;
     using DotNetCoreSaaS.Service;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Identity.Web;
+    using Microsoft.Rest;
+    using System;
+    using System.Net.Http;
+    using System.Threading.Tasks;
 
     public class EmbedInfoController : Controller
     {
+        private readonly PowerBiService m_powerBiService;
+
+        public EmbedInfoController(PowerBiService powerBiService)
+        {
+            this.m_powerBiService = powerBiService;
+        }
+
         /// <summary>
         /// Returns Embed URL of report to the client
         /// </summary>
-        /// <param name="accessToken">Access token to generate embed url</param>
         /// <param name="workspaceId">Workspace where the report resides</param>
         /// <param name="reportId">Report to be embedded</param>
         /// <returns>JSON containing embed url for embedding report</returns>
+        [AuthorizeForScopes(Scopes = new string[] { PowerBiScopes.ReadReport })]
         [HttpGet]
         [Route("/embedinfo/reportembedurl")]
-        public JsonResult ReportEmbedUrl(string accessToken, string workspaceId, string reportId)
+        public async Task<IActionResult> ReportEmbedConfigAsync(string workspaceId, string reportId)
         {
             try
             {
-                var powerBiService = new PowerBiService(accessToken, workspaceId);
-                if (string.IsNullOrWhiteSpace(accessToken))
+                if (string.IsNullOrWhiteSpace(workspaceId))
                 {
-                    throw new Exception("Access token cannot be null");
-                }
-                else if (string.IsNullOrWhiteSpace(workspaceId))
-                {
-                    throw new Exception("Workspace id cannot be null");
+                    throw new ArgumentNullException(nameof(workspaceId));
                 }
                 else if (string.IsNullOrWhiteSpace(reportId))
                 {
-                    throw new Exception("Report id cannot be null");
+                    throw new ArgumentNullException(nameof(reportId));
                 }
 
-                // Generates embedUrl for report
-                else
-                {
-                    return this.Json(powerBiService.GetReportEmbedUrl(reportId));
-                }
+                // Generates embedUrl and accessToken for report
+                return this.Json(await m_powerBiService.GetReportEmbedConfigAsync(reportId, workspaceId));
+            }
+            catch (HttpOperationException ex)
+            {
+                Console.Error.WriteLine(ex);
+                throw;
             }
             catch (HttpRequestException ex)
             {
@@ -46,6 +53,11 @@ namespace DotNetCoreSaaS.Controllers
                 throw;
             }
             catch (FormatException ex)
+            {
+                Console.Error.WriteLine(ex);
+                throw;
+            }
+            catch (MicrosoftIdentityWebChallengeUserException ex)
             {
                 Console.Error.WriteLine(ex);
                 throw;
@@ -55,35 +67,32 @@ namespace DotNetCoreSaaS.Controllers
         /// <summary>
         /// Returns Embed URL of dashboard to the client
         /// </summary>
-        /// <param name="accessToken">Access token to generate embed url</param>
         /// <param name="workspaceId">Workspace where the dashboard resides</param>
         /// <param name="dashboardId">Dashboard to be embedded</param>
         /// <returns>JSON containing embed url for embedding dashboard</returns>
+        [AuthorizeForScopes(Scopes = new string[] { PowerBiScopes.ReadDashboard })]
         [HttpGet]
         [Route("/embedinfo/dashboardembedurl")]
-        public JsonResult DashboardEmbedUrl(string accessToken, string workspaceId, string dashboardId)
+        public async Task<IActionResult> DashboardEmbedConfigAsync(string workspaceId, string dashboardId)
         {
             try
             {
-                var powerBiService = new PowerBiService(accessToken, workspaceId);
-                if (string.IsNullOrWhiteSpace(accessToken))
+                if (string.IsNullOrWhiteSpace(workspaceId))
                 {
-                    throw new Exception("Access token cannot be null");
-                }
-                else if (string.IsNullOrWhiteSpace(workspaceId))
-                {
-                    throw new Exception("Workspace id cannot be null");
+                    throw new ArgumentNullException(nameof(workspaceId));
                 }
                 else if (string.IsNullOrWhiteSpace(dashboardId))
                 {
-                    throw new Exception("Dashboard id cannot be null");
+                    throw new ArgumentNullException(nameof(dashboardId));
                 }
 
-                // Generates embedUrl for dashboard
-                else
-                {
-                    return this.Json(powerBiService.GetDashboardEmbedUrl(dashboardId));
-                }
+                // Generates embedUrl and accessToken for dashboard
+                return this.Json(await m_powerBiService.GetDashboardEmbedConfigAsync(dashboardId, workspaceId));
+            }
+            catch (HttpOperationException ex)
+            {
+                Console.Error.WriteLine(ex);
+                throw;
             }
             catch (HttpRequestException ex)
             {
@@ -91,6 +100,11 @@ namespace DotNetCoreSaaS.Controllers
                 throw;
             }
             catch (FormatException ex)
+            {
+                Console.Error.WriteLine(ex);
+                throw;
+            }
+            catch (MicrosoftIdentityWebChallengeUserException ex)
             {
                 Console.Error.WriteLine(ex);
                 throw;
@@ -100,40 +114,37 @@ namespace DotNetCoreSaaS.Controllers
         /// <summary>
         /// Returns Embed URL of tile to the client
         /// </summary>
-        /// <param name="accessToken">Access token to generate embed url</param>
         /// <param name="workspaceId">Workspace where the dashboard and tile resides</param>
         /// <param name="dashboardId">Dashboard to be embedded</param>
         /// <param name="tileId">Tile to be embedded</param>
         /// <returns>JSON containing embed url for embedding tile</returns>
+        [AuthorizeForScopes(Scopes = new string[] { PowerBiScopes.ReadDashboard })]
         [HttpGet]
         [Route("/embedinfo/tileembedurl")]
-        public JsonResult TileEmbedUrl(string accessToken, string workspaceId, string dashboardId, string tileId)
+        public async Task<IActionResult> TileEmbedConfigAsync(string workspaceId, string dashboardId, string tileId)
         {
             try
             {
-                var powerBiService = new PowerBiService(accessToken, workspaceId);
-                if (string.IsNullOrWhiteSpace(accessToken))
+                if (string.IsNullOrWhiteSpace(workspaceId))
                 {
-                    throw new Exception("Access token cannot be null");
-                }
-                else if (string.IsNullOrWhiteSpace(workspaceId))
-                {
-                    throw new Exception("Workspace id cannot be null");
+                    throw new ArgumentNullException(nameof(workspaceId));
                 }
                 else if (string.IsNullOrWhiteSpace(dashboardId))
                 {
-                    throw new Exception("Dashboard id cannot be null");
+                    throw new ArgumentNullException(nameof(dashboardId));
                 }
                 else if (string.IsNullOrWhiteSpace(tileId))
                 {
-                    throw new Exception("Tile id cannot be null");
+                    throw new ArgumentNullException(nameof(tileId));
                 }
 
-                // Generates embedUrl for tile
-                else
-                {
-                    return this.Json(powerBiService.GetTileEmbedUrl(dashboardId, tileId));
-                }
+                // Generates embedUrl and accessToken for tile
+                return this.Json(await m_powerBiService.GetTileEmbedConfigAsync(dashboardId, tileId, workspaceId));
+            }
+            catch (HttpOperationException ex)
+            {
+                Console.Error.WriteLine(ex);
+                throw;
             }
             catch (HttpRequestException ex)
             {
@@ -141,6 +152,11 @@ namespace DotNetCoreSaaS.Controllers
                 throw;
             }
             catch (FormatException ex)
+            {
+                Console.Error.WriteLine(ex);
+                throw;
+            }
+            catch (MicrosoftIdentityWebChallengeUserException ex)
             {
                 Console.Error.WriteLine(ex);
                 throw;
@@ -150,25 +166,16 @@ namespace DotNetCoreSaaS.Controllers
         /// <summary>
         /// Returns workspaces names and their corresponding Ids to the client
         /// </summary>
-        /// <param name="accessToken">Access token to get workspaces</param>
         /// <returns>JSON containing list of Power BI workspaces</returns>
+        [AuthorizeForScopes(Scopes = new string[] { PowerBiScopes.ReadWorkspace })]
         [HttpGet]
         [Route("/embedinfo/getworkspace")]
-        public JsonResult GetWorkspace(string accessToken)
+        public async Task<IActionResult> GetWorkspacesAsync()
         {
             try
             {
-                var powerBiService = new PowerBiService(accessToken);
-                if (string.IsNullOrWhiteSpace(accessToken))
-                {
-                    throw new Exception("Access token cannot be null");
-                }
-
                 // Retrieving workspaces
-                else
-                {
-                    return this.Json(powerBiService.GetWorkspaces());
-                }
+                return this.Json(await m_powerBiService.GetWorkspacesAsync());
             }
             catch (HttpRequestException ex)
             {
@@ -176,6 +183,11 @@ namespace DotNetCoreSaaS.Controllers
                 throw;
             }
             catch (FormatException ex)
+            {
+                Console.Error.WriteLine(ex);
+                throw;
+            }
+            catch (MicrosoftIdentityWebChallengeUserException ex)
             {
                 Console.Error.WriteLine(ex);
                 throw;
@@ -185,30 +197,22 @@ namespace DotNetCoreSaaS.Controllers
         /// <summary>
         /// Returns reports names and their corresponding Ids to the client
         /// </summary>
-        /// <param name="accessToken">Access token to get reports</param>
         /// <param name="workspaceId">Workspace Id to get the list of reports</param>
         /// <returns>JSON containing list of Power BI reports</returns>
+        [AuthorizeForScopes(Scopes = new string[] { PowerBiScopes.ReadReport })]
         [HttpGet]
         [Route("/embedinfo/getreport")]
-        public JsonResult GetReport(string accessToken, string workspaceId)
+        public async Task<IActionResult> GetReportsAsync(string workspaceId)
         {
             try
             {
-                var powerBiService = new PowerBiService(accessToken, workspaceId);
-                if (string.IsNullOrWhiteSpace(accessToken))
+                if (string.IsNullOrWhiteSpace(workspaceId))
                 {
-                    throw new Exception("Access token cannot be null");
-                }
-                else if (string.IsNullOrWhiteSpace(workspaceId))
-                {
-                    throw new Exception("Workspace id cannot be null");
+                    throw new ArgumentNullException(nameof(workspaceId));
                 }
 
                 // Retrieving reports in a workspace
-                else
-                {
-                    return this.Json(powerBiService.GetReports());
-                }
+                return this.Json(await m_powerBiService.GetReportsAsync(workspaceId));
             }
             catch (HttpRequestException ex)
             {
@@ -216,6 +220,11 @@ namespace DotNetCoreSaaS.Controllers
                 throw;
             }
             catch (FormatException ex)
+            {
+                Console.Error.WriteLine(ex);
+                throw;
+            }
+            catch (MicrosoftIdentityWebChallengeUserException ex)
             {
                 Console.Error.WriteLine(ex);
                 throw;
@@ -225,30 +234,22 @@ namespace DotNetCoreSaaS.Controllers
         /// <summary>
         /// Returns dashboards names and their corresponding Ids to the client
         /// </summary>
-        /// <param name="accessToken">Access token to get dashboards</param>
         /// <param name="workspaceId">Workspace Id to get the list of dashboards</param>
         /// <returns>JSON containing list of Power BI dashboards</returns>
+        [AuthorizeForScopes(Scopes = new string[] { PowerBiScopes.ReadDashboard })]
         [HttpGet]
         [Route("/embedinfo/getdashboard")]
-        public JsonResult GetDashboard(string accessToken, string workspaceId)
+        public async Task<IActionResult> GetDashboardsAsync(string workspaceId)
         {
             try
             {
-                var powerBiService = new PowerBiService(accessToken, workspaceId);
-                if (string.IsNullOrWhiteSpace(accessToken))
+                if (string.IsNullOrWhiteSpace(workspaceId))
                 {
-                    throw new Exception("Access token cannot be null");
-                }
-                else if (string.IsNullOrWhiteSpace(workspaceId))
-                {
-                    throw new Exception("Workspace id cannot be null");
+                    throw new ArgumentNullException(nameof(workspaceId));
                 }
 
                 // Retrieving dashboards in a workspace
-                else
-                {
-                    return this.Json(powerBiService.GetDashboards());
-                }
+                return this.Json(await m_powerBiService.GetDashboardsAsync(workspaceId));
             }
             catch (HttpRequestException ex)
             {
@@ -256,6 +257,11 @@ namespace DotNetCoreSaaS.Controllers
                 throw;
             }
             catch (FormatException ex)
+            {
+                Console.Error.WriteLine(ex);
+                throw;
+            }
+            catch (MicrosoftIdentityWebChallengeUserException ex)
             {
                 Console.Error.WriteLine(ex);
                 throw;
@@ -265,31 +271,27 @@ namespace DotNetCoreSaaS.Controllers
         /// <summary>
         /// Returns tiles names and their corresponding Ids to the client
         /// </summary>
-        /// <param name="accessToken">Access token to get tiles</param>
         /// <param name="workspaceId">Workspace Id to get the list of tiles</param>
         /// <param name="dashboardId">Dashboard Id to get list of tiles</param>
         /// <returns>JSON containing list of Power BI tiles</returns>
+        [AuthorizeForScopes(Scopes = new string[] { PowerBiScopes.ReadDashboard })]
         [HttpGet]
         [Route("/embedinfo/gettile")]
-        public JsonResult GetTile(string accessToken, string workspaceId, string dashboardId)
+        public async Task<IActionResult> GetTilesAsync(string workspaceId, string dashboardId)
         {
             try
             {
-                var powerBiService = new PowerBiService(accessToken, workspaceId);
-                if (string.IsNullOrWhiteSpace(accessToken))
+                if (string.IsNullOrWhiteSpace(workspaceId))
                 {
-                    throw new Exception("Access token cannot be null");
+                    throw new ArgumentNullException(nameof(workspaceId));
                 }
-                else if (string.IsNullOrWhiteSpace(workspaceId))
+                else if (string.IsNullOrWhiteSpace(dashboardId))
                 {
-                    throw new Exception("Workspace id cannot be null");
+                    throw new ArgumentNullException(nameof(dashboardId));
                 }
 
                 // Retrieving tiles in a dashboard
-                else
-                {
-                    return this.Json(powerBiService.GetTiles(dashboardId));
-                }
+                return this.Json(await m_powerBiService.GetTilesAsync(dashboardId, workspaceId));
             }
             catch (HttpRequestException ex)
             {
@@ -297,6 +299,11 @@ namespace DotNetCoreSaaS.Controllers
                 throw;
             }
             catch (FormatException ex)
+            {
+                Console.Error.WriteLine(ex);
+                throw;
+            }
+            catch (MicrosoftIdentityWebChallengeUserException ex)
             {
                 Console.Error.WriteLine(ex);
                 throw;

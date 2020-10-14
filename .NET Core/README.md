@@ -44,7 +44,7 @@
 
 1. Open the [DotNetCoreSaaS.sln](Embed%20for%20your%20organization/DotNetCoreSaaS.sln) file in Visual Studio 2019. If you are using Visual Studio Code then, open [DotNetCoreSaaS](Embed%20for%20your%20organization/DotNetCoreSaaS) folder.
 
-2. Fill in the required parameters in [authConfig.js](Embed%20for%20your%20organization/DotNetCoreSaaS/wwwroot/js/authConfig.js) file related to AAD app.
+2. Fill in the required parameters in [appsettings.json](Embed%20for%20your%20organization/DotNetCoreSaaS/appsettings.json) file related to AAD app.
 
 3. Build and run the application.
 
@@ -55,8 +55,6 @@
 2. Microsoft Edge Chromium
 
 3. Mozilla Firefox
-
-4. Internet Explorer
 
 ## Important
 

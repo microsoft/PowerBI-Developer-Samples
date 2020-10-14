@@ -26,20 +26,11 @@
     },
     {
       "provider": "jsdelivr",
-      "library": "powerbi-client@2.11.0",
+      "library": "powerbi-client@2.14.1",
       "destination": "wwwroot/lib/powerbi-client/",
       "files": [
         "dist/powerbi.min.js",
         "LICENSE.txt"
-      ]
-    },
-    {
-      "provider": "jsdelivr",
-      "library": "msal@1.2.2",
-      "destination": "wwwroot/lib/msal/",
-      "files": [
-        "dist/msal.min.js",
-        "LICENSE"
       ]
     },
     {

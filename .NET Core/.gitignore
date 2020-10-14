@@ -28,5 +28,8 @@ msbuild.log
 msbuild.err
 msbuild.wrn
 
-# Visual Studio 2015
+# Visual Studio
 .vs/
+
+# JS library dependencies
+**/wwwroot/lib/*

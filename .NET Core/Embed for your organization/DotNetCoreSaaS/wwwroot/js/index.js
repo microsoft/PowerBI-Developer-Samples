@@ -1,10 +1,10 @@
 $(function () {
 
-    // Check authorization configuration settings
-    validateConfig();
-
     // Initialize event handlers
-    initializeEventHandlers();
+    DotNetCoreSaaS.initializeEventHandlers();
+
+    // Show username of signed in user
+    DotNetCoreSaaS.showUsername(signedInUsername);
 
     // Hide dashboard div with jQuery
     dashboardDiv.hide();
@@ -34,6 +34,5 @@ $(function () {
     tileContainer.hide();
     tileContainer.get(0).hidden = false;
 
-    // Populate user's information
-    getUserInfo();
+    DotNetCoreSaaS.getWorkspaces();
 });

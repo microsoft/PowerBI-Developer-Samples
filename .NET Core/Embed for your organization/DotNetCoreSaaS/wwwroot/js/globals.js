@@ -1,25 +1,24 @@
 // To cache logged in user's info
-var loggedInUser = {
-    name: undefined,
-    accessToken: undefined
+const loggedInUser = {
+    name: undefined
 };
 
 // Cache DOM objects
-var workspaceSelect = $("#workspace-select");
-var workspaceDefaultOption = $("#workspace-default-option").get(0);
-var reportDiv = $("#report-div");
-var dashboardDiv = $("#dashboard-div");
-var tileDiv = $("#tile-div");
-var reportSelect = $("#report-select");
-var dashboardSelect = $("#dashboard-select");
-var reportWrapper = $(".report-wrapper");
-var dashboardWrapper = $(".dashboard-wrapper");
-var tileWrapper = $(".tile-wrapper");
-var reportDisplayText = $(".report-display-text");
-var dashboardDisplayText = $(".dashboard-display-text");
-var tileDisplayText = $(".tile-display-text");
-var embedButton = $(".embed-button");
-var tileSelect = $("#tile-select");
-var reportContainer = $("#report-container");
-var dashboardContainer = $("#dashboard-container");
-var tileContainer = $("#tile-container");
+const workspaceSelect = $("#workspace-select");
+const workspaceDefaultOption = $("#workspace-default-option").get(0);
+const reportDiv = $("#report-div");
+const dashboardDiv = $("#dashboard-div");
+const tileDiv = $("#tile-div");
+const reportSelect = $("#report-select");
+const dashboardSelect = $("#dashboard-select");
+const reportWrapper = $(".report-wrapper");
+const dashboardWrapper = $(".dashboard-wrapper");
+const tileWrapper = $(".tile-wrapper");
+const reportDisplayText = $(".report-display-text");
+const dashboardDisplayText = $(".dashboard-display-text");
+const tileDisplayText = $(".tile-display-text");
+const embedButton = $(".embed-button");
+const tileSelect = $("#tile-select");
+const reportContainer = $("#report-container");
+const dashboardContainer = $("#dashboard-container");
+const tileContainer = $("#tile-container");

@@ -1,9 +1,4 @@
-function initializeEventHandlers() {
-
-    // Sign-in button click event
-    $(".sign-in").on("click", function () {
-        signIn();
-    });
+DotNetCoreSaaS.initializeEventHandlers = function () {
 
     // Radio button handle event
     $("input[type=radio]").on("click", function () {
@@ -23,7 +18,7 @@ function initializeEventHandlers() {
             reportWrapper.show();
 
             // Repopulate select list for report select event
-            resetReportList();
+            DotNetCoreSaaS.resetReportList();
             reportSelect.attr("disabled", "disabled");
         }
 
@@ -39,7 +34,7 @@ function initializeEventHandlers() {
             dashboardWrapper.show();
 
             // Repopulate select list for dashboard select event
-            resetDashboardList();
+            DotNetCoreSaaS.resetDashboardList();
             dashboardSelect.attr("disabled", "disabled");
         }
 
@@ -55,8 +50,8 @@ function initializeEventHandlers() {
             tileWrapper.show();
 
             // Repopulate select lists for tile select event
-            resetDashboardList();
-            resetTileList();
+            DotNetCoreSaaS.resetDashboardList();
+            DotNetCoreSaaS.resetTileList();
             dashboardSelect.attr("disabled", "disabled");
             tileSelect.attr("disabled", "disabled");
         }
@@ -64,8 +59,7 @@ function initializeEventHandlers() {
 
     // Workspace select event
     workspaceSelect.on("change", function () {
-        var getSelectParams = {
-            accessToken: loggedInUser.accessToken,
+        let getSelectParams = {
             workspaceId: this.value
         };
         embedButton.attr("disabled", "disabled");
@@ -75,22 +69,22 @@ function initializeEventHandlers() {
             reportSelect.attr("disabled", "disabled");
 
             // Populate list of reports if report is checked
-            resetReportList();
-            getReports(getSelectParams);
+            DotNetCoreSaaS.resetReportList();
+            DotNetCoreSaaS.getReports(getSelectParams);
         } else if ($("#dashboard").get(0).checked) {
             dashboardSelect.attr("disabled", "disabled");
 
             // Populate list of dashboards when dashboard radio is checked
-            resetDashboardList();
-            getDashboards(getSelectParams);
+            DotNetCoreSaaS.resetDashboardList();
+            DotNetCoreSaaS.getDashboards(getSelectParams);
         } else {
             dashboardSelect.attr("disabled", "disabled");
             tileSelect.attr("disabled", "disabled");
 
             // Populate list of dashboards when tile radio is checked
-            resetDashboardList();
-            resetTileList();
-            getDashboards(getSelectParams);
+            DotNetCoreSaaS.resetDashboardList();
+            DotNetCoreSaaS.resetTileList();
+            DotNetCoreSaaS.getDashboards(getSelectParams);
         }
     });
 
@@ -101,7 +95,7 @@ function initializeEventHandlers() {
 
     // Dashboard select event
     dashboardSelect.on("change", function () {
-        var getSelectParams = {
+        let getSelectParams = {
             accessToken: loggedInUser.accessToken,
             workspaceId: workspaceSelect.get(0).value
         };
@@ -110,9 +104,9 @@ function initializeEventHandlers() {
         if ($("#tile").get(0).checked) {
             embedButton.attr("disabled", "disabled");
             tileSelect.attr("disabled", "disabled");
-            resetTileList();
+            DotNetCoreSaaS.resetTileList();
             getSelectParams.dashboardId = this.value;
-            getTiles(getSelectParams);
+            DotNetCoreSaaS.getTiles(getSelectParams);
         }
 
         // Enable embedButton when dashboard is selected
@@ -128,8 +122,7 @@ function initializeEventHandlers() {
 
     // Embed content on button click
     embedButton.on("click", function () {
-        var embedParam = {
-            accessToken: loggedInUser.accessToken,
+        let embedParam = {
             workspaceId: workspaceSelect.get(0).value
         };
 
@@ -138,7 +131,7 @@ function initializeEventHandlers() {
             embedParam.reportId = reportSelect.get(0).value;
 
             // Embed report
-            embedReport(embedParam);
+            DotNetCoreSaaS.embedReport(embedParam);
         }
 
         // Dashboard radio button is checked
@@ -146,7 +139,7 @@ function initializeEventHandlers() {
             embedParam.dashboardId = dashboardSelect.get(0).value;
 
             // Embed dashboard
-            embedDashboard(embedParam);
+            DotNetCoreSaaS.embedDashboard(embedParam);
         }
 
         // Tile radio button is checked
@@ -155,7 +148,7 @@ function initializeEventHandlers() {
             embedParam.tileId = tileSelect.get(0).value;
 
             // Embed tile
-            embedTile(embedParam);
+            DotNetCoreSaaS.embedTile(embedParam);
         }
         embedButton.attr("disabled", "disabled");
     });

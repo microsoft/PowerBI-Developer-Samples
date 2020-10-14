@@ -1,13 +1,13 @@
 // Embed Power BI report
-function embedReport(embedParam) {
+DotNetCoreSaaS.embedReport = function (embedParam) {
 
     // For setting type of token in embed config
-    var models = window["powerbi-client"].models;
-    var embedType = "report";
+    const models = window["powerbi-client"].models;
+    const embedType = "report";
 
     // If report is not embedded previously then call bootstrap
-    if (!isEmbedded(embedType)) {
-        powerbi.bootstrap(reportContainer.get(0), {type: embedType});
+    if (!DotNetCoreSaaS.isEmbedded(embedType)) {
+        powerbi.bootstrap(reportContainer.get(0), { type: embedType });
     }
 
     $.ajax({
@@ -15,22 +15,20 @@ function embedReport(embedParam) {
         url: "/embedinfo/reportembedurl",
         data: embedParam,
         contentType: "application/json; charset=utf-8",
-        success: function (embedUrl) {
-            var reportConfig = {
+        success: function (embedConfig) {
+            const reportConfig = {
                 type: embedType,
                 tokenType: models.TokenType.Aad,
-                accessToken: embedParam.accessToken,
-                embedUrl: embedUrl,
-                /*
+                accessToken: embedConfig.accessToken,
+                embedUrl: embedConfig.embedUrl,
                 // Enable this setting to remove gray shoulders from embedded report
-                settings: {
-                    background: models.BackgroundType.Transparent
-                }
-                */
+                // settings: {
+                //     background: models.BackgroundType.Transparent
+                // }
             };
 
             // Embed Power BI report
-            var report = powerbi.embed(reportContainer.get(0), reportConfig);
+            const report = powerbi.embed(reportContainer.get(0), reportConfig);
 
             // Clear any other loaded handler events
             report.off("loaded");
@@ -56,41 +54,41 @@ function embedReport(embedParam) {
 
             // Below patch of code is for handling errors that occur during embedding
             report.on("error", function (event) {
-                var errorMsg = event.detail;
-                
+                const errorMsg = event.detail;
+
                 // Use errorMsg variable to log error in any destination of choice
                 console.error(errorMsg);
                 return;
             });
         },
         error: function (err) {
-            showError(err);
+            DotNetCoreSaaS.showError(err);
         }
     });
 }
 
 // Embed Power BI dashboard
-function embedDashboard(embedParam) {
+DotNetCoreSaaS.embedDashboard = function (embedParam) {
 
     // For setting type of token in embed config
-    var models = window["powerbi-client"].models;
-    var embedType = "dashboard";
+    const models = window["powerbi-client"].models;
+    const embedType = "dashboard";
 
     $.ajax({
         type: "GET",
         url: "/embedinfo/dashboardembedurl",
         data: embedParam,
         contentType: "application/json; charset=utf-8",
-        success: function (embedUrl) {
-            var dashboardConfig = {
+        success: function (embedConfig) {
+            const dashboardConfig = {
                 type: embedType,
                 tokenType: models.TokenType.Aad,
-                accessToken: embedParam.accessToken,
-                embedUrl: embedUrl
+                accessToken: embedConfig.accessToken,
+                embedUrl: embedConfig.embedUrl,
             };
 
             // Embed Power BI dashboard
-            var dashboard = powerbi.embed(dashboardContainer.get(0), dashboardConfig);
+            const dashboard = powerbi.embed(dashboardContainer.get(0), dashboardConfig);
 
             // Clear any other loaded handler events
             dashboard.off("loaded");
@@ -101,60 +99,60 @@ function embedDashboard(embedParam) {
                 dashboardContainer.show();
                 console.log("Dashboard load successful");
             });
-            
+
             // Clear any other tileClicked handler events
             dashboard.off("tileClicked");
-            
+
             // Handle tileClicked event
             dashboard.on("tileClicked", function (event) {
                 console.log("Tile clicked");
             });
-            
+
             // Clear any other error handler event
             dashboard.off("error");
-            
+
             // Below patch of code is for handling errors that occur during embedding
             dashboard.on("error", function (event) {
-                var errorMsg = event.detail;
-                
+                const errorMsg = event.detail;
+
                 // Use errorMsg variable to log error in any destination of choice
                 console.error(errorMsg);
                 return;
             });
         },
         error: function (err) {
-            showError(err);
+            DotNetCoreSaaS.showError(err);
         }
     });
 }
 
 // Embed Power BI tile
-function embedTile(embedParam) {
-    
+DotNetCoreSaaS.embedTile = function (embedParam) {
+
     // For setting type of token in embed config
-    var models = window["powerbi-client"].models;
-    var embedType = "tile";
-    
+    const models = window["powerbi-client"].models;
+    const embedType = "tile";
+
     $.ajax({
         type: "GET",
         url: "/embedinfo/tileembedurl",
         data: embedParam,
         contentType: "application/json; charset=utf-8",
-        success: function (embedUrl) {
-            var tileConfig = {
+        success: function (embedConfig) {
+            const tileConfig = {
                 type: embedType,
                 tokenType: models.TokenType.Aad,
-                accessToken: embedParam.accessToken,
-                embedUrl: embedUrl,
+                accessToken: embedConfig.accessToken,
+                embedUrl: embedConfig.embedUrl,
                 dashboardId: embedParam.dashboardId
             };
-            
+
             // Embed Power BI tile
-            var tile = powerbi.embed(tileContainer.get(0), tileConfig);
-            
+            const tile = powerbi.embed(tileContainer.get(0), tileConfig);
+
             // Clear any other tileLoaded handler events
             tile.off("tileLoaded");
-            
+
             // Handle tileLoad event
             tile.on("tileLoaded", function (event) {
                 tileDisplayText.hide();
@@ -171,15 +169,15 @@ function embedTile(embedParam) {
             });
         },
         error: function (err) {
-            showError(err);
+            DotNetCoreSaaS.showError(err);
         }
     });
 }
 
-function isEmbedded(embedType) {
-    var embedObjects = powerbi.embeds;
+DotNetCoreSaaS.isEmbedded = function (embedType) {
+    const embedObjects = powerbi.embeds;
     if (embedObjects.length > 0) {
-        for (var i = 0; i < embedObjects.length; i++) {
+        for (let i = 0; i < embedObjects.length; i++) {
             if (embedObjects[i].embedtype === embedType) {
                 return true;
             }

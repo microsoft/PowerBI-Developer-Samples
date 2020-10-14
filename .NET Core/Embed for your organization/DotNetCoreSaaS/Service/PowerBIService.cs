@@ -1,74 +1,70 @@
 namespace DotNetCoreSaaS.Service
 {
-    using System;
-    using System.Collections.Generic;
+    using DotNetCoreSaaS.Models;
+    using Microsoft.Identity.Web;
     using Microsoft.PowerBI.Api;
     using Microsoft.PowerBI.Api.Models;
     using Microsoft.Rest;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class PowerBiService
     {
-        private string accessToken;
-        private string workspaceId;
-        private const string ApiUri = "https://api.powerbi.com/";
+        private const string m_urlPowerBiServiceApiRoot = "https://api.powerbi.com/";
+        private ITokenAcquisition m_tokenAcquisition { get; }
 
-        /// <summary>
-        /// Parameterized constructor to initialize access token and workspace id
-        /// </summary>
-        /// <param name="accessToken">Access token for accessing Power BI content</param>
-        /// <param name="workspaceId">Workspace where the report, dashboard and tile resides</param>
-        public PowerBiService(string accessToken, string workspaceId)
+        public PowerBiService(ITokenAcquisition tokenAcquisition)
         {
-            this.accessToken = accessToken;
-            this.workspaceId = workspaceId;
+            this.m_tokenAcquisition = tokenAcquisition;
         }
 
         /// <summary>
-        /// Parameterized constructor to initialize access token
-        /// </summary>
-        /// <param name="accessToken">Access token for accessing Power BI content</param>
-        public PowerBiService(string accessToken)
-        {
-            this.accessToken = accessToken;
-        }
-
-        /// <summary>
-        /// Returns Embed URL for a report
+        /// Returns embed config for given report
         /// </summary>
         /// <param name="reportId">Report to be embedded</param>
+        /// <param name="workspaceId">Workspace id of report</param>
         /// <returns>String containing embed url</returns>
-        public string GetReportEmbedUrl(string reportId)
+        public async Task<EmbedConfig> GetReportEmbedConfigAsync(string reportId, string workspaceId)
         {
-            using (var client = new PowerBIClient(new Uri(ApiUri), new TokenCredentials(this.accessToken, "Bearer")))
+            var accessToken = await m_tokenAcquisition.GetAccessTokenForUserAsync(new string[] { PowerBiScopes.ReadReport });
+            using (var client = new PowerBIClient(new Uri(m_urlPowerBiServiceApiRoot), new TokenCredentials(accessToken, "Bearer")))
             {
-                return client.Reports.GetReportInGroup(new Guid(this.workspaceId), new Guid(reportId)).EmbedUrl;
+                var report = await client.Reports.GetReportInGroupAsync(new Guid(workspaceId), new Guid(reportId));
+                return new EmbedConfig(accessToken, report.EmbedUrl);
             }
         }
 
         /// <summary>
-        /// Returns Embed URL for a dashboard
+        /// Returns embed config for given dashboard
         /// </summary>
         /// <param name="dashboardId">Dashboard to be embedded</param>
+        /// <param name="workspaceId">Workspace id of dashboard</param>
         /// <returns>String containing embed url</returns>
-        public string GetDashboardEmbedUrl(string dashboardId)
+        public async Task<EmbedConfig> GetDashboardEmbedConfigAsync(string dashboardId, string workspaceId)
         {
-            using (var client = new PowerBIClient(new Uri(ApiUri), new TokenCredentials(this.accessToken, "Bearer")))
+            var accessToken = await m_tokenAcquisition.GetAccessTokenForUserAsync(new string[] { PowerBiScopes.ReadDashboard });
+            using (var client = new PowerBIClient(new Uri(m_urlPowerBiServiceApiRoot), new TokenCredentials(accessToken, "Bearer")))
             {
-                return client.Dashboards.GetDashboardInGroup(new Guid(this.workspaceId), new Guid(dashboardId)).EmbedUrl;
+                var dashboard = await client.Dashboards.GetDashboardInGroupAsync(new Guid(workspaceId), new Guid(dashboardId));
+                return new EmbedConfig(accessToken, dashboard.EmbedUrl);
             }
         }
 
         /// <summary>
-        /// Returns Embed URL for a tile
+        /// Returns embed config for given tile
         /// </summary>
         /// <param name="dashboardId">Dashboard to be embedded</param>
         /// <param name="tileId">Tile to be embedded</param>
+        /// <param name="workspaceId">Workspace id of tile</param>
         /// <returns>String containing embed url</returns>
-        public string GetTileEmbedUrl(string dashboardId, string tileId)
+        public async Task<EmbedConfig> GetTileEmbedConfigAsync(string dashboardId, string tileId, string workspaceId)
         {
-            using (var client = new PowerBIClient(new Uri(ApiUri), new TokenCredentials(this.accessToken, "Bearer")))
+            var accessToken = await m_tokenAcquisition.GetAccessTokenForUserAsync(new string[] { PowerBiScopes.ReadDashboard });
+            using (var client = new PowerBIClient(new Uri(m_urlPowerBiServiceApiRoot), new TokenCredentials(accessToken, "Bearer")))
             {
-                return client.Dashboards.GetTileInGroup(new Guid(this.workspaceId), new Guid(dashboardId), new Guid(tileId)).EmbedUrl;
+                var tile = await client.Dashboards.GetTileInGroupAsync(new Guid(workspaceId), new Guid(dashboardId), new Guid(tileId));
+                return new EmbedConfig(accessToken, tile.EmbedUrl);
             }
         }
 
@@ -76,35 +72,43 @@ namespace DotNetCoreSaaS.Service
         /// Returns a list of Power BI workspaces
         /// </summary>
         /// <returns>List of workspaces</returns>
-        public IList<Group> GetWorkspaces()
+        public async Task<IList<Group>> GetWorkspacesAsync()
         {
-            using (var client = new PowerBIClient(new Uri(ApiUri), new TokenCredentials(this.accessToken, "Bearer")))
+            var accessToken = await m_tokenAcquisition.GetAccessTokenForUserAsync(new string[] { PowerBiScopes.ReadWorkspace });
+            using (var client = new PowerBIClient(new Uri(m_urlPowerBiServiceApiRoot), new TokenCredentials(accessToken, "Bearer")))
             {
-                return client.Groups.GetGroups().Value;
+                var groups = await client.Groups.GetGroupsAsync();
+                return groups.Value;
             }
         }
 
         /// <summary>
         /// Returns a list of reports in a Power BI workspace
         /// </summary>
+        /// <param name="workspaceId">Workspace id of reports</param>
         /// <returns>List of reports in a workspace</returns>
-        public IList<Report> GetReports()
+        public async Task<IList<Report>> GetReportsAsync(string workspaceId)
         {
-            using (var client = new PowerBIClient(new Uri(ApiUri), new TokenCredentials(this.accessToken, "Bearer")))
+            var accessToken = await m_tokenAcquisition.GetAccessTokenForUserAsync(new string[] { PowerBiScopes.ReadReport });
+            using (var client = new PowerBIClient(new Uri(m_urlPowerBiServiceApiRoot), new TokenCredentials(accessToken, "Bearer")))
             {
-                return client.Reports.GetReportsInGroup(new Guid(this.workspaceId)).Value;
+                var reports = await client.Reports.GetReportsInGroupAsync(new Guid(workspaceId));
+                return reports.Value;
             }
         }
 
         /// <summary>
         /// Returns a list of dashboards in a Power BI workspace
         /// </summary>
+        /// <param name="workspaceId">Workspace id of dashboard</param>
         /// <returns>List of dashboard in a workspace</returns>
-        public IList<Dashboard> GetDashboards()
+        public async Task<IList<Dashboard>> GetDashboardsAsync(string workspaceId)
         {
-            using (var client = new PowerBIClient(new Uri(ApiUri), new TokenCredentials(this.accessToken, "Bearer")))
+            var accessToken = await m_tokenAcquisition.GetAccessTokenForUserAsync(new string[] { PowerBiScopes.ReadDashboard });
+            using (var client = new PowerBIClient(new Uri(m_urlPowerBiServiceApiRoot), new TokenCredentials(accessToken, "Bearer")))
             {
-                return client.Dashboards.GetDashboardsInGroup(new Guid(this.workspaceId)).Value;
+                var dashboard = await client.Dashboards.GetDashboardsInGroupAsync(new Guid(workspaceId));
+                return dashboard.Value;
             }
         }
 
@@ -112,12 +116,15 @@ namespace DotNetCoreSaaS.Service
         /// Returns a list of tiles from a dashboard in a Power BI workspace
         /// </summary>
         /// <param name="dashboardId">Dashboard Id to get list of tiles</param>
+        /// <param name="workspaceId">Workspace id of tile</param>
         /// <returns>List of tiles in a dashboard</returns>
-        public IList<Tile> GetTiles(string dashboardId)
+        public async Task<IList<Tile>> GetTilesAsync(string dashboardId, string workspaceId)
         {
-            using (var client = new PowerBIClient(new Uri(ApiUri), new TokenCredentials(this.accessToken, "Bearer")))
+            var accessToken = await m_tokenAcquisition.GetAccessTokenForUserAsync(new string[] { PowerBiScopes.ReadDashboard });
+            using (var client = new PowerBIClient(new Uri(m_urlPowerBiServiceApiRoot), new TokenCredentials(accessToken, "Bearer")))
             {
-                return client.Dashboards.GetTilesInGroup(new Guid(this.workspaceId), new Guid(dashboardId)).Value;
+                var tile = await client.Dashboards.GetTilesInGroupAsync(new Guid(workspaceId), new Guid(dashboardId));
+                return tile.Value;
             }
         }
     }

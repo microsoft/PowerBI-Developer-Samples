@@ -1,7 +1,7 @@
 // Reset report list
-function resetReportList() {
-    var len = reportSelect.get(0).options.length;
-    for (var i = 1; i < len; i++) {
+DotNetCoreSaaS.resetReportList = function () {
+    const len = reportSelect.get(0).options.length;
+    for (let i = 1; i < len; i++) {
         reportSelect.get(0).remove(i);
     }
 
@@ -10,9 +10,9 @@ function resetReportList() {
 }
 
 // Reset dashboard list
-function resetDashboardList() {
-    var len = dashboardSelect.get(0).options.length;
-    for (var i = 1; i < len; i++) {
+DotNetCoreSaaS.resetDashboardList = function () {
+    const len = dashboardSelect.get(0).options.length;
+    for (let i = 1; i < len; i++) {
         dashboardSelect.get(0).remove(i);
     }
 
@@ -21,9 +21,9 @@ function resetDashboardList() {
 }
 
 // Reset tile list
-function resetTileList() {
-    var len = tileSelect.get(0).options.length;
-    for (var i = 1; i < len; i++) {
+DotNetCoreSaaS.resetTileList = function () {
+    const len = tileSelect.get(0).options.length;
+    for (let i = 1; i < len; i++) {
         tileSelect.get(0).remove(i);
     }
 
@@ -32,7 +32,7 @@ function resetTileList() {
 }
 
 // Fetch workspaces list from server
-function getWorkspaces(getSelectParams) {
+DotNetCoreSaaS.getWorkspaces = function (getSelectParams) {
     $.ajax({
         type: "GET",
         url: "/embedinfo/getworkspace",
@@ -41,7 +41,7 @@ function getWorkspaces(getSelectParams) {
         success: function (data) {
 
             // Populate select list
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 workspaceSelect.append(
                     $("<option />")
                         .text(data[i].name)
@@ -50,19 +50,18 @@ function getWorkspaces(getSelectParams) {
             }
 
             if (data.length >= 1) {
-
                 // Enable workspace select list
                 workspaceSelect.removeAttr("disabled");
             }
         },
         error: function (err) {
-            showError(err);
+            DotNetCoreSaaS.showError(err);
         }
     });
 }
 
 // Fetch reports list from server
-function getReports(getSelectParams) {
+DotNetCoreSaaS.getReports = function (getSelectParams) {
     $.ajax({
         type: "GET",
         url: "/embedinfo/getreport",
@@ -71,7 +70,7 @@ function getReports(getSelectParams) {
         success: function (data) {
 
             // Populate select list
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 reportSelect.append(
                     $("<option />")
                         .text(data[i].name)
@@ -86,13 +85,13 @@ function getReports(getSelectParams) {
             }
         },
         error: function (err) {
-            showError(err);
+            DotNetCoreSaaS.showError(err);
         }
     });
 }
 
 // Fetch dashboards list from server
-function getDashboards(getSelectParams) {
+DotNetCoreSaaS.getDashboards = function (getSelectParams) {
     $.ajax({
         type: "GET",
         url: "/embedinfo/getdashboard",
@@ -101,7 +100,7 @@ function getDashboards(getSelectParams) {
         success: function (data) {
 
             // Populate select list
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 dashboardSelect.append(
                     $("<option />")
                         .text(data[i].displayName)
@@ -116,13 +115,13 @@ function getDashboards(getSelectParams) {
             }
         },
         error: function (err) {
-            showError(err);
+            DotNetCoreSaaS.showError(err);
         }
     });
 }
 
 // Fetch tiles list from server
-function getTiles(getSelectParams) {
+DotNetCoreSaaS.getTiles = function (getSelectParams) {
     $.ajax({
         type: "GET",
         url: "/embedinfo/gettile",
@@ -131,7 +130,7 @@ function getTiles(getSelectParams) {
         success: function (data) {
 
             // Populate select list
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 tileSelect.append(
                     $("<option />")
                         .text(data[i].title)
@@ -146,7 +145,7 @@ function getTiles(getSelectParams) {
             }
         },
         error: function (err) {
-            showError(err);
+            DotNetCoreSaaS.showError(err);
         }
     });
 }
