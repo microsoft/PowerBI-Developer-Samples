@@ -37,6 +37,7 @@ Licensed under the MIT license.
 .dashboard-container {
     background-color: #EAEAEA;
     height: calc(74vw * 0.5625); /* 16:9 aspect ratio */
+    max-height: 75vh;
     padding: 0;
 }
 
@@ -54,6 +55,7 @@ Licensed under the MIT license.
 .dashboard-wrapper {
     background-color: #EAEAEA;
     height: calc(74vw * 0.5625); /* 16:9 aspect ratio */
+    max-height: 75vh;
     padding: 0;
 }
 
@@ -94,12 +96,14 @@ Licensed under the MIT license.
 
 .report-container {
     height: calc(0.5625 * (100vw - 206px)); /* 16:9 aspect ratio */
+    max-height: 75vh;
     padding: 0;
 }
 
 .report-wrapper {
     background-color: #EAEAEA;
-    height: 70vh;
+    height: calc(0.5625 * 74vw);  /* 16:9 aspect ratio */
+    max-height: 75vh;
     padding: 0;
 }
 
@@ -145,6 +149,7 @@ Licensed under the MIT license.
 
 .tile-container {
     height: calc(0.5625 * (100vw - 206px));  /* 16:9 aspect ratio */
+    max-height: 75vh;
     padding: 0;
 }
 
@@ -160,7 +165,9 @@ Licensed under the MIT license.
 }
 
 .tile-wrapper {
-    height: calc(0.5625 * (100vw - 206px));  /* 16:9 aspect ratio */
+    background-color: #EAEAEA;
+    height: calc(0.5625 * 74vw);  /* 16:9 aspect ratio */
+    max-height: 75vh;
     padding: 0;
 }
 
