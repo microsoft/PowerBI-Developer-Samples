@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
 DotNetCoreSaaS.showUsername = function (userName) {
     const userInfo = $(".user-info").get(0);
 

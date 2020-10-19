@@ -1,4 +1,9 @@
-﻿namespace DotNetCoreSaaS.Controllers
+﻿// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
+namespace DotNetCoreSaaS.Controllers
 {
     using DotNetCoreSaaS.Service;
     using Microsoft.AspNetCore.Authorization;

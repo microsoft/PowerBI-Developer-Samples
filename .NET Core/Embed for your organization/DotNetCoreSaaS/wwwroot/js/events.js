@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
 DotNetCoreSaaS.initializeEventHandlers = function () {
 
     // Radio button handle event

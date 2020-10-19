@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
 namespace DotNetCoreSaaS
 {
     using Microsoft.AspNetCore.Hosting;

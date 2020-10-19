@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
 // Reset report list
 DotNetCoreSaaS.resetReportList = function () {
     const len = reportSelect.get(0).options.length;

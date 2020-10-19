@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
 // Show error to the user
 DotNetCoreSaaS.showError = function (err) {
     const errorContainer = $("#error-container");
