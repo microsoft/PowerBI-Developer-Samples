@@ -3,7 +3,7 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
-DotNetCoreSaaS.initializeEventHandlers = function () {
+UserOwnsData.initializeEventHandlers = function () {
 
     // Radio button handle event
     $("input[type=radio]").on("click", function () {
@@ -23,7 +23,7 @@ DotNetCoreSaaS.initializeEventHandlers = function () {
             reportWrapper.show();
 
             // Repopulate select list for report select event
-            DotNetCoreSaaS.resetReportList();
+            UserOwnsData.resetReportList();
             reportSelect.attr("disabled", "disabled");
         }
 
@@ -39,7 +39,7 @@ DotNetCoreSaaS.initializeEventHandlers = function () {
             dashboardWrapper.show();
 
             // Repopulate select list for dashboard select event
-            DotNetCoreSaaS.resetDashboardList();
+            UserOwnsData.resetDashboardList();
             dashboardSelect.attr("disabled", "disabled");
         }
 
@@ -55,8 +55,8 @@ DotNetCoreSaaS.initializeEventHandlers = function () {
             tileWrapper.show();
 
             // Repopulate select lists for tile select event
-            DotNetCoreSaaS.resetDashboardList();
-            DotNetCoreSaaS.resetTileList();
+            UserOwnsData.resetDashboardList();
+            UserOwnsData.resetTileList();
             dashboardSelect.attr("disabled", "disabled");
             tileSelect.attr("disabled", "disabled");
         }
@@ -74,22 +74,22 @@ DotNetCoreSaaS.initializeEventHandlers = function () {
             reportSelect.attr("disabled", "disabled");
 
             // Populate list of reports if report is checked
-            DotNetCoreSaaS.resetReportList();
-            DotNetCoreSaaS.getReports(getSelectParams);
+            UserOwnsData.resetReportList();
+            UserOwnsData.getReports(getSelectParams);
         } else if ($("#dashboard").get(0).checked) {
             dashboardSelect.attr("disabled", "disabled");
 
             // Populate list of dashboards when dashboard radio is checked
-            DotNetCoreSaaS.resetDashboardList();
-            DotNetCoreSaaS.getDashboards(getSelectParams);
+            UserOwnsData.resetDashboardList();
+            UserOwnsData.getDashboards(getSelectParams);
         } else {
             dashboardSelect.attr("disabled", "disabled");
             tileSelect.attr("disabled", "disabled");
 
             // Populate list of dashboards when tile radio is checked
-            DotNetCoreSaaS.resetDashboardList();
-            DotNetCoreSaaS.resetTileList();
-            DotNetCoreSaaS.getDashboards(getSelectParams);
+            UserOwnsData.resetDashboardList();
+            UserOwnsData.resetTileList();
+            UserOwnsData.getDashboards(getSelectParams);
         }
     });
 
@@ -109,9 +109,9 @@ DotNetCoreSaaS.initializeEventHandlers = function () {
         if ($("#tile").get(0).checked) {
             embedButton.attr("disabled", "disabled");
             tileSelect.attr("disabled", "disabled");
-            DotNetCoreSaaS.resetTileList();
+            UserOwnsData.resetTileList();
             getSelectParams.dashboardId = this.value;
-            DotNetCoreSaaS.getTiles(getSelectParams);
+            UserOwnsData.getTiles(getSelectParams);
         }
 
         // Enable embedButton when dashboard is selected
@@ -136,7 +136,7 @@ DotNetCoreSaaS.initializeEventHandlers = function () {
             embedParam.reportId = reportSelect.get(0).value;
 
             // Embed report
-            DotNetCoreSaaS.embedReport(embedParam);
+            UserOwnsData.embedReport(embedParam);
         }
 
         // Dashboard radio button is checked
@@ -144,7 +144,7 @@ DotNetCoreSaaS.initializeEventHandlers = function () {
             embedParam.dashboardId = dashboardSelect.get(0).value;
 
             // Embed dashboard
-            DotNetCoreSaaS.embedDashboard(embedParam);
+            UserOwnsData.embedDashboard(embedParam);
         }
 
         // Tile radio button is checked
@@ -153,7 +153,7 @@ DotNetCoreSaaS.initializeEventHandlers = function () {
             embedParam.tileId = tileSelect.get(0).value;
 
             // Embed tile
-            DotNetCoreSaaS.embedTile(embedParam);
+            UserOwnsData.embedTile(embedParam);
         }
         embedButton.attr("disabled", "disabled");
     });

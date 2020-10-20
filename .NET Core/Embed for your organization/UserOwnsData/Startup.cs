@@ -3,9 +3,9 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
-namespace DotNetCoreSaaS
+namespace UserOwnsData
 {
-    using DotNetCoreSaaS.Service;
+    using UserOwnsData.Service;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;

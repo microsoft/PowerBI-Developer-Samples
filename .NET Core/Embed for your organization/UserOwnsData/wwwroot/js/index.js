@@ -6,10 +6,10 @@
 $(function () {
 
     // Initialize event handlers
-    DotNetCoreSaaS.initializeEventHandlers();
+    UserOwnsData.initializeEventHandlers();
 
     // Show username of signed in user
-    DotNetCoreSaaS.showUsername(signedInUsername);
+    UserOwnsData.showUsername(signedInUsername);
 
     // Hide dashboard div with jQuery
     dashboardDiv.hide();
@@ -39,5 +39,5 @@ $(function () {
     tileContainer.hide();
     tileContainer.get(0).hidden = false;
 
-    DotNetCoreSaaS.getWorkspaces();
+    UserOwnsData.getWorkspaces();
 });

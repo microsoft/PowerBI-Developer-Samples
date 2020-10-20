@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "DotNetCoreSaaS": {
+    "UserOwnsData": {
       "commandName": "Project",
       "launchBrowser": true,
       "applicationUrl": "https://localhost:5000",

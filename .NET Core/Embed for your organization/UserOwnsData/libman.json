@@ -32,15 +32,6 @@
         "dist/powerbi.min.js",
         "LICENSE.txt"
       ]
-    },
-    {
-      "provider": "jsdelivr",
-      "library": "bluebird@3.7.2",
-      "destination": "wwwroot/lib/bluebird/",
-      "files": [
-        "LICENSE",
-        "js/browser/bluebird.min.js"
-      ]
     }
   ]
 }

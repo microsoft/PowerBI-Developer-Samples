@@ -3,7 +3,7 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
-namespace DotNetCoreSaaS
+namespace UserOwnsData
 {
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;

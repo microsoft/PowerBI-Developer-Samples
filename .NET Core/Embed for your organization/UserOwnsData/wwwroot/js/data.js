@@ -4,7 +4,7 @@
 // ----------------------------------------------------------------------------
 
 // Reset report list
-DotNetCoreSaaS.resetReportList = function () {
+UserOwnsData.resetReportList = function () {
     const len = reportSelect.get(0).options.length;
     for (let i = 1; i < len; i++) {
         reportSelect.get(0).remove(i);
@@ -15,7 +15,7 @@ DotNetCoreSaaS.resetReportList = function () {
 }
 
 // Reset dashboard list
-DotNetCoreSaaS.resetDashboardList = function () {
+UserOwnsData.resetDashboardList = function () {
     const len = dashboardSelect.get(0).options.length;
     for (let i = 1; i < len; i++) {
         dashboardSelect.get(0).remove(i);
@@ -26,7 +26,7 @@ DotNetCoreSaaS.resetDashboardList = function () {
 }
 
 // Reset tile list
-DotNetCoreSaaS.resetTileList = function () {
+UserOwnsData.resetTileList = function () {
     const len = tileSelect.get(0).options.length;
     for (let i = 1; i < len; i++) {
         tileSelect.get(0).remove(i);
@@ -37,7 +37,7 @@ DotNetCoreSaaS.resetTileList = function () {
 }
 
 // Fetch workspaces list from server
-DotNetCoreSaaS.getWorkspaces = function (getSelectParams) {
+UserOwnsData.getWorkspaces = function (getSelectParams) {
     $.ajax({
         type: "GET",
         url: "/embedinfo/getworkspace",
@@ -60,13 +60,13 @@ DotNetCoreSaaS.getWorkspaces = function (getSelectParams) {
             }
         },
         error: function (err) {
-            DotNetCoreSaaS.showError(err);
+            UserOwnsData.showError(err);
         }
     });
 }
 
 // Fetch reports list from server
-DotNetCoreSaaS.getReports = function (getSelectParams) {
+UserOwnsData.getReports = function (getSelectParams) {
     $.ajax({
         type: "GET",
         url: "/embedinfo/getreport",
@@ -90,13 +90,13 @@ DotNetCoreSaaS.getReports = function (getSelectParams) {
             }
         },
         error: function (err) {
-            DotNetCoreSaaS.showError(err);
+            UserOwnsData.showError(err);
         }
     });
 }
 
 // Fetch dashboards list from server
-DotNetCoreSaaS.getDashboards = function (getSelectParams) {
+UserOwnsData.getDashboards = function (getSelectParams) {
     $.ajax({
         type: "GET",
         url: "/embedinfo/getdashboard",
@@ -120,13 +120,13 @@ DotNetCoreSaaS.getDashboards = function (getSelectParams) {
             }
         },
         error: function (err) {
-            DotNetCoreSaaS.showError(err);
+            UserOwnsData.showError(err);
         }
     });
 }
 
 // Fetch tiles list from server
-DotNetCoreSaaS.getTiles = function (getSelectParams) {
+UserOwnsData.getTiles = function (getSelectParams) {
     $.ajax({
         type: "GET",
         url: "/embedinfo/gettile",
@@ -150,7 +150,7 @@ DotNetCoreSaaS.getTiles = function (getSelectParams) {
             }
         },
         error: function (err) {
-            DotNetCoreSaaS.showError(err);
+            UserOwnsData.showError(err);
         }
     });
 }

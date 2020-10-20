@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetCoreSaaS", "DotNetCoreSaaS\DotNetCoreSaaS.csproj", "{170012D7-5601-432B-B2E3-FA2CB194A184}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserOwnsData", "UserOwnsData\UserOwnsData.csproj", "{170012D7-5601-432B-B2E3-FA2CB194A184}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

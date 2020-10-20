@@ -3,7 +3,7 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
-DotNetCoreSaaS.showUsername = function (userName) {
+UserOwnsData.showUsername = function (userName) {
     const userInfo = $(".user-info").get(0);
 
     // Initialize Welcome text

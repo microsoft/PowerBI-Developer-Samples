@@ -3,9 +3,9 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
-namespace DotNetCoreSaaS.Controllers
+namespace UserOwnsData.Controllers
 {
-    using DotNetCoreSaaS.Service;
+    using UserOwnsData.Service;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Identity.Web;
     using Microsoft.Rest;

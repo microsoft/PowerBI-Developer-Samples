@@ -4,7 +4,7 @@
 // ----------------------------------------------------------------------------
 
 // Show error to the user
-DotNetCoreSaaS.showError = function (err) {
+UserOwnsData.showError = function (err) {
     const errorContainer = $("#error-container");
     reportWrapper.hide();
     dashboardWrapper.hide();

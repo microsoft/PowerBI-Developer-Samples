@@ -3,9 +3,9 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
-namespace DotNetCoreSaaS.Service
+namespace UserOwnsData.Service
 {
-    using DotNetCoreSaaS.Models;
+    using UserOwnsData.Models;
     using Microsoft.Identity.Web;
     using Microsoft.PowerBI.Api;
     using Microsoft.PowerBI.Api.Models;

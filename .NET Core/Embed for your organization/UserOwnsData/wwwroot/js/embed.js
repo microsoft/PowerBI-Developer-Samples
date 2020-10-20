@@ -4,14 +4,14 @@
 // ----------------------------------------------------------------------------
 
 // Embed Power BI report
-DotNetCoreSaaS.embedReport = function (embedParam) {
+UserOwnsData.embedReport = function (embedParam) {
 
     // For setting type of token in embed config
     const models = window["powerbi-client"].models;
     const embedType = "report";
 
     // If report is not embedded previously then call bootstrap
-    if (!DotNetCoreSaaS.isEmbedded(embedType)) {
+    if (!UserOwnsData.isEmbedded(embedType)) {
         powerbi.bootstrap(reportContainer.get(0), { type: embedType });
     }
 
@@ -67,13 +67,13 @@ DotNetCoreSaaS.embedReport = function (embedParam) {
             });
         },
         error: function (err) {
-            DotNetCoreSaaS.showError(err);
+            UserOwnsData.showError(err);
         }
     });
 }
 
 // Embed Power BI dashboard
-DotNetCoreSaaS.embedDashboard = function (embedParam) {
+UserOwnsData.embedDashboard = function (embedParam) {
 
     // For setting type of token in embed config
     const models = window["powerbi-client"].models;
@@ -126,13 +126,13 @@ DotNetCoreSaaS.embedDashboard = function (embedParam) {
             });
         },
         error: function (err) {
-            DotNetCoreSaaS.showError(err);
+            UserOwnsData.showError(err);
         }
     });
 }
 
 // Embed Power BI tile
-DotNetCoreSaaS.embedTile = function (embedParam) {
+UserOwnsData.embedTile = function (embedParam) {
 
     // For setting type of token in embed config
     const models = window["powerbi-client"].models;
@@ -174,12 +174,12 @@ DotNetCoreSaaS.embedTile = function (embedParam) {
             });
         },
         error: function (err) {
-            DotNetCoreSaaS.showError(err);
+            UserOwnsData.showError(err);
         }
     });
 }
 
-DotNetCoreSaaS.isEmbedded = function (embedType) {
+UserOwnsData.isEmbedded = function (embedType) {
     const embedObjects = powerbi.embeds;
     if (embedObjects.length > 0) {
         for (let i = 0; i < embedObjects.length; i++) {
