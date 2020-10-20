@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
 let models = window["powerbi-client"].models;
 let reportContainer = $("#report-container").get(0);
 
@@ -9,20 +14,21 @@ $.ajax({
     type: "GET",
     url: "/getEmbedToken",
     dataType: "json",
-    success: function(embedData) {
+    success: function (embedData) {
 
         // Create a config object with type of the object, Embed details and Token Type
         let reportLoadConfig = {
             type: "report",
             tokenType: models.TokenType.Embed,
             accessToken: embedData.accessToken,
-            embedUrl: embedData.embedUrl,
-            /*
+
+            // Use other embed report config based on the requirement. We have used the first one for demo purpose
+            embedUrl: embedData.embedUrl[0].embedUrl,
+
             // Enable this setting to remove gray shoulders from embedded report
-            settings: {
-                background: models.BackgroundType.Transparent
-            }
-            */
+            // settings: {
+            //     background: models.BackgroundType.Transparent
+            // }
         };
 
         // Use the token expiry to regenerate Embed token for seamless end user experience
@@ -36,7 +42,7 @@ $.ajax({
         report.off("loaded");
 
         // Triggers when a report schema is successfully loaded
-        report.on("loaded", function() {
+        report.on("loaded", function () {
             console.log("Report load successful");
         });
 
@@ -44,7 +50,7 @@ $.ajax({
         report.off("rendered");
 
         // Triggers when a report is successfully embedded in UI
-        report.on("rendered", function() {
+        report.on("rendered", function () {
             console.log("Report render successful");
         });
 
@@ -52,14 +58,14 @@ $.ajax({
         report.off("error");
 
         // Handle embed errors
-        report.on("error", function(event) {
+        report.on("error", function (event) {
             let errorMsg = event.detail;
             console.error(errorMsg);
             return;
         });
     },
 
-    error: function(err) {
+    error: function (err) {
 
         // Show error container
         let errorContainer = $(".error-container");

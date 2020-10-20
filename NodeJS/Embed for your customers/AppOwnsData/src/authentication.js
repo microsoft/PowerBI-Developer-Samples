@@ -1,4 +1,9 @@
-const getAuthenticationToken = async function() {
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
+const getAccessToken = async function () {
 
     // Use ADAL.js for authentication
     let adal = require("adal-node");
@@ -16,7 +21,7 @@ const getAuthenticationToken = async function() {
 
         return new Promise(
             (resolve, reject) => {
-                context.acquireTokenWithUsernamePassword(config.scope, config.pbiUsername, config.pbiPassword, config.clientId, function(err, tokenResponse) {
+                context.acquireTokenWithUsernamePassword(config.scope, config.pbiUsername, config.pbiPassword, config.clientId, function (err, tokenResponse) {
 
                     // Function returns error object in tokenResponse
                     // Invalid Username will return empty tokenResponse, thus err is used
@@ -28,14 +33,14 @@ const getAuthenticationToken = async function() {
             }
         );
 
-        // Check for ServicePrincipal Authentication
+        // Service Principal auth is the recommended by Microsoft to achieve App Owns Data Power BI embedding
     } else if (config.authenticationMode.toLowerCase() === "serviceprincipal") {
         authorityUrl = authorityUrl.replace("common", config.tenantId);
         let context = new AuthenticationContext(authorityUrl);
 
         return new Promise(
             (resolve, reject) => {
-                context.acquireTokenWithClientCredentials(config.scope, config.clientId, config.clientSecret, function(err, tokenResponse) {
+                context.acquireTokenWithClientCredentials(config.scope, config.clientId, config.clientSecret, function (err, tokenResponse) {
 
                     // Function returns error object in tokenResponse
                     // Invalid Username will return empty tokenResponse, thus err is used
@@ -49,4 +54,4 @@ const getAuthenticationToken = async function() {
     }
 }
 
-module.exports.getAuthenticationToken = getAuthenticationToken;
+module.exports.getAccessToken = getAccessToken;

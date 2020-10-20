@@ -19,7 +19,7 @@
         "jquery": "^3.4.1",
         "node-fetch": "^2.6.0",
         "path": "^0.12.7",
-        "powerbi-client": "^2.11.0"
+        "powerbi-client": "^2.14.1"
     },
     "devDependencies": {
         "nodemon": "^2.0.2"

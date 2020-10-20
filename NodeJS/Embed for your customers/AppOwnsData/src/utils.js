@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
 let config = require(__dirname + "/../config/config.json");
 
 function getAuthHeader(accessToken) {
@@ -30,6 +35,10 @@ function validateConfig() {
 
     if (!config.reportId) {
         return "ReportId is empty. Please select a report you own and fill its Id in config.json.";
+    }
+
+    if (!guid.isGuid(config.reportId)) {
+        return "ReportId must be a Guid object. Please select a report you own and fill its Id in config.json.";
     }
 
     if (!config.workspaceId) {
