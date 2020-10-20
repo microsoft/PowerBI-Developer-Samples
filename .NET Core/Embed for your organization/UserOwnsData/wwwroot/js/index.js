@@ -12,32 +12,32 @@ $(function () {
     UserOwnsData.showUsername(signedInUsername);
 
     // Hide dashboard div with jQuery
-    dashboardDiv.hide();
-    dashboardDiv.get(0).hidden = false;
+    UserOwnsData.dashboardDiv.hide();
+    UserOwnsData.dashboardDiv.get(0).hidden = false;
 
     // Hide tile div with jQuery
-    tileDiv.hide();
-    tileDiv.get(0).hidden = false;
+    UserOwnsData.tileDiv.hide();
+    UserOwnsData.tileDiv.get(0).hidden = false;
 
     // Hide dashboard wrapper with jQuery
-    dashboardWrapper.hide();
-    dashboardWrapper.get(0).hidden = false;
+    UserOwnsData.dashboardWrapper.hide();
+    UserOwnsData.dashboardWrapper.get(0).hidden = false;
 
     // Hide tile wrapper with jQuery
-    tileWrapper.hide();
-    tileWrapper.get(0).hidden = false;
+    UserOwnsData.tileWrapper.hide();
+    UserOwnsData.tileWrapper.get(0).hidden = false;
 
     // Hide report container with jQuery
-    reportContainer.hide();
-    reportContainer.get(0).hidden = false;
+    UserOwnsData.reportContainer.hide();
+    UserOwnsData.reportContainer.get(0).hidden = false;
 
     // Hide dashboard container with jQuery
-    dashboardContainer.hide();
-    dashboardContainer.get(0).hidden = false;
+    UserOwnsData.dashboardContainer.hide();
+    UserOwnsData.dashboardContainer.get(0).hidden = false;
 
     // Hide tile container with jQuery
-    tileContainer.hide();
-    tileContainer.get(0).hidden = false;
+    UserOwnsData.tileContainer.hide();
+    UserOwnsData.tileContainer.get(0).hidden = false;
 
     UserOwnsData.getWorkspaces();
 });

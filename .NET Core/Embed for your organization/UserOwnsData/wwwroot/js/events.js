@@ -7,84 +7,84 @@ UserOwnsData.initializeEventHandlers = function () {
 
     // Radio button handle event
     $("input[type=radio]").on("click", function () {
-        workspaceDefaultOption.selected = "true";
+        UserOwnsData.workspaceDefaultOption.selected = "true";
 
         // When report radio button is clicked
         if ($("#report").get(0).checked) {
-            dashboardDiv.hide();
-            tileDiv.hide();
-            reportDiv.show();
-            reportContainer.hide();
-            reportDisplayText.show();
-            dashboardWrapper.hide();
-            tileWrapper.hide();
+            UserOwnsData.dashboardDiv.hide();
+            UserOwnsData.tileDiv.hide();
+            UserOwnsData.reportDiv.show();
+            UserOwnsData.reportContainer.hide();
+            UserOwnsData.reportDisplayText.show();
+            UserOwnsData.dashboardWrapper.hide();
+            UserOwnsData.tileWrapper.hide();
             $(".report-wrapper").removeClass("transparent-bg");
             $(".report-wrapper").addClass("colored-bg");
-            reportWrapper.show();
+            UserOwnsData.reportWrapper.show();
 
             // Repopulate select list for report select event
             UserOwnsData.resetReportList();
-            reportSelect.attr("disabled", "disabled");
+            UserOwnsData.reportSelect.attr("disabled", "disabled");
         }
 
         // When dashboard radio button is clicked
         else if ($("#dashboard").get(0).checked) {
-            reportDiv.hide();
-            tileDiv.hide();
-            dashboardDiv.show();
-            dashboardContainer.hide();
-            dashboardDisplayText.show();
-            reportWrapper.hide();
-            tileWrapper.hide();
-            dashboardWrapper.show();
+            UserOwnsData.reportDiv.hide();
+            UserOwnsData.tileDiv.hide();
+            UserOwnsData.dashboardDiv.show();
+            UserOwnsData.dashboardContainer.hide();
+            UserOwnsData.dashboardDisplayText.show();
+            UserOwnsData.reportWrapper.hide();
+            UserOwnsData.tileWrapper.hide();
+            UserOwnsData.dashboardWrapper.show();
 
             // Repopulate select list for dashboard select event
             UserOwnsData.resetDashboardList();
-            dashboardSelect.attr("disabled", "disabled");
+            UserOwnsData.dashboardSelect.attr("disabled", "disabled");
         }
 
         // When radio button for tile is clicked
         else if ($("#tile").get(0).checked) {
-            reportDiv.hide();
-            dashboardDiv.show();
-            tileDiv.show();
-            tileContainer.hide();
-            tileDisplayText.show();
-            reportWrapper.hide();
-            dashboardWrapper.hide();
-            tileWrapper.show();
+            UserOwnsData.reportDiv.hide();
+            UserOwnsData.dashboardDiv.show();
+            UserOwnsData.tileDiv.show();
+            UserOwnsData.tileContainer.hide();
+            UserOwnsData.tileDisplayText.show();
+            UserOwnsData.reportWrapper.hide();
+            UserOwnsData.dashboardWrapper.hide();
+            UserOwnsData.tileWrapper.show();
 
             // Repopulate select lists for tile select event
             UserOwnsData.resetDashboardList();
             UserOwnsData.resetTileList();
-            dashboardSelect.attr("disabled", "disabled");
-            tileSelect.attr("disabled", "disabled");
+            UserOwnsData.dashboardSelect.attr("disabled", "disabled");
+            UserOwnsData.tileSelect.attr("disabled", "disabled");
         }
     });
 
     // Workspace select event
-    workspaceSelect.on("change", function () {
+    UserOwnsData.workspaceSelect.on("change", function () {
         let getSelectParams = {
             workspaceId: this.value
         };
-        embedButton.attr("disabled", "disabled");
+        UserOwnsData.embedButton.attr("disabled", "disabled");
 
         // Populate select list
         if ($("#report").get(0).checked) {
-            reportSelect.attr("disabled", "disabled");
+            UserOwnsData.reportSelect.attr("disabled", "disabled");
 
             // Populate list of reports if report is checked
             UserOwnsData.resetReportList();
             UserOwnsData.getReports(getSelectParams);
         } else if ($("#dashboard").get(0).checked) {
-            dashboardSelect.attr("disabled", "disabled");
+            UserOwnsData.dashboardSelect.attr("disabled", "disabled");
 
             // Populate list of dashboards when dashboard radio is checked
             UserOwnsData.resetDashboardList();
             UserOwnsData.getDashboards(getSelectParams);
         } else {
-            dashboardSelect.attr("disabled", "disabled");
-            tileSelect.attr("disabled", "disabled");
+            UserOwnsData.dashboardSelect.attr("disabled", "disabled");
+            UserOwnsData.tileSelect.attr("disabled", "disabled");
 
             // Populate list of dashboards when tile radio is checked
             UserOwnsData.resetDashboardList();
@@ -94,21 +94,21 @@ UserOwnsData.initializeEventHandlers = function () {
     });
 
     // Report select event
-    reportSelect.on("change", function () {
-        embedButton.removeAttr("disabled");
+    UserOwnsData.reportSelect.on("change", function () {
+        UserOwnsData.embedButton.removeAttr("disabled");
     });
 
     // Dashboard select event
-    dashboardSelect.on("change", function () {
+    UserOwnsData.dashboardSelect.on("change", function () {
         let getSelectParams = {
             accessToken: loggedInUser.accessToken,
-            workspaceId: workspaceSelect.get(0).value
+            workspaceId: UserOwnsData.workspaceSelect.get(0).value
         };
 
         // Populate list of tiles after selecting the workspace from workspace list
         if ($("#tile").get(0).checked) {
-            embedButton.attr("disabled", "disabled");
-            tileSelect.attr("disabled", "disabled");
+            UserOwnsData.embedButton.attr("disabled", "disabled");
+            UserOwnsData.tileSelect.attr("disabled", "disabled");
             UserOwnsData.resetTileList();
             getSelectParams.dashboardId = this.value;
             UserOwnsData.getTiles(getSelectParams);
@@ -116,24 +116,24 @@ UserOwnsData.initializeEventHandlers = function () {
 
         // Enable embedButton when dashboard is selected
         else {
-            embedButton.removeAttr("disabled");
+            UserOwnsData.embedButton.removeAttr("disabled");
         }
     });
 
     // Tile select event
-    tileSelect.on("change", function () {
-        embedButton.removeAttr("disabled");
+    UserOwnsData.tileSelect.on("change", function () {
+        UserOwnsData.embedButton.removeAttr("disabled");
     });
 
     // Embed content on button click
-    embedButton.on("click", function () {
+    UserOwnsData.embedButton.on("click", function () {
         let embedParam = {
-            workspaceId: workspaceSelect.get(0).value
+            workspaceId: UserOwnsData.workspaceSelect.get(0).value
         };
 
         // Report radio button is checked
         if ($("#report").get(0).checked) {
-            embedParam.reportId = reportSelect.get(0).value;
+            embedParam.reportId = UserOwnsData.reportSelect.get(0).value;
 
             // Embed report
             UserOwnsData.embedReport(embedParam);
@@ -141,7 +141,7 @@ UserOwnsData.initializeEventHandlers = function () {
 
         // Dashboard radio button is checked
         else if ($("#dashboard").get(0).checked) {
-            embedParam.dashboardId = dashboardSelect.get(0).value;
+            embedParam.dashboardId = UserOwnsData.dashboardSelect.get(0).value;
 
             // Embed dashboard
             UserOwnsData.embedDashboard(embedParam);
@@ -149,12 +149,12 @@ UserOwnsData.initializeEventHandlers = function () {
 
         // Tile radio button is checked
         else if ($("#tile").get(0).checked) {
-            embedParam.dashboardId = dashboardSelect.get(0).value;
-            embedParam.tileId = tileSelect.get(0).value;
+            embedParam.dashboardId = UserOwnsData.dashboardSelect.get(0).value;
+            embedParam.tileId = UserOwnsData.tileSelect.get(0).value;
 
             // Embed tile
             UserOwnsData.embedTile(embedParam);
         }
-        embedButton.attr("disabled", "disabled");
+        UserOwnsData.embedButton.attr("disabled", "disabled");
     });
 }

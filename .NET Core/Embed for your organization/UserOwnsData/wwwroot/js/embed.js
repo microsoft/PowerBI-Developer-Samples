@@ -12,7 +12,7 @@ UserOwnsData.embedReport = function (embedParam) {
 
     // If report is not embedded previously then call bootstrap
     if (!UserOwnsData.isEmbedded(embedType)) {
-        powerbi.bootstrap(reportContainer.get(0), { type: embedType });
+        powerbi.bootstrap(UserOwnsData.reportContainer.get(0), { type: embedType });
     }
 
     $.ajax({
@@ -33,16 +33,16 @@ UserOwnsData.embedReport = function (embedParam) {
             };
 
             // Embed Power BI report
-            const report = powerbi.embed(reportContainer.get(0), reportConfig);
+            const report = powerbi.embed(UserOwnsData.reportContainer.get(0), reportConfig);
 
             // Clear any other loaded handler events
             report.off("loaded");
 
             // Triggers when a report schema is successfully loaded
             report.on("loaded", function () {
-                reportDisplayText.hide();
+                UserOwnsData.reportDisplayText.hide();
                 $(".report-wrapper").addClass("transparent-bg");
-                reportContainer.show();
+                UserOwnsData.reportContainer.show();
                 console.log("Report load successful");
             });
 
@@ -93,15 +93,15 @@ UserOwnsData.embedDashboard = function (embedParam) {
             };
 
             // Embed Power BI dashboard
-            const dashboard = powerbi.embed(dashboardContainer.get(0), dashboardConfig);
+            const dashboard = powerbi.embed(UserOwnsData.dashboardContainer.get(0), dashboardConfig);
 
             // Clear any other loaded handler events
             dashboard.off("loaded");
 
             // Triggers when a dashboard schema is successfully loaded
             dashboard.on("loaded", function () {
-                dashboardDisplayText.hide();
-                dashboardContainer.show();
+                UserOwnsData.dashboardDisplayText.hide();
+                UserOwnsData.dashboardContainer.show();
                 console.log("Dashboard load successful");
             });
 
@@ -153,15 +153,15 @@ UserOwnsData.embedTile = function (embedParam) {
             };
 
             // Embed Power BI tile
-            const tile = powerbi.embed(tileContainer.get(0), tileConfig);
+            const tile = powerbi.embed(UserOwnsData.tileContainer.get(0), tileConfig);
 
             // Clear any other tileLoaded handler events
             tile.off("tileLoaded");
 
             // Handle tileLoad event
             tile.on("tileLoaded", function (event) {
-                tileDisplayText.hide();
-                tileContainer.show();
+                UserOwnsData.tileDisplayText.hide();
+                UserOwnsData.tileContainer.show();
                 console.log("Tile load successful");
             });
 

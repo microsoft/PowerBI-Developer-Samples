@@ -3,27 +3,29 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
-// To cache logged in user's info
+// Cache logged in user's info
 const loggedInUser = {
     name: undefined
 };
 
-// Cache DOM objects
-const workspaceSelect = $("#workspace-select");
-const workspaceDefaultOption = $("#workspace-default-option").get(0);
-const reportDiv = $("#report-div");
-const dashboardDiv = $("#dashboard-div");
-const tileDiv = $("#tile-div");
-const reportSelect = $("#report-select");
-const dashboardSelect = $("#dashboard-select");
-const reportWrapper = $(".report-wrapper");
-const dashboardWrapper = $(".dashboard-wrapper");
-const tileWrapper = $(".tile-wrapper");
-const reportDisplayText = $(".report-display-text");
-const dashboardDisplayText = $(".dashboard-display-text");
-const tileDisplayText = $(".tile-display-text");
-const embedButton = $(".embed-button");
-const tileSelect = $("#tile-select");
-const reportContainer = $("#report-container");
-const dashboardContainer = $("#dashboard-container");
-const tileContainer = $("#tile-container");
+$(function() {
+    // Cache DOM objects
+    UserOwnsData.workspaceSelect = $("#workspace-select");
+    UserOwnsData.workspaceDefaultOption = $("#workspace-default-option").get(0);
+    UserOwnsData.reportDiv = $("#report-div");
+    UserOwnsData.dashboardDiv = $("#dashboard-div");
+    UserOwnsData.tileDiv = $("#tile-div");
+    UserOwnsData.reportSelect = $("#report-select");
+    UserOwnsData.dashboardSelect = $("#dashboard-select");
+    UserOwnsData.reportWrapper = $(".report-wrapper");
+    UserOwnsData.dashboardWrapper = $(".dashboard-wrapper");
+    UserOwnsData.tileWrapper = $(".tile-wrapper");
+    UserOwnsData.reportDisplayText = $(".report-display-text");
+    UserOwnsData.dashboardDisplayText = $(".dashboard-display-text");
+    UserOwnsData.tileDisplayText = $(".tile-display-text");
+    UserOwnsData.embedButton = $(".embed-button");
+    UserOwnsData.tileSelect = $("#tile-select");
+    UserOwnsData.reportContainer = $("#report-container");
+    UserOwnsData.dashboardContainer = $("#dashboard-container");
+    UserOwnsData.tileContainer = $("#tile-container");
+});

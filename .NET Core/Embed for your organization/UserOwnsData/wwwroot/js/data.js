@@ -5,35 +5,35 @@
 
 // Reset report list
 UserOwnsData.resetReportList = function () {
-    const len = reportSelect.get(0).options.length;
+    const len = UserOwnsData.reportSelect.get(0).options.length;
     for (let i = 1; i < len; i++) {
-        reportSelect.get(0).remove(i);
+        UserOwnsData.reportSelect.get(0).remove(i);
     }
 
     // Set default option as selected
-    reportSelect.get(0).options[0].selected = true;
+    UserOwnsData.reportSelect.get(0).options[0].selected = true;
 }
 
 // Reset dashboard list
 UserOwnsData.resetDashboardList = function () {
-    const len = dashboardSelect.get(0).options.length;
+    const len = UserOwnsData.dashboardSelect.get(0).options.length;
     for (let i = 1; i < len; i++) {
-        dashboardSelect.get(0).remove(i);
+        UserOwnsData.dashboardSelect.get(0).remove(i);
     }
 
     // Set default option as selected
-    dashboardSelect.get(0).options[0].selected = true;
+    UserOwnsData.dashboardSelect.get(0).options[0].selected = true;
 }
 
 // Reset tile list
 UserOwnsData.resetTileList = function () {
-    const len = tileSelect.get(0).options.length;
+    const len = UserOwnsData.tileSelect.get(0).options.length;
     for (let i = 1; i < len; i++) {
-        tileSelect.get(0).remove(i);
+        UserOwnsData.tileSelect.get(0).remove(i);
     }
 
     // Set default option as selected
-    tileSelect.get(0).options[0].selected = true;
+    UserOwnsData.tileSelect.get(0).options[0].selected = true;
 }
 
 // Fetch workspaces list from server
@@ -47,7 +47,7 @@ UserOwnsData.getWorkspaces = function (getSelectParams) {
 
             // Populate select list
             for (let i = 0; i < data.length; i++) {
-                workspaceSelect.append(
+                UserOwnsData.workspaceSelect.append(
                     $("<option />")
                         .text(data[i].name)
                         .val(data[i].id)
@@ -56,7 +56,7 @@ UserOwnsData.getWorkspaces = function (getSelectParams) {
 
             if (data.length >= 1) {
                 // Enable workspace select list
-                workspaceSelect.removeAttr("disabled");
+                UserOwnsData.workspaceSelect.removeAttr("disabled");
             }
         },
         error: function (err) {
@@ -76,7 +76,7 @@ UserOwnsData.getReports = function (getSelectParams) {
 
             // Populate select list
             for (let i = 0; i < data.length; i++) {
-                reportSelect.append(
+                UserOwnsData.reportSelect.append(
                     $("<option />")
                         .text(data[i].name)
                         .val(data[i].id)
@@ -86,7 +86,7 @@ UserOwnsData.getReports = function (getSelectParams) {
             if (data.length >= 1) {
 
                 // Enable report select list
-                reportSelect.removeAttr("disabled");
+                UserOwnsData.reportSelect.removeAttr("disabled");
             }
         },
         error: function (err) {
@@ -106,7 +106,7 @@ UserOwnsData.getDashboards = function (getSelectParams) {
 
             // Populate select list
             for (let i = 0; i < data.length; i++) {
-                dashboardSelect.append(
+                UserOwnsData.dashboardSelect.append(
                     $("<option />")
                         .text(data[i].displayName)
                         .val(data[i].id)
@@ -116,7 +116,7 @@ UserOwnsData.getDashboards = function (getSelectParams) {
             if (data.length >= 1) {
 
                 // Enable dashboard select list
-                dashboardSelect.removeAttr("disabled");
+                UserOwnsData.dashboardSelect.removeAttr("disabled");
             }
         },
         error: function (err) {
@@ -136,7 +136,7 @@ UserOwnsData.getTiles = function (getSelectParams) {
 
             // Populate select list
             for (let i = 0; i < data.length; i++) {
-                tileSelect.append(
+                UserOwnsData.tileSelect.append(
                     $("<option />")
                         .text(data[i].title)
                         .val(data[i].id)
@@ -146,7 +146,7 @@ UserOwnsData.getTiles = function (getSelectParams) {
             if (data.length >= 1) {
 
                 // Enable tile select list
-                tileSelect.removeAttr("disabled");
+                UserOwnsData.tileSelect.removeAttr("disabled");
             }
         },
         error: function (err) {

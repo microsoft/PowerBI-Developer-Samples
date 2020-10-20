@@ -6,9 +6,9 @@
 // Show error to the user
 UserOwnsData.showError = function (err) {
     const errorContainer = $("#error-container");
-    reportWrapper.hide();
-    dashboardWrapper.hide();
-    tileWrapper.hide();
+    UserOwnsData.reportWrapper.hide();
+    UserOwnsData.dashboardWrapper.hide();
+    UserOwnsData.tileWrapper.hide();
     $(".config-container").hide();
     $("header").hide();
 
