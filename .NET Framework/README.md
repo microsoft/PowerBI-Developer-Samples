@@ -1,91 +1,57 @@
 # Power BI Embedded Sample in .NET Framework
 
-Read this documentation to prepare your environment: https://aka.ms/EmbedForCustomer
+## Requirements
+
+1. [.NET Framework 4.8 Dev Pack](https://aka.ms/dotnet48)
+
+2. IDE/ Code Editor (Recommended is Visual Studio)
 
 # Embed for your customers
 
-## Choose Authentication method
+## Set up a Power BI app
 
-In web.config:
+1. For Master user, register a Native app [here](https://aka.ms/embedsetup/AppOwnsData) and for Service Principal, register a Server-side web app by following [this](https://aka.ms/EmbedServicePrincipal).
 
-- For authentication with master user credential choose MasterUser as AuthenticationType. Register an app [here](https://aka.ms/embedsetup/appownsdata)
+2. Select "Read all workspaces", "Read all datasets", "Read all reports", "Read all dashboards" permissions during Power BI app setup. Refer to the [documentation](https://aka.ms/RegisterPowerBIApp) for registering a Power BI app. 
 
-- For authentication with app secret choose ServicePrincipal as AuthenticationType. For more details refer to https://aka.ms/EmbedServicePrincipal
+    Refer to the [documentation](https://aka.ms/PowerBIPermissions) for the complete list of Power BI permissions.
 
-To embed reports, dashboards and tiles, the following details must be specified within web.config:
+## Run the application on localhost
 
-| Detail            | Description                                                                                           |
-|-------------------|-------------------------------------------------------------------------------------------------------|
-| applicationId     | Id of the AAD application registered as a Native app.                                                 |
-| workspaceId       | The group or workspace Id in Power BI containing the reports, dashboards and tiles you want to embed. |
-| pbiUsername       | A Power BI username (e.g. Email). The user must be an admin of the group above. (For Master User only)|
-| pbiPassword       | The password of the Power BI user above. (For Master User only)                                       |
-| applicationSecret | Secret Key of the AAD application registered as a Server-side web app. (For Service Principal only)            |
-| tenant            | Tenant Id of the application. (For Service Principal Only)                                            |
+1. Open the [PowerBIEmbedded_AppOwnsData.sln](Embed%20for%20your%20customers/PowerBIEmbedded_AppOwnsData.sln) file in Visual Studio.
 
-Following permissions need to be configured in the AAD app:
+2. Fill in the required parameters in [Web.config](Embed%20for%20your%20customers/PowerBIEmbedded_AppOwnsData/Web.config) file.
 
-1. Report.Read.All
-2. Dashboard.Read.All
+3. Build and run the application.
 
 # Embed for your organization
 
-## Source code for integrate a report / dashboard / tile into an app walkthrough
+## Set up a Power BI app
 
-Integrate Power BI elements from a user's Power BI account by embedding an IFrame into an app, such as a mobile app or web app.
+1. Register a Server-side web app [here](https://aka.ms/embedsetup/userownsdata). Refer to the [documentation](https://aka.ms/PowerBIPermissions) for the complete list of Power BI permissions.
 
-See [Integrate a report into an app walkthrough](https://aka.ms/EmbedForOrg).
+2. Select "Read all workspaces", "Read all reports" and "Read all dashboards" permissions during Power BI app setup.
+   
+3. Go to the AAD app in [Azure portal](https://aka.ms/AppRegistrations) that was created in the previous step and click on "Authentication".
 
-Follow these steps to run PowerBI.com Integrate samples:
+4. Under "Redirect URIs", add https://localhost:44300/
 
+## Run the application on localhost
 
-## Step 1 - App Registration
+1. Open the [DotNetFrameworkSaaS.sln](Embed%20for%20your%20organization\DotNetFrameworkSaaS.sln) file in Visual Studio.
 
-1. Register an application to be used to call Power BI APIs using the [Embed Setup Tool](https://aka.ms/embedsetup/UserOwnsData)
-2. Enable Access token option under “Implicit grant” in Authentication section of AAD app
+2. Fill in the required parameters in [Web.config](Embed%20for%20your%20organization\DotNetFrameworkSaaS\Web.config) file related to AAD app.
 
-### Registration parameters per sample
+3. Build and run the application.
 
-Redirect URL  - http://localhost:13526/Redirect
+## Supported browsers:
 
-Home Page URL - http://localhost:13526/
+1. Google Chrome
+   
+2. Microsoft Edge Chromium
 
-### App permissions to be configured in AAD app
-
-1. Report.Read.All
-2. Dashboard.Read.All
-
-Registration Example:
-
-![regexample](https://cloud.githubusercontent.com/assets/23071967/23340723/fc032efe-fc43-11e6-9a8f-13e40cb32d97.png)
-
-## Step 2 - Change Cloud.config
-
-Copy Client Id and Client secret to Cloud.config file
-
-![regexample](https://cloud.githubusercontent.com/assets/23071967/23340740/48d4f640-fc44-11e6-8f31-dd273d26a61e.png)
+3. Mozilla Firefox
 
 ## Important
 
 For security reasons, in a real world application, password or secret should not be stored in config. Instead, consider securing credentials with an application such as Key Vault.
-
-
-## Troubleshooting
-
-### Visual Studio 2013
-To resolve a 'CS0012:Predefined type 'System.Object' is not defined or imported' error, please update web.config.
-
-Find line:
- ```xml
- <compilation debug="true" targetFramework="4.5"/>
- ```
- 
- And modify it to:
- 
- ```xml
- <compilation debug="true" targetFramework="4.5">
-  <assemblies>     
-    <add assembly="System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />   
-  </assemblies>
-</compilation>
-```

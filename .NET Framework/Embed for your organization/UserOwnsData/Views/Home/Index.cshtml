@@ -1,0 +1,23 @@
+﻿@* Copyright (c) Microsoft Corporation.
+Licensed under the MIT license. *@
+
+@{
+	ViewBag.Title = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+	window.onload = function () {
+		// Sign-in button click event
+		$(".sign-in").on("click", function () {
+			location.href = '@Url.Action("Embed", "EmbedInfo")';
+		});
+	};
+</script>
+
+<div class="sign-in-div">
+	<div class="signin-container">
+		<p>Sign in to Power BI</p>
+		<button class="sign-in">Sign in</button>
+	</div>
+</div>

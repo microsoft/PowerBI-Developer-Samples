@@ -1,0 +1,12 @@
+﻿@* Copyright (c) Microsoft Corporation.
+Licensed under the MIT license. *@
+
+@model UserOwnsData.Models.ErrorModel
+
+@{
+	ViewBag.Title = "Error";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Error: @Model.ErrorCode</h1>
+<h2>@Model.ErrorMessage</h2>
