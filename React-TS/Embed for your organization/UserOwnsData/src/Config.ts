@@ -1,3 +1,8 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 
 // Scope of AAD app. Use the below configuration to use all the permissions provided in the AAD app through Azure portal.

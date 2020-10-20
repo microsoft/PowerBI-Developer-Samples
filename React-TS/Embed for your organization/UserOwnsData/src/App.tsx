@@ -1,6 +1,10 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+// ----------------------------------------------------------------------------
+
 import React from "react";
 import { UserAgentApplication, AuthError, AuthResponse } from "msal";
-import { Promise } from "bluebird"; // For MSAL support in IE
 import { service, factories, models, IEmbedConfiguration } from "powerbi-client";
 import "./App.css";
 import * as config from "./Config";
