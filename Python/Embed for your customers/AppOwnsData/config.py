@@ -1,6 +1,10 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+
 class BaseConfig(object):
+
     # Can be set to 'MasterUser' or 'ServicePrincipal'
-    AUTHENTICATION_MODE = 'MasterUser'
+    AUTHENTICATION_MODE = 'ServicePrincipal'
 
     # Workspace Id in which the report is present
     WORKSPACE_ID = ''
