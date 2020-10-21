@@ -20,17 +20,25 @@
 
 1. Open IDE.
  
-2. Open [App Owns Data](Embed%20for%20your%20customers) folder.
+2. Open [AppOwnsData](./Embed%20for%20your%20customers/AppOwnsData) folder.
 
 3. Open terminal and install required dependencies by executing the following command.<br>
    `npm install`
    
-4. Fill in the required parameters in [config.json](Embed%20for%20your%20customers/config/config.json) file related to AAD app, Power BI report, workspace, and user account information.
+4. Fill in the required parameters in [config.json](./Embed%20for%20your%20customers/AppOwnsData/config/config.json) file related to AAD app, Power BI report, workspace, and user account information.
 
 5. Run the following command in CMD/PowerShell to start the application.<br>
    `npm start`
 
 6. Open **http://localhost:5300** in browser or refer to logs to check the port on which the application is running.
+
+#### Supported browsers:
+
+1. Google Chrome
+   
+2. Microsoft Edge Chromium
+
+3. Mozilla Firefox
 
 ## Important
 

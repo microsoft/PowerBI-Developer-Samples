@@ -2,7 +2,7 @@
 
 ## Requirements
 
-1. [.NET Framework 4.8 Dev Pack](https://aka.ms/dotnet48)
+1. [.NET Framework 4.8](https://aka.ms/dotnet48)
 
 2. IDE/ Code Editor (Recommended is Visual Studio)
 
@@ -18,9 +18,9 @@
 
 ## Run the application on localhost
 
-1. Open the [PowerBIEmbedded_AppOwnsData.sln](Embed%20for%20your%20customers/PowerBIEmbedded_AppOwnsData.sln) file in Visual Studio.
+1. Open the [AppOwnsData.sln](Embed%20for%20your%20customers/AppOwnsData.sln) file in Visual Studio.
 
-2. Fill in the required parameters in [Web.config](Embed%20for%20your%20customers/PowerBIEmbedded_AppOwnsData/Web.config) file.
+2. Fill in the required parameters in [Web.config](Embed%20for%20your%20customers/AppOwnsData/Web.config) file.
 
 3. Build and run the application.
 
@@ -38,13 +38,13 @@
 
 ## Run the application on localhost
 
-1. Open the [DotNetFrameworkSaaS.sln](Embed%20for%20your%20organization\DotNetFrameworkSaaS.sln) file in Visual Studio.
+1. Open the [UserOwnsData.sln](Embed%20for%20your%20organization\UserOwnsData.sln) file in Visual Studio.
 
-2. Fill in the required parameters in [Web.config](Embed%20for%20your%20organization\DotNetFrameworkSaaS\Web.config) file related to AAD app.
+2. Fill in the required parameters in [Web.config](Embed%20for%20your%20organization\UserOwnsData\Web.config) file related to AAD app.
 
 3. Build and run the application.
 
-## Supported browsers:
+#### Supported browsers:
 
 1. Google Chrome
    
