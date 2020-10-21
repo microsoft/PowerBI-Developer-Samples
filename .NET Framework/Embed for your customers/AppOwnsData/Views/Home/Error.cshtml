@@ -1,0 +1,33 @@
+﻿@*
+----------------------------------------------------------------------------
+Copyright (c) Microsoft Corporation.
+Licensed under the MIT license.
+----------------------------------------------------------------------------
+*@
+
+@model AppOwnsData.Models.ErrorModel
+
+@{
+    ViewBag.Title = "Error";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Error</title>
+</head>
+<body>
+    <hgroup>
+        <h2>
+            Error
+        </h2>
+
+        <pre>
+            @Model.ErrorMessage
+        </pre>
+    </hgroup>
+</body>
+</html>
+
+

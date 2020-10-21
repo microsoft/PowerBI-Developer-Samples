@@ -1,0 +1,32 @@
+﻿@*
+----------------------------------------------------------------------------
+Copyright (c) Microsoft Corporation.
+Licensed under the MIT license.
+----------------------------------------------------------------------------
+*@
+
+@model AppOwnsData.Models.IndexConfig
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="buttonsWrapper">
+    Select an entity to embed<br /><br />
+
+    <a id="btnEmbedReport" href="~/Home/EmbedReport">Embed Report</a>
+    <br />
+
+    <a id="btnEmbedDashboard" href="~/Home/EmbedDashboard">Embed Dashboard</a>
+    <br />
+
+    <a id="btnEmbedTile" href="~/Home/EmbedTile">Embed Tile</a>
+    <br />
+
+    <div class="infoBox">
+        <b>Nuget packages which are used in this solution</b><br />
+        Microsoft.PowerBI.API Version @Model.DotNetSDK<br />
+        Microsoft.PowerBI.JavaScript Version 2.14.1<br />
+    </div>
+</div>
