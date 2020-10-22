@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<RunSettings>
-  <RunConfiguration>
-    <TargetPlatform>x64</TargetPlatform>
-  </RunConfiguration>
-  <TestRunParameters>
-    <Parameter name="webAppUrl" value="http://localhost:42734" />
-  </TestRunParameters>
-</RunSettings>

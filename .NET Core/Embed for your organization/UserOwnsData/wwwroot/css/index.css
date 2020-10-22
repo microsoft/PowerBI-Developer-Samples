@@ -1,0 +1,224 @@
+/*
+----------------------------------------------------------------------------
+Copyright (c) Microsoft Corporation.
+Licensed under the MIT license.
+----------------------------------------------------------------------------
+*/
+
+.button-container {
+    padding-top: 2.31vh;
+}
+
+.config-container {
+    font-size: 1.85vh;
+    padding-bottom: 0.93vh;
+    padding-top: 0.93vh;
+}
+
+.custom-control-label {
+    cursor: pointer;
+}
+
+.custom-radio .custom-control-input:checked~.custom-control-label {
+    font-weight: bold;
+}
+
+.custom-radio .custom-control-input:checked~.custom-control-label::before, .custom-radio .custom-control-input:checked~.custom-control-label::after {
+    background-color: #2A22F0;
+    border-radius: 50%;
+}
+
+.custom-radio .custom-control-label::before, .custom-radio .custom-control-label::after {
+    top: 0.65vh;
+    height: 1.5vh;
+    width: 1.5vh;
+}
+
+.dashboard-container {
+    background-color: #EAEAEA;
+    height: calc(74vw * 0.5625); /* 16:9 aspect ratio */
+    max-height: 75vh;
+    padding: 0;
+}
+
+.dashboard-display-text {
+    color: #6E6E6E;
+    font: 3.7vh "segoe ui light", arial, sans-serif;
+    left: 50%;
+    margin: auto;
+    text-align: center;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+}
+
+.dashboard-wrapper {
+    background-color: #EAEAEA;
+    height: calc(74vw * 0.5625); /* 16:9 aspect ratio */
+    max-height: 75vh;
+    padding: 0;
+}
+
+.heading {
+    color: #2A22F0;
+    font-family: 'Segoe UI Light', arial, sans-serif;
+    font-size: 3.7vh;
+}
+
+.outer-div {
+    padding: 2.78vh 13.05vh 4.63vh 13.05vh;
+    font-size: 2.5vh;
+}
+
+.overlay {
+    background-color: #FCFCFC;
+    bottom: 0;
+    display: block;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+}
+
+.report-display-text {
+    color: #6E6E6E;
+    font: 3.7vh "segoe ui light", arial, sans-serif;
+    left: 50%;
+    margin: auto;
+    text-align: center;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+}
+
+.report-container {
+    height: calc(0.5625 * (100vw - 206px)); /* 16:9 aspect ratio */
+    max-height: 75vh;
+    padding: 0;
+}
+
+.report-wrapper {
+    background-color: #EAEAEA;
+    height: calc(0.5625 * 74vw);  /* 16:9 aspect ratio */
+    max-height: 75vh;
+    padding: 0;
+}
+
+.select-list {
+    align-self: flex-end;
+    border-radius: 6.17vh;
+    border-color: #D3D3D3;
+    font-size: 1.48vh;
+    height: 3.61vh;
+    padding: 0.46vh;
+    padding-left: 0.92vh;
+}
+
+.select-list:focus {
+    outline: none;
+}
+
+.sign-in {
+    left: 50%;
+    font-size: 2.28vh;
+    top: 65%;
+    transform: translate(-50%, -35%);
+    -ms-transform: translate(-50%, -35%);
+}
+
+.signin-container {
+    height: 27vh;
+    left: 50%;
+    padding: 4.5vh;
+    position: relative;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    width: 70vh;
+}
+
+.signin-container>p {
+    color: #2A22F0;
+    font-family: 'Segoe UI Light', arial, sans-serif;
+    font-size: 5vh;
+    text-align: center;
+}
+
+.tile-container {
+    height: calc(0.5625 * (100vw - 206px));  /* 16:9 aspect ratio */
+    max-height: 75vh;
+    padding: 0;
+}
+
+.tile-display-text {
+    color: #6E6E6E;
+    font: 3.7vh "segoe ui light", arial, sans-serif;
+    left: 50%;
+    margin: auto;
+    text-align: center;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+}
+
+.tile-wrapper {
+    background-color: #EAEAEA;
+    height: calc(0.5625 * 74vw);  /* 16:9 aspect ratio */
+    max-height: 75vh;
+    padding: 0;
+}
+
+.user-info {
+    color: #2C2C2C;
+    font-family: 'Segoe UI', arial, sans-serif;
+    font-size: 1.85vh;
+    padding-top: 2.31vh;
+    text-align: right;
+}
+
+body {
+    background: #FCFCFC;
+    opacity: 1;
+}
+
+button {
+    background-color: #2A22F0;
+    border: none;
+    border-radius: 3.7vh;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-size: 1.39vh;
+    font-family: 'Segoe UI Semibold', arial, sans-serif;
+    padding: 0.93vh 3.24vh;
+    position: absolute;
+    right: 0;
+}
+
+button:disabled {
+    background-color: #5C5C5F;
+    cursor: default;
+}
+
+button:focus {
+    outline: none;
+}
+
+main {
+    margin: 0 auto;
+    width: 100%;
+}
+
+iframe {
+    border: none;
+}
+
+.colored-bg {
+    background-color: #EAEAEA;
+}
+
+.transparent-bg {
+    background-color: transparent;
+}

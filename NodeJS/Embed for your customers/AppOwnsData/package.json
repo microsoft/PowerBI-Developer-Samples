@@ -1,0 +1,27 @@
+{
+    "name": "embedding-sample",
+    "version": "1.0.0",
+    "description": "Generate Embed Token, URL and Embed the Report.",
+    "main": "./src/server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nodemon ./src/server.js",
+        "start": "nodemon ./src/server.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "adal-node": "^0.2.1",
+        "body-parser": "^1.19.0",
+        "bootstrap": "^4.4.1",
+        "express": "^4.17.1",
+        "guid": "0.0.12",
+        "jquery": "^3.4.1",
+        "node-fetch": "^2.6.0",
+        "path": "^0.12.7",
+        "powerbi-client": "^2.14.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.2"
+    }
+}

@@ -20,13 +20,13 @@ Select the required permissions while registering the app. Complete list of Powe
 
 1. Open the IDE
 
-2. Put required values in the [Config.ts](Embed%20for%20your%20organization\src\Config.ts) file:
+2. Put required values in the [Config.ts](./Embed%20for%20your%20organization/UserOwnsData/src/Config.ts) file:
 To embed a report the following details must be specified within Config.ts:
 
     | Detail       | Description                                                                 |
     |--------------|-----------------------------------------------------------------------------|
     | clientId     | Id of the AAD application registered as a Server-side app                   |
-    | workspaceId  | Id of the Power BI workspace where the report is hosted  |
+    | workspaceId  | Id of the Power BI workspace where the report is hosted                     |
     | reportId     | Id of the report to be embedded                                             |
 
 3. Open terminal and install required dependencies by executing the following command:<br>
@@ -44,8 +44,6 @@ To embed a report the following details must be specified within Config.ts:
 2. Microsoft Edge Chromium
 
 3. Mozilla Firefox
-
-4. Internet Explorer
 
 ## Important
 

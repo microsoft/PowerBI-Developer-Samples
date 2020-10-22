@@ -21,9 +21,9 @@
 
 ### Run the application on localhost
 
-1. Open the [DotNetCorePaaS.sln](Embed%20for%20your%20customers/DotNetCorePaaS.sln) file in Visual Studio 2019. If you are using Visual Studio Code then, open [DotNetCorePaaS](Embed%20for%20your%20customers/DotNetCorePaaS) folder.
+1. Open the [AppOwnsData.sln](./Embed%20for%20your%20customers/AppOwnsData.sln) file in Visual Studio 2019. If you are using Visual Studio Code then, open [AppOwnsData](./Embed%20for%20your%20customers/AppOwnsData) folder.
 
-2. Fill in the required parameters in [appsettings.json](Embed%20for%20your%20customers/DotNetCorePaaS/appsettings.json) file. Refer to [ConfigurationModel.cs](Embed%20for%20your%20customers/DotNetCorePaaS/Models/ConfigurationModel.cs) for more info on the config parameters.
+2. Fill in the required parameters in [appsettings.json](./Embed%20for%20your%20customers/AppOwnsData/appsettings.json) file. Refer to [PowerBI.cs](./Embed%20for%20your%20customers/AppOwnsData/Models/PowerBI.cs) and [AzureAd.cs](./Embed%20for%20your%20customers/AppOwnsData/Models/AzureAd.cs) for more info on the config parameters.
 
 3. Build and run the application.
 
@@ -42,9 +42,9 @@
 
 ### Run the application on localhost
 
-1. Open the [DotNetCoreSaaS.sln](Embed%20for%20your%20organization/DotNetCoreSaaS.sln) file in Visual Studio 2019. If you are using Visual Studio Code then, open [DotNetCoreSaaS](Embed%20for%20your%20organization/DotNetCoreSaaS) folder.
+1. Open the [UserOwnsData.sln](./Embed%20for%20your%20organization/UserOwnsData.sln) file in Visual Studio 2019. If you are using Visual Studio Code then, open [UserOwnsData](./Embed%20for%20your%20organization/UserOwnsData) folder.
 
-2. Fill in the required parameters in [authConfig.js](Embed%20for%20your%20organization/DotNetCoreSaaS/wwwroot/js/authConfig.js) file related to AAD app.
+2. Fill in the required parameters in [appsettings.json](./Embed%20for%20your%20organization/UserOwnsData/appsettings.json) file related to AAD app.
 
 3. Build and run the application.
 
@@ -55,8 +55,6 @@
 2. Microsoft Edge Chromium
 
 3. Mozilla Firefox
-
-4. Internet Explorer
 
 ## Important
 
