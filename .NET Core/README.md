@@ -38,7 +38,7 @@
    
 3. Under "Implicit grant", enable the Access token option.
 
-4. Under "Redirect URIs", add https://localhost:5000
+4. Under "Redirect URIs", add https://localhost:5000/signin-oidc
 
 ### Run the application on localhost
 
