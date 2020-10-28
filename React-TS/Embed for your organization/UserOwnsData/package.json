@@ -10,7 +10,7 @@
     "react": "^16.13.0",
     "react-app-polyfill": "^1.0.6",
     "react-dom": "^16.13.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "3.4.4",
     "typescript": "^3.7.5"
   },
   "scripts": {
