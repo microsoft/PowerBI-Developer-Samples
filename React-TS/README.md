@@ -6,7 +6,6 @@
 	
 ## Embed a Power BI report
 1. Register a Server-side web app [here](https://aka.ms/embedsetup/userownsdata) with 'Read all reports' permissions. For more info, refer [documentation](https://aka.ms/RegisterPowerBIApp)
-<br>
 Select the required permissions while registering the app. Complete list of Power BI API permissions is available [here](https://aka.ms/PowerBIPermissions).
 2. Navigate to  [App registrations in the Azure portal](https://aka.ms/AppRegistrations) and click on the name of the AAD app registered in the previous step.
 3. Click on Authentication section and set the following configurations in the AAD app:
