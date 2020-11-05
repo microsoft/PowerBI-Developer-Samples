@@ -21,6 +21,10 @@ This repo contains samples for calling the Power BI REST APIs using PowerShell. 
 | [copyWorkspace.ps1](copyWorkspace.ps1) | Duplicate a workpsace in the Power BI service   |
 | [bindToGateway.ps1](bindtogateway.ps1) | Bind a dataset to a new gateway  |
 | [takeOverDataset.ps1](takeOverDataset.ps1) | Take ownership of a dataset to your account  |
+| [Create-Workspace.ps1](Create-Workspace.ps1) | Create a new workspace  |
+| [Create-Workspace-and-Add-Workspace-Users.ps1](Create-Workspace-and-Add-Workspace-Users.ps1) | Create a new workspace and add user as contributor   |
+| [Import-PBIX-File.ps1](Import-PBIX-File.ps1) | Import PBIX into a specific target workspace  |
+
 
 For Azure Resource Management (ARM) based scripts, refer [Azure-Samples/powerbi-powershell](https://github.com/Azure-Samples/powerbi-powershell).
 
