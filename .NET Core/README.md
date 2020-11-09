@@ -15,9 +15,9 @@
 
 1. For Master user, register a Native app [here](https://aka.ms/embedsetup/AppOwnsData) and for Service Principal, register a Server-side web app by following [this](https://aka.ms/EmbedServicePrincipal).
 
-    Select "Read all datasets" and "Read all reports" permissions during Power BI app setup. Refer to the [documentation](https://aka.ms/RegisterPowerBIApp) for registering a Power BI app. 
-    
-    Refer to the [documentation](https://aka.ms/PowerBIPermissions) for the complete list of Power BI permissions.
+2. Select "Read all datasets" and "Read all reports" permissions during Power BI app setup. Refer to the [documentation](https://aka.ms/RegisterPowerBIApp) for registering a Power BI app. 
+
+3. Refer to the [documentation](https://aka.ms/PowerBIPermissions) for the complete list of Power BI permissions.
 
 ### Run the application on localhost
 
@@ -33,12 +33,14 @@
 ### Set up a Power BI app
 
 1. Register a Server-side web app [here](https://aka.ms/embedsetup/userownsdata). Refer to the [documentation](https://aka.ms/PowerBIPermissions) for the complete list of Power BI permissions.
-   
-2. Go to the AAD app in [Azure portal](https://aka.ms/AppRegistrations) that was created in the previous step and click on "Authentication".
-   
-3. Under "Implicit grant", enable the Access token option.
 
-4. Under "Redirect URIs", add https://localhost:5000/signin-oidc
+2. Select "Read all workspaces", "Read all reports" and "Read all dashboards" permissions during Power BI app setup.
+
+3. Go to the AAD app in [Azure portal](https://aka.ms/AppRegistrations) that was created in the previous step and click on "Authentication".
+
+4. Under "Implicit grant", enable the Access token option.
+
+5. Under "Redirect URIs", add https://localhost:5000/signin-oidc
 
 ### Run the application on localhost
 
@@ -51,7 +53,7 @@
 #### Supported browsers:
 
 1. Google Chrome
-   
+
 2. Microsoft Edge Chromium
 
 3. Mozilla Firefox

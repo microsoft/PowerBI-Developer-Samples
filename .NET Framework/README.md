@@ -14,7 +14,7 @@
 
 2. Select "Read all workspaces", "Read all datasets", "Read all reports", "Read all dashboards" permissions during Power BI app setup. Refer to the [documentation](https://aka.ms/RegisterPowerBIApp) for registering a Power BI app. 
 
-    Refer to the [documentation](https://aka.ms/PowerBIPermissions) for the complete list of Power BI permissions.
+3. Refer to the [documentation](https://aka.ms/PowerBIPermissions) for the complete list of Power BI permissions.
 
 ## Run the application on localhost
 
@@ -31,7 +31,7 @@
 1. Register a Server-side web app [here](https://aka.ms/embedsetup/userownsdata). Refer to the [documentation](https://aka.ms/PowerBIPermissions) for the complete list of Power BI permissions.
 
 2. Select "Read all workspaces", "Read all reports" and "Read all dashboards" permissions during Power BI app setup.
-   
+
 3. Go to the AAD app in [Azure portal](https://aka.ms/AppRegistrations) that was created in the previous step and click on "Authentication".
 
 4. Under "Redirect URIs", add https://localhost:44300/
@@ -47,7 +47,7 @@
 #### Supported browsers:
 
 1. Google Chrome
-   
+
 2. Microsoft Edge Chromium
 
 3. Mozilla Firefox
