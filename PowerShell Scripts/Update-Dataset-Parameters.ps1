@@ -1,3 +1,7 @@
+Write-Host
+
+Connect-PowerBIServiceAccount | Out-Null
+
 # update these parameters for target workspace and dataset 
 $workspaceName = "YOUR_WORKSPACE_NAME"
 $datasetName = "YOUR_DATASET_NAME"
