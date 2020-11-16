@@ -4,7 +4,7 @@ Write-Host
 Connect-PowerBIServiceAccount | Out-Null
 
 # update $workspaceName variable with name of target workspace
-$workspaceName = "Dev Camp Labs"
+$workspaceName = "YOUR_WORKSPACE_NAME"
 
 $workspace = Get-PowerBIWorkspace -Name $workspaceName -Scope Organization -Include All
 $workspaceId = $workspace.Id
