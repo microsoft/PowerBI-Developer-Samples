@@ -12,7 +12,7 @@
 
 1. For Master user, register a Native app [here](https://aka.ms/embedsetup/AppOwnsData) and for Service Principal, register a Server-side web app by following [this](https://aka.ms/EmbedServicePrincipal).
 
-2. Select "Read all datasets" and "Read all reports" permissions during Power BI app setup. Refer to the[documentation](https://aka.ms/RegisterPowerBIApp) for registering a Power BI app. 
+2. Select "Read all datasets" and "Read all reports" permissions during Power BI app setup. Refer to the [documentation](https://aka.ms/RegisterPowerBIApp) for registering a Power BI app. 
 
    Refer to the [documentation](https://aka.ms/PowerBIPermissions) for the complete list of Power BI permissions.
 
