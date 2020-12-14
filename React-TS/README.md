@@ -16,8 +16,6 @@
 
 4. Under "Redirect URIs", add http://localhost:3000
 
-
-
 ## Steps to build and run:
 
 1. Open the IDE.
