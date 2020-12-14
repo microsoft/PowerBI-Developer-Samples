@@ -1,6 +1,7 @@
-# Power BI Embedded Sample in Spring MVC framework
+# Power BI Embedded sample in Spring MVC framework
 
 ## Requirements
+
 1. [JDK (or JRE)](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)<br/>
 Find the steps to add Java path to environment variable [here](https://docs.oracle.com/javase/7/docs/webnotes/install/windows/jdk-installation-windows.html#path)<br/>
     To check if you have working JDK execute `java -version` in terminal
@@ -9,15 +10,9 @@ Find the steps to add Java path to environment variable [here](https://docs.orac
 
 3. [Apache Tomcat](https://tomcat.apache.org/download-90.cgi) (Download binary distributions)
 
-
 ## Set up a Power BI app
 
-1. For Master user, register a Native app [here](https://aka.ms/embedsetup/AppOwnsData) and for Service Principal, register a Server-side web app by following [this](https://aka.ms/EmbedServicePrincipal).
-
-    Select "Read all datasets" and "Read all reports" permissions during Power BI app setup. Refer to the [documentation](https://aka.ms/RegisterPowerBIApp) for registering a Power BI app. 
-
-    Refer to the [documentation](https://aka.ms/PowerBIPermissions) for the complete list of Power BI permissions.
-	
+Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
 
 ## Steps to build and run
 
@@ -34,7 +29,7 @@ Find the steps to add Java path to environment variable [here](https://docs.orac
 
 1. To import project,
 Click File > Open Project from File System > Click on Directory > Select [AppOwnsData](./Embed%20for%20your%20customers/AppOwnsData) folder > Finish
-    
+
 2. Let Maven finish automatically downloading the dependencies in background.
 
 3. Add Tomcat server to the project
@@ -43,7 +38,7 @@ Click File > Open Project from File System > Click on Directory > Select [AppOwn
     3. Select __Apache Tomcat__ from the list
     4. Click on Apply and Close
 
-4. Fill in the required parameters in [Config.java](./Embed%20for%20your%20customers/AppOwnsData/src/main/java/com/embedsample/appownsdata/config/Config.java) file related to AAD app, Power BI report, workspace, and user account information.
+4. Fill in the required parameters in the [Config.java](./Embed%20for%20your%20customers/AppOwnsData/src/main/java/com/embedsample/appownsdata/config/Config.java) file related to AAD app, Power BI report, workspace, and user account information.
 
 5. Run the project
     1. Right click project's name from Project Explorer
@@ -54,14 +49,14 @@ Click File > Open Project from File System > Click on Directory > Select [AppOwn
 #### Supported browsers:
 
 1. Google Chrome
-   
-2. Microsoft Edge Chromium
+
+2. Microsoft Edge
 
 3. Mozilla Firefox
 
 ## Important
 
-For security reasons, in a real world application, password or secrets should not be stored in config. Instead, consider securing credentials with an application such as Key Vault.
+For security reasons, in a real world application, passwords and secrets should not be stored in config files. Instead, consider securing your credentials with an application such as Key Vault.
 
 ## Troubleshoot
 

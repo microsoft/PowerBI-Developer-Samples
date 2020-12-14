@@ -1,25 +1,26 @@
 # Power BI Embedded sample in React framework
 
 ## Requirements
-* [Node JS](https://nodejs.org/en/download/)
-* IDE
-	
+
+1. [Node JS](https://nodejs.org/en/download/)
+
+2. IDE/code editor. We recommend using Visual Studio Code.
+
 ## Embed a Power BI report
-1. Register a Server-side web app [here](https://aka.ms/embedsetup/userownsdata) with 'Read all reports' permissions. For more info, refer [documentation](https://aka.ms/RegisterPowerBIApp)
-Select the required permissions while registering the app. Complete list of Power BI API permissions is available [here](https://aka.ms/PowerBIPermissions).
-2. Navigate to  [App registrations in the Azure portal](https://aka.ms/AppRegistrations) and click on the name of the AAD app registered in the previous step.
-3. Click on Authentication section and set the following configurations in the AAD app:
-    * In Redirect URIs, add http://localhost:3000 
-    * Under "Implicit grant", check the __Access token__ box  
-    * Save the changes
 
+1. Register an Azure AD app using the [Power BI embedding setup tool](https://app.powerbi.com/embedsetup). For more information see [Register an Azure AD application to use with Power BI](https://docs.microsoft.com/power-bi/developer/embedded/register-app).
 
+2. Verify that your Azure AD app have the **Read all reports** permissions.
+
+3. Go to the AAD app in [Azure portal](https://aka.ms/AppRegistrations) that was created in the previous step and click on "Authentication".
+
+4. Under "Redirect URIs", add http://localhost:3000
 
 ## Steps to build and run:
 
-1. Open the IDE
+1. Open the IDE.
 
-2. Put required values in the [Config.ts](./Embed%20for%20your%20organization/UserOwnsData/src/Config.ts) file:
+2. Put required values in the [Config.ts](./Embed%20for%20your%20organization/UserOwnsData/src/Config.ts) file.
 To embed a report the following details must be specified within Config.ts:
 
     | Detail       | Description                                                                 |
@@ -34,16 +35,16 @@ To embed a report the following details must be specified within Config.ts:
 4. Execute the below command to start the application:<br>
    `npm run start`
 
-5. Open http://localhost:3000 in browser or refer to logs to check the port on which the application is running
+5. Open http://localhost:3000 in browser or refer to logs to check the port on which the application is running.
 
 #### Supported browsers:
 
 1. Google Chrome
-   
-2. Microsoft Edge Chromium
+
+2. Microsoft Edge
 
 3. Mozilla Firefox
 
 ## Important
 
-For security reasons, in a real world application, password or secret should not be stored in config. Instead, consider securing credentials with an application such as Key Vault.
+For security reasons, in a real world application, passwords and secrets should not be stored in config files. Instead, consider securing your credentials with an application such as Key Vault.
