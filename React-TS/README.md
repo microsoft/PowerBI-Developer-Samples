@@ -14,7 +14,10 @@
 
 3. Go to the AAD app in [Azure portal](https://aka.ms/AppRegistrations) that was created in the previous step and click on "Authentication".
 
-4. Under "Redirect URIs", add http://localhost:3000
+4. Click on Authentication section and set the following configurations in the AAD app:
+    * Under "Redirect URIs", add http://localhost:3000
+    * Under "Implicit grant", check the __Access token__ box
+    * Save the changes
 
 
 
