@@ -22,7 +22,9 @@ Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
 
 4. Reinstall the Power BI JavaScript client from NuGet package manager.
 
-5. Run the application.
+5. Clean the solution and rebuild the application.
+
+6. Run the application.
 
 # Embed for your organization
 
@@ -30,7 +32,7 @@ Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
 
 1. Register an Azure AD app using the [Power BI embedding setup tool](https://app.powerbi.com/embedsetup). For more information see [Register an Azure AD application to use with Power BI](https://docs.microsoft.com/power-bi/developer/embedded/register-app).
 
-2. Verify that your Azure AD app have the **Read all datasets**, **Read all reports**, and **Read all workspaces** permissions.
+2. Verify that your Azure AD app have the **Read all dashboards**, **Read all reports**, and **Read all workspaces** permissions.
 
 3. Go to the AAD app in [Azure portal](https://aka.ms/AppRegistrations) that was created in the previous step and click on "Authentication".
 
