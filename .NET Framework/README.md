@@ -18,13 +18,11 @@ Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
 
 2. Fill in the required parameters in the [Web.config](Embed%20for%20your%20customers/AppOwnsData/Web.config) file.
 
-3. Build the application.
+3. Restore NuGet packages.
 
-4. Reinstall the Power BI JavaScript client from NuGet package manager.
+4. Build the application.
 
-5. Clean the solution and rebuild the application.
-
-6. Run the application.
+5. Run the application.
 
 # Embed for your organization
 
@@ -44,9 +42,9 @@ Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
 
 2. Fill in the required parameters in the [Web.config](Embed%20for%20your%20organization\UserOwnsData\Web.config) file related to AAD app.
 
-3. Build the application.
+3. Restore NuGet packages.
 
-4. Reinstall the Power BI JavaScript client from NuGet package manager.
+4. Build the application.
 
 5. Run the application.
 

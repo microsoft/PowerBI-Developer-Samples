@@ -26,7 +26,7 @@
     },
     {
       "provider": "jsdelivr",
-      "library": "powerbi-client@2.14.1",
+      "library": "powerbi-client@2.16.5",
       "destination": "wwwroot/lib/powerbi-client/",
       "files": [
         "dist/powerbi.min.js",
