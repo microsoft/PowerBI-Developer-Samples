@@ -19,8 +19,6 @@
     * Under "Implicit grant", check the __Access token__ box
     * Save the changes
 
-
-
 ## Steps to build and run:
 
 1. Open the IDE.
