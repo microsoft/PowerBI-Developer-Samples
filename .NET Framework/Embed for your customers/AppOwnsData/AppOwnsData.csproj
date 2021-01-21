@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Web.LibraryManager.Build.2.1.113\build\Microsoft.Web.LibraryManager.Build.props" Condition="Exists('..\packages\Microsoft.Web.LibraryManager.Build.2.1.113\build\Microsoft.Web.LibraryManager.Build.props')" />
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.Net.Compilers.3.7.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.3.7.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -77,18 +78,31 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Win32.Primitives" />
     <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.AppContext" />
+    <Reference Include="System.Console" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Diagnostics.Tracing" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Globalization.Calendars" />
     <Reference Include="System.IdentityModel" />
+    <Reference Include="System.IO" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.ZipFile" />
+    <Reference Include="System.IO.FileSystem" />
+    <Reference Include="System.IO.FileSystem.Primitives" />
     <Reference Include="System.Linq" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Net.Sockets" />
+    <Reference Include="System.Reflection" />
     <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.Extensions" />
     <Reference Include="System.Runtime.InteropServices" />
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
     <Reference Include="System.Runtime.Serialization" />
@@ -96,6 +110,7 @@
       <HintPath>..\packages\System.Security.Cryptography.Cng.4.7.0\lib\net47\System.Security.Cryptography.Cng.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Thread" />
+    <Reference Include="System.ValueTuple" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -157,11 +172,13 @@
     <Compile Include="Services\EmbedService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\lib\jquery\dist\jquery.min.js" />
+    <Content Include="Content\lib\jquery\LICENSE.txt" />
+    <Content Include="Content\lib\powerbi-client\dist\powerbi.min.js" />
+    <Content Include="Content\lib\powerbi-client\LICENSE.txt" />
     <Content Include="Content\style\style.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="scripts\powerbi.js" />
-    <Content Include="scripts\powerbi.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -188,10 +205,12 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="scripts\powerbi.js.map" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\Error.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="libman.json" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -229,9 +248,12 @@
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Web.LibraryManager.Build.2.1.113\build\Microsoft.Web.LibraryManager.Build.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Web.LibraryManager.Build.2.1.113\build\Microsoft.Web.LibraryManager.Build.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Web.LibraryManager.Build.2.1.113\build\Microsoft.Web.LibraryManager.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Web.LibraryManager.Build.2.1.113\build\Microsoft.Web.LibraryManager.Build.targets'))" />
   </Target>
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
+  <Import Project="..\packages\Microsoft.Web.LibraryManager.Build.2.1.113\build\Microsoft.Web.LibraryManager.Build.targets" Condition="Exists('..\packages\Microsoft.Web.LibraryManager.Build.2.1.113\build\Microsoft.Web.LibraryManager.Build.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

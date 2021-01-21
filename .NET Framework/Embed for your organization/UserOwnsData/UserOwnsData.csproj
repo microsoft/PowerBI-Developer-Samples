@@ -164,6 +164,8 @@
     <Content Include="Content\lib\bootstrap\dist\js\bootstrap.min.js" />
     <Content Include="Content\lib\jquery\dist\jquery.min.js" />
     <Content Include="Content\lib\jquery\LICENSE.txt" />
+    <Content Include="Content\lib\powerbi-client\dist\powerbi.min.js" />
+    <Content Include="Content\lib\powerbi-client\LICENSE.txt" />
     <Content Include="Content\style\style.css" />
     <Content Include="libman.json" />
     <Content Include="Content\lib\bootstrap\LICENSE" />
@@ -175,8 +177,6 @@
     <Content Include="Scripts\events.js" />
     <Content Include="Scripts\globals.js" />
     <Content Include="Scripts\index.js" />
-    <Content Include="Scripts\powerbi.js" />
-    <Content Include="Scripts\powerbi.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -203,7 +203,6 @@
     <Content Include="Views\Home\Error.cshtml" />
     <Content Include="Views\Shared\Embed.cshtml" />
     <None Include="packages.config" />
-    <Content Include="Scripts\powerbi.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

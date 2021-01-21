@@ -35,7 +35,7 @@
                 "Type": "other",
                 "Other": {
                     "Name": "powerbi-client",
-                    "Version": "2.15.1",
+                    "Version": "2.16.5",
                     "DownloadUrl": "https://cdnjs.cloudflare.com/ajax/libs/powerbi-client/2.15.1/powerbi.min.js"
                 }
             }
