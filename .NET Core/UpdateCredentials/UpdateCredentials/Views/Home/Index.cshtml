@@ -1,0 +1,220 @@
+﻿<!-- Copyright (c) Microsoft Corporation.
+Licensed under the MIT license. -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Encrypt Power BI Datasource Credentials</title>
+	<link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+	<header class="col-lg-12 col-md-12 col-sm-12 shadow">
+		<div>
+			Encrypt Power BI Data Source Credentials
+		</div>
+	</header>
+	<main class="row">
+		<section id="text-container" class="col mb-8 ml-8">
+			<div>
+				<div>
+					<h5>Update data source</h5>
+					Encrypt the credentials of Power BI data source and update them using the API: 
+					<a href="https://docs.microsoft.com/en-us/rest/api/power-bi/gateways/updatedatasource#credentialdetails">Update data source credentials</a>.
+					<br><br>
+					<h5>Add data source</h5>
+					Encrypt the credentials of Power BI data source and add new data source using the API: 
+					<a href="https://docs.microsoft.com/en-us/rest/api/power-bi/gateways/createdatasource">Add data source</a>.
+					<br><br>
+					<h5>Encrypt credentials</h5>
+					Get the encrypted credentials of Power BI data source.
+				</div>
+				<br>
+				<div>Sample's code is present in the following files:
+					<ol>
+						<li>Controllers/EncryptCredentialsController.cs</li>
+						<li>Services/PowerBIService.cs</li>
+						<li>Services/AadService.cs</li>
+						<li>Services/ConfigValidatorService.cs</li>
+					</ol>
+				</div>
+			</div>
+		</section>
+		<section id="input-container" class="input-container col mb-4 ml-5 mt-4">
+			<div id="task-container">
+				<h6>1. Select functionality</h6>
+				<select name="functionality" id="functionality-select" class="input-element">
+					<option value="updateDatasource">Update data source</option>
+					<option value="addDatasource">Add data source</option>
+					<option value="encryptCredentials">Encrypt credentials</option>
+				</select>
+			</div>
+			<!-- Update data source Form -->
+			<div class="update-datasource-container">
+				<div class="row">
+					<div class="id-container">
+						<h6>Group ID</h6>
+						<input id="group-id" type="text" class="title input-element" name="title"
+							placeholder="E.g. 00000000-0000-0000-0000-000000000000" />
+					</div>
+					<br>
+					<div class="id-container">
+						<h6>Dataset ID</h6>
+						<input id="dataset-id" type="text" class="title input-element" name="title"
+							placeholder="E.g. 00000000-0000-0000-0000-000000000000" />
+					</div>
+				</div>
+				<button id="get-datasources" class="btn btn-primary send-button">Get data sources</button>
+				<br><br>
+				<h6 class="datasource-deps">2. Choose a data source</h6>
+				<select name="datasources-list" id="datasources-list" class="input-element datasource-deps">
+					<option value="Key">Choose data source</option>
+				</select>
+				<div class="gateway-container">
+					<h6>Gateway ID</h6>
+					<div id="gateway-output"></div>
+				</div>
+			</div>
+			<!-- Add data source Form -->
+			<div class="add-datasource-container">
+				<div id="gateway-input">
+					<h6>Gateway ID</h6>
+					<input id="gateway-id" type="text" class="title input-element" name="title"
+						placeholder="E.g. 00000000-0000-0000-0000-000000000000" />
+				</div>
+				<br>
+				<div class="row">
+					<div class="id-container" id="add-input-element">
+						<h6>Data source type</h6>
+						<input id="datasource-type" type="text" class="title input-element" name="title"
+							placeholder="E.g. SQL" />
+					</div>
+					<br>
+					<div class="id-container">
+						<h6>Data source name</h6>
+						<input id="datasource-name" type="text" class="title input-element" name="title"
+							placeholder="E.g. Sample data source" />
+					</div>
+				</div>
+				<br>
+				<div>
+					<h6>Connection details</h6>
+					<input id="connection-details" type="text" class="title input-element" name="title"
+						placeholder='E.g. {"server":"MyServer","database":"MyDatabase"}' />
+				</div>
+			</div>
+
+			<!-- Encrypt-Credentials Form -->
+			<div class="encrypt-credentials-container">
+				<h6>Gateway ID</h6>
+				<input id="encrypt-gateway" type="text" class="title input-element" name="title"
+					placeholder="E.g. 00000000-0000-0000-0000-000000000000" />
+			</div>
+			
+			<!-- Common credentials input -->
+			<div id="credentials-input">
+				<br>
+				<div>
+					<h6 class="datasource-deps">Credential type</h6>
+					<select name="credentials-type" id="cred-type" class="input-element datasource-deps">
+						<option value="Key">Key credentials</option>
+						<option value="Basic">Basic credentials</option>
+						<option value="OAuth2">OAuth2 credentials</option>
+						<option value="Windows">Windows credentials</option>
+					</select>
+				</div>
+				<br>
+				<div id="credential-key">
+					<h6 class="datasource-deps">Key credentials</h6>
+					<input id="key-credentials" class="input-element title datasource-deps" type="text" name="title"
+						placeholder="Key value" />
+				</div>
+				<div id="credential-windows">
+					<h6 class="datasource-deps"> Windows credentials</h6>
+					<input id="window-credentials-username" class="input-element title datasource-deps" type="text" name="title" placeholder="Username" />
+					<input id="window-credentials-password" class="input-element password-text title datasource-deps " type="password"
+						name="title" placeholder="Password" />
+				</div>
+				<div id="credential-oauth2">
+					<h6 class="datasource-deps"> OAuth2 credentials</h6>
+					<input id="oauth-credentials" class="input-element datasource-deps" type="text" name="title"
+						placeholder="Access Token" />
+				</div>
+				<div id="credential-basic">
+					<h6 class="datasource-deps">Basic credentials</h6>
+					<input id="basic-credentials-username" class="input-element title datasource-deps" type="text"
+						name="title" placeholder="Username" />
+					<input id="basic-credentials-password" class="input-element title password-text datasource-deps" type="password"
+						name="title" placeholder="Password" />
+				</div>
+				<br/>
+			</div>
+
+			<!-- Update Datasource Form -->
+			<div class="update-datasource-container">
+				<h6 class="datasource-deps">Privacy level</h6>
+				<select name="privacy-level" id="update-datasource-privacy-level" class="input-element datasource-deps">
+					<option value="None">None</option>
+					<option value="Private">Private</option>
+					<option value="Organizational">Organizational</option>
+					<option value="Public">Public</option>
+				</select>
+				<br><br>
+				<div id="update-credentials-label">
+					<h6 class="datasource-deps">3. Set new credentials</h6>
+					<button id="update-credentials" class="btn btn-primary send-button datasource-deps">Update credentials</button>
+				</div>
+				<br>
+			</div>
+
+			<!-- Add Datasource Form -->
+			<div class="add-datasource-container">
+				<h6>Privacy level</h6>
+				<select name="privacy-level" id="add-datasource-privacy-level" class="input-element">
+					<option value="None">None</option>
+					<option value="Private">Private</option>
+					<option value="Organizational">Organizational</option>
+					<option value="Public">Public</option>
+				</select>
+				<br><br>
+				<div id="add-datasource-label">
+					<h6>2. Add data source with credentials</h6>
+					<button id="add-datasource" class="btn btn-primary send-button">Add data source</button>
+				</div>
+			</div>
+
+			<!-- Encrypt-Credentials Form -->
+			<div class="encrypt-credentials-container">
+				<div id="encrypt-button-container">
+					<h6>2. Get the encrypted credentials</h6>
+					<button id="encrypt-button" class="btn btn-primary send-button">Encrypt credentials</button>
+				</div>
+			</div>
+		</section>
+	</main>
+	
+	<!-- Modal to display success and error messages -->
+	<div class="modal response-container" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 id="modal-title" class="modal-title"></h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div id="modal-body" class="modal-body"></div>
+		  </div>
+		</div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	<script src="js/index.js"></script>
+</body>
+</html>
