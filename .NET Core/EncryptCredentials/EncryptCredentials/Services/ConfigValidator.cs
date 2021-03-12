@@ -3,9 +3,9 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
-namespace UpdateCredentials.Services
+namespace EncryptCredentials.Services
 {
-	using UpdateCredentials.Models;
+	using EncryptCredentials.Models;
 	using Microsoft.Extensions.Options;
 	using System;
 

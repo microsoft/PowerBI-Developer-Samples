@@ -3,7 +3,7 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
-namespace UpdateCredentials
+namespace EncryptCredentials
 {
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;

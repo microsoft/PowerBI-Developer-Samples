@@ -3,15 +3,15 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
-namespace UpdateCredentials.Services
+namespace EncryptCredentials.Services
 {
+	using EncryptCredentials.Models;
 	using Microsoft.PowerBI.Api;
     using Microsoft.PowerBI.Api.Extensions;
     using Microsoft.PowerBI.Api.Models;
 	using Microsoft.PowerBI.Api.Models.Credentials;
 	using Microsoft.Rest;
 	using System;
-	using UpdateCredentials.Models;
 
 	public class PowerBIService 
 	{

@@ -3,10 +3,10 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
-namespace UpdateCredentials
+namespace EncryptCredentials
 {
-    using UpdateCredentials.Models;
-    using UpdateCredentials.Services;
+    using EncryptCredentials.Models;
+    using EncryptCredentials.Services;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;

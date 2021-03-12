@@ -15,9 +15,9 @@ Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
 
 ### Run the application on localhost
 
-1. Open the [UpdateCredentials.sln](./UpdateCredentials.sln) file in Visual Studio. If you are using Visual Studio Code, open [UpdateCredentials](./UpdateCredentials) folder.
+1. Open the [EncryptCredentials.sln](./EncryptCredentials.sln) file in Visual Studio. If you are using Visual Studio Code, open [EncryptCredentials](./EncryptCredentials) folder.
 
-2. Fill in the required parameters in the [appsettings.json](./UpdateCredentials/appsettings.json) file related to AAD app.
+2. Fill in the required parameters in the [appsettings.json](./EncryptCredentials/appsettings.json) file related to AAD app.
 
 3. Build and run the application.
 

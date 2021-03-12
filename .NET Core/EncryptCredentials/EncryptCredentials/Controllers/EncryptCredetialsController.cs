@@ -3,17 +3,15 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
-namespace UpdateCredentials.Controllers
+namespace EncryptCredentials.Controllers
 {
+	using EncryptCredentials.Models;
+	using EncryptCredentials.Services;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.Extensions.Options;
-    using Microsoft.PowerBI.Api.Extensions;
     using Microsoft.PowerBI.Api.Models;
     using Microsoft.Rest;
     using System;
-    using System.Text.Json;
-	using UpdateCredentials.Models;
-	using UpdateCredentials.Services;
 
 	public class EncryptCredentialsController : Controller
 	{
@@ -117,7 +115,7 @@ namespace UpdateCredentials.Controllers
 				// Add datasource in corresponding gateway
 				var datasource = powerBIService.AddDatasource(addDatasourceMap.GatewayId, publishDatasourceToGatewayRequest);
 
-				return Ok("Data source added successfully with ID: " + datasource.Id);
+				return Ok("Successfully added data source with ID: " + datasource.Id);
 			}
 			catch (HttpOperationException ex)
             {

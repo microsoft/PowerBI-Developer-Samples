@@ -3,7 +3,7 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
-namespace UpdateCredentials.Models
+namespace EncryptCredentials.Models
 {
 	using System;
 
