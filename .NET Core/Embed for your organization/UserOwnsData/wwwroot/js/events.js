@@ -15,6 +15,7 @@ UserOwnsData.initializeEventHandlers = function () {
             UserOwnsData.tileDiv.hide();
             UserOwnsData.reportDiv.show();
             UserOwnsData.reportContainer.hide();
+            UserOwnsData.reportSpinner.hide();
             UserOwnsData.reportDisplayText.show();
             UserOwnsData.dashboardWrapper.hide();
             UserOwnsData.tileWrapper.hide();
@@ -33,6 +34,7 @@ UserOwnsData.initializeEventHandlers = function () {
             UserOwnsData.tileDiv.hide();
             UserOwnsData.dashboardDiv.show();
             UserOwnsData.dashboardContainer.hide();
+            UserOwnsData.dashboardSpinner.hide();
             UserOwnsData.dashboardDisplayText.show();
             UserOwnsData.reportWrapper.hide();
             UserOwnsData.tileWrapper.hide();
@@ -49,6 +51,7 @@ UserOwnsData.initializeEventHandlers = function () {
             UserOwnsData.dashboardDiv.show();
             UserOwnsData.tileDiv.show();
             UserOwnsData.tileContainer.hide();
+            UserOwnsData.tileSpinner.hide();
             UserOwnsData.tileDisplayText.show();
             UserOwnsData.reportWrapper.hide();
             UserOwnsData.dashboardWrapper.hide();
@@ -134,6 +137,10 @@ UserOwnsData.initializeEventHandlers = function () {
         // Report radio button is checked
         if ($("#report").get(0).checked) {
             embedParam.reportId = UserOwnsData.reportSelect.get(0).value;
+            UserOwnsData.reportDisplayText.hide();
+            $(".report-wrapper").removeClass("transparent-bg");
+            UserOwnsData.reportContainer.hide();
+            UserOwnsData.reportSpinner.show();
 
             // Embed report
             UserOwnsData.embedReport(embedParam);
@@ -142,6 +149,9 @@ UserOwnsData.initializeEventHandlers = function () {
         // Dashboard radio button is checked
         else if ($("#dashboard").get(0).checked) {
             embedParam.dashboardId = UserOwnsData.dashboardSelect.get(0).value;
+            UserOwnsData.dashboardDisplayText.hide();
+            UserOwnsData.dashboardContainer.hide();
+            UserOwnsData.dashboardSpinner.show();
 
             // Embed dashboard
             UserOwnsData.embedDashboard(embedParam);
@@ -151,6 +161,9 @@ UserOwnsData.initializeEventHandlers = function () {
         else if ($("#tile").get(0).checked) {
             embedParam.dashboardId = UserOwnsData.dashboardSelect.get(0).value;
             embedParam.tileId = UserOwnsData.tileSelect.get(0).value;
+            UserOwnsData.tileDisplayText.hide();
+            UserOwnsData.tileContainer.hide();
+            UserOwnsData.tileSpinner.show();
 
             // Embed tile
             UserOwnsData.embedTile(embedParam);

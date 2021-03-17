@@ -28,4 +28,7 @@ $(function() {
     UserOwnsData.reportContainer = $("#report-container");
     UserOwnsData.dashboardContainer = $("#dashboard-container");
     UserOwnsData.tileContainer = $("#tile-container");
+    UserOwnsData.reportSpinner = $("#report-spinner");
+    UserOwnsData.dashboardSpinner = $("#dashboard-spinner");
+    UserOwnsData.tileSpinner = $("#tile-spinner");
 });

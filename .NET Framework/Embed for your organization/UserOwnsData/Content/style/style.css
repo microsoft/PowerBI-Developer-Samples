@@ -142,6 +142,13 @@ Licensed under the MIT license. */
     text-align: center;
 }
 
+.spinner {
+    animation: rotation 1s infinite linear;
+    left: 50%;
+    top: 50%;
+    width: auto;
+}
+
 .tile-container {
     height: calc(0.5625 * (100vw - 206px)); /* 16:9 aspect ratio */
     max-height: 75vh;
@@ -216,4 +223,13 @@ iframe {
 
 .transparent-bg {
     background-color: transparent;
+}
+
+@keyframes rotation {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(359deg);
+    }
 }

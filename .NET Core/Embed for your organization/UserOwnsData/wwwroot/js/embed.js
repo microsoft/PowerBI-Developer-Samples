@@ -40,7 +40,7 @@ UserOwnsData.embedReport = function (embedParam) {
 
             // Triggers when a report schema is successfully loaded
             report.on("loaded", function () {
-                UserOwnsData.reportDisplayText.hide();
+                UserOwnsData.reportSpinner.hide();
                 $(".report-wrapper").addClass("transparent-bg");
                 UserOwnsData.reportContainer.show();
                 console.log("Report load successful");
@@ -100,7 +100,7 @@ UserOwnsData.embedDashboard = function (embedParam) {
 
             // Triggers when a dashboard schema is successfully loaded
             dashboard.on("loaded", function () {
-                UserOwnsData.dashboardDisplayText.hide();
+                UserOwnsData.dashboardSpinner.hide();
                 UserOwnsData.dashboardContainer.show();
                 console.log("Dashboard load successful");
             });
@@ -160,7 +160,7 @@ UserOwnsData.embedTile = function (embedParam) {
 
             // Handle tileLoad event
             tile.on("tileLoaded", function (event) {
-                UserOwnsData.tileDisplayText.hide();
+                UserOwnsData.tileSpinner.hide();
                 UserOwnsData.tileContainer.show();
                 console.log("Tile load successful");
             });
