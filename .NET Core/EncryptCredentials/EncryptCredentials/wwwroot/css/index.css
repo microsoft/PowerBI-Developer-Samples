@@ -45,14 +45,6 @@ section#text-container > div > div {
 	margin-bottom: 15px;
 }
 
-.encrypted-box {
-	width: 40vw;
-	min-width:250px;
-	border: 1px solid #ccc;
-	overflow-x: auto;	
-	overflow-y: none;
-}
-
 section#text-container {
     margin: 48px 40px;
 }
@@ -66,6 +58,7 @@ footer > p {
 }
 
 .gateway-container {
+    display: none;
     margin-top: 20px;
 }
 
@@ -79,9 +72,13 @@ footer > p {
     margin-right: 0;
 }
 
+.modal-dialog {
+    max-width: min-content;
+    min-width: 500px;
+}
+
 .add-datasource-container,
 .encrypt-credentials-container,
-.gateway-container,
 #credential-windows,
 #credential-oauth2,
 #credential-basic {
@@ -90,4 +87,12 @@ footer > p {
 
 #credential-key {
     display: block;
+}
+
+.inactive-text {
+    color: #808080;
+}
+
+.active-text {
+    color: #000000;
 }
