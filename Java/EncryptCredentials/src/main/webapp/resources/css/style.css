@@ -72,6 +72,11 @@ footer > p {
     margin-right: 0;
 }
 
+.modal-dialog {
+    max-width: min-content;
+    min-width: 500px;
+}
+
 .add-datasource-container,
 .encrypt-credentials-container,
 #credential-windows,
@@ -82,4 +87,12 @@ footer > p {
 
 #credential-key {
     display: block;
+}
+
+.inactive-text {
+    color: #808080;
+}
+
+.active-text {
+    color: #000000;
 }

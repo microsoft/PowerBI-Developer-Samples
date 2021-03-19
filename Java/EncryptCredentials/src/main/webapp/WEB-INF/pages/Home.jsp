@@ -176,8 +176,8 @@ Licensed under the MIT license. -->
                 </select>
                 <br><br>
                 <div id="update-credentials-label">
-                    <h6 class="datasource-deps">3. Set new credentials</h6>
-                    <button id="update-credentials" class="btn btn-primary send-button datasource-deps">Update credentials</button>
+                    <h6 id="update-creds-text" class="inactive-text">3. Set new credentials</h6>
+                    <button id="update-credentials" class="btn btn-primary send-button">Update credentials</button>
                 </div>
                 <br>
             </div>
@@ -192,14 +192,14 @@ Licensed under the MIT license. -->
                 </select>
                 <br><br>
                 <div id="add-datasource-label">
-                    <h6>2. Add data source with credentials</h6>
+                    <h6 id="add-creds-text" class="inactive-text">2. Add data source with credentials</h6>
                     <button id="add-datasource" class="btn btn-primary send-button">Add data source</button>
                 </div>
             </div>
             <!-- Encrypt-Credentials Form -->
             <div class="encrypt-credentials-container">
                 <div id="encrypt-button-container">
-                    <h6>2. Get the encrypted credentials</h6>
+                    <h6 id="encrypt-creds-text" class="inactive-text">2. Get the encrypted credentials</h6>
                     <button id="encrypt-button" class="btn btn-primary send-button">Encrypt Credentials</button>
                 </div>
             </div>
@@ -228,6 +228,7 @@ Licensed under the MIT license. -->
                 datasources: []
             };
 
+            // Create global list for storing endpoints
             const Endpoints = {
                 GetDatasources: "/encryptcredential/getdatasourcesingroup",
                 UpdateDatasource: "/encryptcredential/updatedatasource",
@@ -235,35 +236,58 @@ Licensed under the MIT license. -->
                 Encrypt: "/encryptcredential/encrypt"
             };
 
-            const updateDatasourceContainer = $(".update-datasource-container");
-            const addDatasourceContainer = $(".add-datasource-container").hide();
-            const encryptCredentialsContainer = $(".encrypt-credentials-container").hide();
-            const gatewayContainer = $(".gateway-container");
+            // Freezing the contents for endpoint objects
+            Object.freeze(Endpoints);
 
+            // Cache constants
+            const ENABLED = "btn-primary";
+            const DISABLED = "btn-secondary";
+            const ACTIVE_TEXT = "active-text"
+            const INACTIVE_TEXT = "inactive-text";
+
+            // Cache DOM Objects
+            const updateDatasourceContainer = $(".update-datasource-container");
+            const addDatasourceContainer = $(".add-datasource-container");
+            const encryptCredentialsContainer = $(".encrypt-credentials-container");
+            const gatewayContainer = $(".gateway-container");
             const credentialKey = $("#credential-key");
             const credentialWindows = $("#credential-windows");
             const credentialOAuth2 = $("#credential-oauth2");
             const credentialBasic = $("#credential-basic");
+            const functionality = $("#functionality-select");
+            const getDatasourceButton = $("#get-datasources");
             const updateCredButton = $("#update-credentials");
             const addCredButton = $("#add-datasource");
-
-            const datasourceList = $("#datasources-list");
-            const successContainer = $(".success-container");
-            const errorContainer = $(".error-container");
-
             const encryptButton = $("#encrypt-button");
-            const functionality = $("#functionality-select");
-
+            const groupId = $("#group-id");
+            const datasetId = $("#dataset-id");
             const datasourceDepsElements = $(".datasource-deps");
             const datasourceDepsElementsText = $("h6.datasource-deps");
-
-            // Disable as Update Creds functionality is default
-            disableUpdateDatasourceDeps();
-
+            const updateDataSourceLabel = $("h6#update-creds-text");
+            const addDataSourceLabel = $("h6#add-creds-text");
+            const encryptCredsLabel = $("h6#encrypt-creds-text");
+            const datasourceList = $("#datasources-list");
+            const keyCredentials = $("#key-credentials");
+            const windowsCredentialsUsername = $("#window-credentials-username");
+            const windowsCredentialsPassword = $("#window-credentials-password");
+            const oAuth2Credentials = $("#oauth-credentials");
+            const basicCredentialsUsername = $("#basic-credentials-username");
+            const basicCredentialsPassword = $("#basic-credentials-password");
+            const updateDataSourcePrivacyLevel = $("#update-datasource-privacy-level");
+            const addDataSourceGatewayId = $("#gateway-id");
+            const datasourceType = $("#datasource-type");
+            const datasourceName = $("#datasource-name");
+            const connectionDetails = $("#connection-details");
+            const addDataSourcePrivacyLevel = $("#add-datasource-privacy-level");
+            const encryptCredsGatewayId = $("#encrypt-gateway");
             const responseModal = $(".response-container");
             const responseModalTitle = $("#modal-title");
             const responseModalBody = $("#modal-body");
+
             responseModal.modal("hide");
+
+            // Disable as Update Creds functionality is default
+            disableUpdateDatasourceDeps();
 
             // Get credential type from the user
             const credType = $("#cred-type");
@@ -272,6 +296,9 @@ Licensed under the MIT license. -->
                 credentialWindows.hide();
                 credentialOAuth2.hide();
                 credentialBasic.hide();
+                validateUpdateDatasourceForm();
+                validateAddDatasourceForm();
+                validateEncryptCredsForm();
 
                 switch ((credType.val()).toLowerCase()) {
                     case "key":
@@ -289,12 +316,53 @@ Licensed under the MIT license. -->
                 }
             });
 
+            // Disable/Enable get data source button until all inputs are filled 
+            validateGetDataSourceForm();
+            datasetId.keyup(validateGetDataSourceForm);
+            groupId.keyup(validateGetDataSourceForm);
+
+            // Disable/Enable update data source button until all inputs are filled 
+            validateUpdateDatasourceForm();
+            keyCredentials.keyup(validateUpdateDatasourceForm);
+            windowsCredentialsUsername.keyup(validateUpdateDatasourceForm);
+            windowsCredentialsPassword.keyup(validateUpdateDatasourceForm);
+            oAuth2Credentials.keyup(validateUpdateDatasourceForm);
+            basicCredentialsUsername.keyup(validateUpdateDatasourceForm);
+            basicCredentialsPassword.keyup(validateUpdateDatasourceForm);
+            datasourceList.change(validateUpdateDatasourceForm);
+            updateDataSourcePrivacyLevel.change(validateUpdateDatasourceForm);
+
+            // Disable/Enable add data source button until all inputs are filled 
+            validateAddDatasourceForm();
+            addDataSourceGatewayId.keyup(validateAddDatasourceForm);
+            datasourceType.keyup(validateAddDatasourceForm);
+            datasourceName.keyup(validateAddDatasourceForm);
+            connectionDetails.keyup(validateAddDatasourceForm);
+            keyCredentials.keyup(validateAddDatasourceForm);
+            windowsCredentialsUsername.keyup(validateAddDatasourceForm);
+            windowsCredentialsPassword.keyup(validateAddDatasourceForm);
+            oAuth2Credentials.keyup(validateAddDatasourceForm);
+            basicCredentialsUsername.keyup(validateAddDatasourceForm);
+            basicCredentialsPassword.keyup(validateAddDatasourceForm);
+            addDataSourcePrivacyLevel.change(validateAddDatasourceForm);
+
+            // Disable/Enable encrypt credentials button until all inputs are filled 
+            validateEncryptCredsForm();
+            encryptCredsGatewayId.keyup(validateEncryptCredsForm);
+            keyCredentials.keyup(validateEncryptCredsForm);
+            windowsCredentialsUsername.keyup(validateEncryptCredsForm);
+            windowsCredentialsPassword.keyup(validateEncryptCredsForm);
+            oAuth2Credentials.keyup(validateEncryptCredsForm);
+            basicCredentialsUsername.keyup(validateEncryptCredsForm);
+            basicCredentialsPassword.keyup(validateEncryptCredsForm);
+
             functionality.on("change", function () {
                 switch (functionality.val()) {
                     case "updateDatasource":
                         updateDatasourceContainer.show();
                         addDatasourceContainer.hide();
                         encryptCredentialsContainer.hide();
+                        validateGetDataSourceForm();
                         resetDatasourceDepsElements()
                         break;
 
@@ -302,6 +370,7 @@ Licensed under the MIT license. -->
                         updateDatasourceContainer.hide();
                         addDatasourceContainer.show();
                         encryptCredentialsContainer.hide();
+                        validateAddDatasourceForm();
                         showUpdateDatasourceDeps();
                         break;
 
@@ -309,6 +378,7 @@ Licensed under the MIT license. -->
                         updateDatasourceContainer.hide();
                         addDatasourceContainer.hide();
                         encryptCredentialsContainer.show();
+                        validateEncryptCredsForm();
                         showUpdateDatasourceDeps();
                         break;
                 }
@@ -318,12 +388,9 @@ Licensed under the MIT license. -->
                 selectDatasource($(this).val());
             })
 
-            $("#get-datasources").on("click", function () {
+            getDatasourceButton.on("click", function () {
+                validateUpdateDatasourceForm();
                 globalState.datasources = [];
-
-                // Get user inputs
-                datasetId = $("#dataset-id").val();
-                groupId = $("#group-id").val();
 
                 // Request to get datasources
                 $.ajax({
@@ -331,8 +398,8 @@ Licensed under the MIT license. -->
                     url: Endpoints.GetDatasources,
                     dataType: "text",
                     data: {
-                        datasetId: datasetId,
-                        groupId: groupId,
+                        datasetId: datasetId.val(),
+                        groupId: groupId.val(),
                     },
                     success: (message) => {
                         globalState.datasources = JSON.parse(message).value;
@@ -347,7 +414,7 @@ Licensed under the MIT license. -->
             updateCredButton.on("click", function () {
                 const datasourceId = datasourceList.val();
                 const gatewayId = getGatewayId(datasourceId);
-                const privacyLevel = $("#update-datasource-privacy-level").val();
+                const privacyLevel = updateDataSourcePrivacyLevel.val();
 
                 const credentials = [];
                 switch (credType.val().toLowerCase()) {
@@ -382,7 +449,7 @@ Licensed under the MIT license. -->
                     data: JSON.stringify(requestBody),
                     success: (message) => {
                         if (!message) {
-                            message = "Credentials were updated successfully"
+                            message = "Successfully updated data source credentials"
                         }
 
                         showSuccessMessage(message);
@@ -394,16 +461,6 @@ Licensed under the MIT license. -->
             });
 
             addCredButton.click(function () {
-                successContainer.hide();
-                errorContainer.hide();
-
-                // Get gatewayId from the user
-                const gatewayId = $("#gateway-id").val();
-                const privacyLevel = $("#add-datasource-privacy-level").val();
-                const datasourceType = $("#datasource-type").val();
-                const datasourceName = $("#datasource-name").val();
-                const connectionDetails = $("#connection-details").val();
-
                 const credentials = [];
                 switch (credType.val().toLowerCase()) {
                     case "key":
@@ -423,13 +480,13 @@ Licensed under the MIT license. -->
                 }
 
                 const requestBody = {
-                    gatewayId: gatewayId,
+                    gatewayId: addDataSourceGatewayId.val(),
                     credType: credType.val(),
                     credentialsArray: credentials,
-                    privacyLevel: privacyLevel,
-                    dataSourceType: datasourceType,
-                    dataSourceName: datasourceName,
-                    connectionDetails: connectionDetails
+                    privacyLevel: addDataSourcePrivacyLevel.val(),
+                    dataSourceType: datasourceType.val(),
+                    dataSourceName: datasourceName.val(),
+                    connectionDetails: connectionDetails.val()
                 }
 
                 $.ajax({
@@ -455,8 +512,6 @@ Licensed under the MIT license. -->
 
             encryptButton.on("click", function () {
 
-                // Get gatewayId from the user
-                const gatewayId = $("#encrypt-gateway").val();
                 const credentials = [];
                 switch (credType.val().toLowerCase()) {
                     case "key":
@@ -476,7 +531,7 @@ Licensed under the MIT license. -->
                 }
 
                 const requestBody = {
-                    gatewayId: gatewayId,
+                    gatewayId: encryptCredsGatewayId.val(),
                     credType: credType.val(),
                     credentialsArray: credentials,
                 }
@@ -536,6 +591,7 @@ Licensed under the MIT license. -->
                 populateDatasourcesList(globalState.datasources);
                 selectDatasource();
                 disableUpdateDatasourceDeps();
+                validateUpdateDatasourceForm();
             }
 
             function selectDatasource(selectedValue) {
@@ -580,15 +636,95 @@ Licensed under the MIT license. -->
             // Disables the elements dependent on get datasources of Update datasource functionality
             function disableUpdateDatasourceDeps() {
                 datasourceDepsElements.prop("disabled", true);
-                datasourceDepsElementsText.css('color', 'grey');
-                updateCredButton.removeClass("btn-primary").addClass("btn-secondary");
+                datasourceDepsElementsText.removeClass(ACTIVE_TEXT).addClass(INACTIVE_TEXT);
             }
 
             // Shows the elements dependent on get datasources of Update datasource functionality
             function showUpdateDatasourceDeps() {
                 datasourceDepsElements.prop("disabled", false);
-                datasourceDepsElementsText.css('color', 'black');
-                updateCredButton.removeClass("btn-secondary").addClass("btn-primary");
+                datasourceDepsElementsText.removeClass(INACTIVE_TEXT).addClass(ACTIVE_TEXT);
+            }
+
+            // Disables or enables get data source functionality depending on the input provided by the user
+            function validateGetDataSourceForm() {
+                // Check if groupId and datasetId is provided by user to activate functionality
+                if (groupId.val().length > 0 && datasetId.val().length > 0) {
+                    getDatasourceButton.prop("disabled", false);
+                    getDatasourceButton.removeClass(DISABLED).addClass(ENABLED);
+                } else {
+                    getDatasourceButton.prop("disabled", true);
+                    getDatasourceButton.removeClass(ENABLED).addClass(DISABLED);
+                }
+            }
+
+            // Disables or enables update data source functionality depending on the input provided by the user
+            function validateUpdateDatasourceForm() {
+                const isDisabled = credType.prop("disabled");
+
+                // Check if update data source form disabled
+                if (isDisabled) {
+                    disableDOMElements(updateDataSourceLabel, updateCredButton);
+                } else {
+                    // Check if all inputs are provided by user to activate the functionality
+                    if (validCredentials()) {
+                        enableDOMElements(updateDataSourceLabel, updateCredButton);
+                    } else {
+                        disableDOMElements(updateDataSourceLabel, updateCredButton);
+                    }
+                }
+            }
+
+            // Disables or enables add data source functionality depending on the input provided by the user
+            function validateAddDatasourceForm() {
+                // Check if all inputs are provided by user to activate the functionality
+                if (
+                    addDataSourceGatewayId.val().length > 0 &&
+                    datasourceType.val().length > 0 &&
+                    datasourceName.val().length > 0 &&
+                    connectionDetails.val().length > 0 &&
+                    validCredentials()
+                ) {
+                    enableDOMElements(addDataSourceLabel, addCredButton);
+                } else {
+                    disableDOMElements(addDataSourceLabel, addCredButton);
+                }
+            }
+
+            // Disables or enables add data source functionality depending on the input provided by the user
+            function validateEncryptCredsForm() {
+                // Check if all inputs are provided by user to activate the functionality
+                if (encryptCredsGatewayId.val().length > 0 && validCredentials()) {
+                    enableDOMElements(encryptCredsLabel, encryptButton);
+                } else {
+                    disableDOMElements(encryptCredsLabel, encryptButton);
+                }
+            }
+
+            // Validates credentials provided by the user
+            function validCredentials() {
+                return ((credType.val().toLowerCase() === "key" && keyCredentials.val().length > 0) ||
+                (credType.val().toLowerCase() === "windows" &&
+                windowsCredentialsUsername.val().length > 0 &&
+                windowsCredentialsPassword.val().length > 0) ||
+                (credType.val().toLowerCase() === "oauth2" &&
+                oAuth2Credentials.val().length > 0) ||
+                (credType.val().toLowerCase() === "basic" &&
+                basicCredentialsUsername.val().length > 0 &&
+                basicCredentialsPassword.val().length > 0))
+            }
+
+            // Disables DOM elements
+            function disableDOMElements(labelElement, buttonElement) {
+                labelElement.removeClass(ACTIVE_TEXT).addClass(INACTIVE_TEXT);
+                buttonElement.prop("disabled", true);
+                buttonElement.removeClass(ENABLED).addClass(DISABLED);
+            }
+
+            // Enables DOM elements
+            function enableDOMElements(labelElement, buttonElement) {
+                labelElement.removeClass(INACTIVE_TEXT).addClass(ACTIVE_TEXT);
+                buttonElement.prop("disabled", false);
+                buttonElement.removeClass(DISABLED).addClass(ENABLED);
             }
         });
     </script>
