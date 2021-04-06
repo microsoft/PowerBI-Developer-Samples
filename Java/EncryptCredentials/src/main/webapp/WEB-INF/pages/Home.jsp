@@ -31,7 +31,7 @@ Licensed under the MIT license. -->
                 <div>
                     <h5>Update data source</h5>
                     Encrypt the credentials of Power BI data source and update them using the API: 
-                    <a href="https://docs.microsoft.com/en-us/rest/api/power-bi/gateways/updatedatasource#credentialdetails">Update data source credentials</a>.
+                    <a href="https://docs.microsoft.com/en-us/rest/api/power-bi/gateways/updatedatasource">Update data source credentials</a>.
                     <br><br>
                     <h5>Add data source</h5>
                     Encrypt the credentials of Power BI data source and add new data source using the API: 

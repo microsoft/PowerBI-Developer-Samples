@@ -19,7 +19,7 @@ public abstract class Config {
 	// - For authentication with app secret choose ServicePrincipal as
 	// AuthenticationType.
 	// More details here: https://aka.ms/EmbedServicePrincipal
-	public static final String authenticationType = "MasterUser";
+	public static final String authenticationType = "ServicePrincipal";
 
 	// Common configuration properties for both authentication types
 	// Enter Application Id
