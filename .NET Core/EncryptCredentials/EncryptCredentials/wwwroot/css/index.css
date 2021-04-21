@@ -1,0 +1,98 @@
+/* Copyright (c) Microsoft Corporation.
+Licensed under the MIT license. */
+
+header {
+    background-color: #007FFF;
+    height: 75px;
+    width: 100%;
+}
+
+header > div {
+    color: #FFFFFF;
+    font: bold 25.6px "segoe ui", arial, sans-serif;
+    margin-left: 32px;
+    padding-top: 19px;
+}
+
+main {
+    margin: 0 auto;
+    width: 100%;
+}
+
+section#text-container > div > div {
+    font: 19px "segoe ui", arial, sans-serif;
+}
+
+.id-container {
+	margin: 0 12px 0 16px;
+}
+
+.input-element {
+	height: 30px;
+	width: 280px;
+	padding: 2px;
+}
+
+.send-button {
+	width: 200px;
+}
+
+.password-text {
+	margin-left: 24px;
+}
+
+#task-container {
+	margin-bottom: 15px;
+}
+
+section#text-container {
+    margin: 48px 40px;
+}
+
+footer > p {
+    font: 16px "segoe ui", arial, sans-serif;
+}
+
+#get-datasources {
+    margin-top: 20px;
+}
+
+.gateway-container {
+    display: none;
+    margin-top: 20px;
+}
+
+.success-container {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.error-container {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.modal-dialog {
+    max-width: min-content;
+    min-width: 500px;
+}
+
+.add-datasource-container,
+.encrypt-credentials-container,
+#credential-windows,
+#credential-oauth2,
+#credential-basic {
+    display: none;
+}
+
+#credential-key {
+    display: block;
+}
+
+.inactive-text {
+    color: #808080;
+}
+
+.active-text {
+    color: #000000;
+}

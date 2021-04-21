@@ -44,4 +44,7 @@ $(function() {
     globals.reportContainer = $("#report-container");
     globals.dashboardContainer = $("#dashboard-container");
     globals.tileContainer = $("#tile-container");
+    globals.reportSpinner = $("#report-spinner");
+    globals.dashboardSpinner = $("#dashboard-spinner");
+    globals.tileSpinner = $("#tile-spinner");
 });

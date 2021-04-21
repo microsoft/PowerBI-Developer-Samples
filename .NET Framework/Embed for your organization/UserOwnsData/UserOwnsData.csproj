@@ -160,6 +160,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\img\spinner.svg" />
     <Content Include="Content\lib\bootstrap\dist\css\bootstrap.min.css" />
     <Content Include="Content\lib\bootstrap\dist\js\bootstrap.min.js" />
     <Content Include="Content\lib\jquery\dist\jquery.min.js" />

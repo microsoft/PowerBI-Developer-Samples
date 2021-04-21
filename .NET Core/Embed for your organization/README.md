@@ -8,22 +8,6 @@
 <br>
 > **Note:** Visual Studio version >=16.5 is required to use .NET Core SDK 3.1.
 
-
-## Embed for your customers
-
-### Set up a Power BI app
-
-Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
-
-### Run the application on localhost
-
-1. Open the [AppOwnsData.sln](./Embed%20for%20your%20customers/AppOwnsData.sln) file in Visual Studio. If you are using Visual Studio Code then, open [AppOwnsData](./Embed%20for%20your%20customers/AppOwnsData) folder.
-
-2. Fill in the required parameters in the [appsettings.json](./Embed%20for%20your%20customers/AppOwnsData/appsettings.json) file. Refer to [PowerBI.cs](./Embed%20for%20your%20customers/AppOwnsData/Models/PowerBI.cs) and [AzureAd.cs](./Embed%20for%20your%20customers/AppOwnsData/Models/AzureAd.cs) for more info on the config parameters.
-
-3. Build and run the application.
-
-
 ## Embed for your organization
 
 ### Set up a Power BI app
@@ -38,9 +22,9 @@ Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
 
 ### Run the application on localhost
 
-1. Open the [UserOwnsData.sln](./Embed%20for%20your%20organization/UserOwnsData.sln) file in Visual Studio. If you are using Visual Studio Code, open [UserOwnsData](./Embed%20for%20your%20organization/UserOwnsData) folder.
+1. Open the [UserOwnsData.sln](./UserOwnsData.sln) file in Visual Studio. If you are using Visual Studio Code, open [UserOwnsData](./UserOwnsData) folder.
 
-2. Fill in the required parameters in the [appsettings.json](./Embed%20for%20your%20organization/UserOwnsData/appsettings.json) file related to AAD app.
+2. Fill in the required parameters in the [appsettings.json](./UserOwnsData/appsettings.json) file related to AAD app.
 
 3. Build and run the application.
 

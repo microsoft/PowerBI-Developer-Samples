@@ -41,7 +41,7 @@ function embedReport(embedParam) {
 
             // Triggers when a report schema is successfully loaded
             report.on("loaded", function() {
-                globals.reportDisplayText.hide();
+                globals.reportSpinner.hide();
                 $(".report-wrapper").addClass("transparent-bg");
                 globals.reportContainer.show();
                 console.log("Report load successful");
@@ -101,7 +101,7 @@ function embedDashboard(embedParam) {
 
             // Triggers when a dashboard schema is successfully loaded
             dashboard.on("loaded", function() {
-                globals.dashboardDisplayText.hide();
+                globals.dashboardSpinner.hide();
                 globals.dashboardContainer.show();
                 console.log("Dashboard load successful");
             });
@@ -161,7 +161,7 @@ function embedTile(embedParam) {
 
             // Handle tileLoad event
             tile.on("tileLoaded", function(event) {
-                globals.tileDisplayText.hide();
+                globals.tileSpinner.hide();
                 globals.tileContainer.show();
                 console.log("Tile load successful");
             });

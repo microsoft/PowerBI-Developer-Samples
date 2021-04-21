@@ -40,4 +40,13 @@ $(function() {
     // Hide tile container with jQuery
     globals.tileContainer.hide();
     globals.tileContainer.get(0).hidden = false;
+
+    // Hide report spinner with jQuery
+    globals.reportSpinner.hide();
+
+    // Hide dashboard spinner with jQuery
+    globals.dashboardSpinner.hide();
+
+    // Hide tile spinner with jQuery
+    globals.tileSpinner.hide();
 });

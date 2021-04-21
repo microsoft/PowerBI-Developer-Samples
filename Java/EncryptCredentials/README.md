@@ -1,4 +1,4 @@
-# Power BI Embedded sample in Spring MVC framework
+# Power BI credentials encryption sample in Spring MVC framework
 
 ## Requirements
 
@@ -28,23 +28,23 @@ Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
     7. There should be a Tomcat server now in the Servers tab
 
 1. To import project,
-Click File > Open Project from File System > Click on Directory > Select [AppOwnsData](./Embed%20for%20your%20customers/AppOwnsData) folder > Finish
+Click File > Open Project from File System > Click on Directory > Select [Update Credentials](./) folder > Finish
 
 2. Let Maven finish automatically downloading the dependencies in background.
 
 3. Add Tomcat server to the project
-    1. Right click __AppOwnsData__ (project's name) from Project Explorer and then click __Properties__
+    1. Right click __EncryptCredentials__ (project's name) from Project Explorer and then click __Properties__
     2. Select __Targeted Runtimes__
     3. Select __Apache Tomcat__ from the list
     4. Click on Apply and Close
 
-4. Fill in the required parameters in the [Config.java](./Embed%20for%20your%20customers/AppOwnsData/src/main/java/com/embedsample/appownsdata/config/Config.java) file related to AAD app, Power BI report, workspace, and user account information.
+4. Fill in the required parameters in the [Config.java](./src/main/java/com/encryptcredentialsample/encryptcredential/config/Config.java) file related to AAD app, Power BI report, workspace, and user account information.
 
 5. Run the project
     1. Right click project's name from Project Explorer
     2. Select Run As > __Run on Server__
     3. Select the created server and click __Finish__
-    4. http://localhost:8080/appownsdatasample should open in browser
+    4. http://localhost:8080/encryptcredential should open in browser
 
 #### Supported browsers:
 
@@ -56,7 +56,9 @@ Click File > Open Project from File System > Click on Directory > Select [AppOwn
 
 ## Important
 
-For security reasons, in a real world application, passwords and secrets should not be stored in config files. Instead, consider securing your credentials with an application such as Key Vault.
+1. For security reasons, in a real world application, passwords and secrets should not be stored in config files. Instead, consider securing your credentials with an application such as Key Vault.
+
+2. Do not use default browser provided by eclipse for running the sample on server.
 
 ## Troubleshoot
 

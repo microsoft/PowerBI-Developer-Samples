@@ -15,6 +15,7 @@ function initializeEventHandlers() {
             globals.tileDiv.hide();
             globals.reportDiv.show();
             globals.reportContainer.hide();
+            globals.reportSpinner.hide();
             globals.reportDisplayText.show();
             globals.dashboardWrapper.hide();
             globals.tileWrapper.hide();
@@ -33,6 +34,7 @@ function initializeEventHandlers() {
             globals.tileDiv.hide();
             globals.dashboardDiv.show();
             globals.dashboardContainer.hide();
+            globals.dashboardSpinner.hide();
             globals.dashboardDisplayText.show();
             globals.reportWrapper.hide();
             globals.tileWrapper.hide();
@@ -49,6 +51,7 @@ function initializeEventHandlers() {
             globals.dashboardDiv.show();
             globals.tileDiv.show();
             globals.tileContainer.hide();
+            globals.tileSpinner.hide();
             globals.tileDisplayText.show();
             globals.reportWrapper.hide();
             globals.dashboardWrapper.hide();
@@ -133,6 +136,10 @@ function initializeEventHandlers() {
         // Report radio button is checked
         if ($("#report").get(0).checked) {
             embedParam.reportId = globals.reportSelect.get(0).value;
+            globals.reportDisplayText.hide();
+            $(".report-wrapper").removeClass("transparent-bg");
+            globals.reportContainer.hide();
+            globals.reportSpinner.show();
 
             // Embed report
             embedReport(embedParam);
@@ -141,6 +148,9 @@ function initializeEventHandlers() {
         // Dashboard radio button is checked
         else if ($("#dashboard").get(0).checked) {
             embedParam.dashboardId = globals.dashboardSelect.get(0).value;
+            globals.dashboardDisplayText.hide();
+            globals.dashboardContainer.hide();
+            globals.dashboardSpinner.show();
 
             // Embed dashboard
             embedDashboard(embedParam);
@@ -150,6 +160,9 @@ function initializeEventHandlers() {
         else if ($("#tile").get(0).checked) {
             embedParam.dashboardId = globals.dashboardSelect.get(0).value;
             embedParam.tileId = globals.tileSelect.get(0).value;
+            globals.tileDisplayText.hide();
+            globals.tileContainer.hide();
+            globals.tileSpinner.show();
 
             // Embed tile
             embedTile(embedParam);

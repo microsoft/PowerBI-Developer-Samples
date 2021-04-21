@@ -39,5 +39,14 @@ $(function () {
     UserOwnsData.tileContainer.hide();
     UserOwnsData.tileContainer.get(0).hidden = false;
 
+    // Hide report spinner with jQuery
+    UserOwnsData.reportSpinner.hide();
+
+    // Hide dashboard spinner with jQuery
+    UserOwnsData.dashboardSpinner.hide();
+
+    // Hide tile spinner with jQuery
+    UserOwnsData.tileSpinner.hide();
+
     UserOwnsData.getWorkspaces();
 });
