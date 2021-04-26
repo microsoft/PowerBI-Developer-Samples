@@ -8,9 +8,6 @@ $(function () {
     // Initialize event handlers
     UserOwnsData.initializeEventHandlers();
 
-    // Show username of signed in user
-    UserOwnsData.showUsername(signedInUsername);
-
     // Hide dashboard div with jQuery
     UserOwnsData.dashboardDiv.hide();
     UserOwnsData.dashboardDiv.get(0).hidden = false;

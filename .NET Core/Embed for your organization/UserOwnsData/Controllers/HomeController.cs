@@ -11,6 +11,7 @@ namespace UserOwnsData.Controllers
     using Microsoft.Identity.Web;
     using Microsoft.Graph;
     using System.Threading.Tasks;
+    using UserOwnsData.Models;
 
     [Authorize]
     public class HomeController : Controller
@@ -36,15 +37,20 @@ namespace UserOwnsData.Controllers
         [AuthorizeForScopes(Scopes = new string[] { PowerBiScopes.ReadDashboard, PowerBiScopes.ReadReport, PowerBiScopes.ReadWorkspace })]
         public async Task<IActionResult> Embed()
         {
-            // Generate token for the signed in user and store in cache
-            await m_tokenAcquisition.GetAccessTokenForUserAsync(new string[] { PowerBiScopes.ReadDashboard, PowerBiScopes.ReadReport, PowerBiScopes.ReadWorkspace });
+            // Generate token for the signed in user
+            var accessToken = await m_tokenAcquisition.GetAccessTokenForUserAsync(new string[] { PowerBiScopes.ReadDashboard, PowerBiScopes.ReadReport, PowerBiScopes.ReadWorkspace });
 
             // Get username of logged in user
             var userInfo = await m_graphServiceClient.Me.Request().GetAsync();
             var userName = userInfo.DisplayName;
-            ViewData["username"] = userName;
 
-            return View();
+            AuthDetails authDetails = new AuthDetails
+            {
+                UserName = userName,
+                AccessToken = accessToken
+            };
+
+            return View(authDetails);
         }
     }
 }

@@ -5,13 +5,12 @@ Licensed under the MIT license.
 ----------------------------------------------------------------------------
 *@
 
-@{       
-    string username = ViewData["username"] as string;
-}
+@model UserOwnsData.Models.AuthDetails
+
 <div class="outer-div">
     <header class="row">
         <div class="heading col-lg-6 col-md-6">Power BI Embedded Sample</div>
-        <div class="user-info col-lg-6 col-md-6">
+        <div class="user-info col-lg-6 col-md-6">Welcome <strong><u>@Model.UserName!</u></strong>
         </div>
     </header>
     <div class="row config-container">
@@ -102,16 +101,15 @@ Licensed under the MIT license.
         <div class="tile-display-text col-lg-12 col-md-12">Select workspace, dashboard and tile</div>
     </div>
 </div>
-<script>
-    // Show welcome user text
-    var signedInUsername = "@username";
-</script>
 
 <script src="/js/namespace.js"></script>
 <script src="/js/error.js"></script>
 <script src="/js/globals.js"></script>
 <script src="/js/data.js"></script>
-<script src="/js/login.js"></script>
 <script src="/js/embed.js"></script>
 <script src="/js/events.js"></script>
 <script src="/js/index.js"></script>
+
+<script>
+    loggedInUser.accessToken = "@Model.AccessToken";
+</script>

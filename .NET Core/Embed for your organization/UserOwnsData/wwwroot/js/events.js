@@ -104,7 +104,6 @@ UserOwnsData.initializeEventHandlers = function () {
     // Dashboard select event
     UserOwnsData.dashboardSelect.on("change", function () {
         let getSelectParams = {
-            accessToken: loggedInUser.accessToken,
             workspaceId: UserOwnsData.workspaceSelect.get(0).value
         };
 
