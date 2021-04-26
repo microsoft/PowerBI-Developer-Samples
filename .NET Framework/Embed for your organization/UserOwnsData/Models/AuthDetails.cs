@@ -5,11 +5,9 @@
 
 namespace UserOwnsData.Models
 {
-	using Microsoft.PowerBI.Api.Models;
-	using System.Collections.Generic;
-
-	public class WorkspaceList
+	public class AuthDetails
 	{
-		public IList<Group> Workspaces { get; set; }
+		public string UserName { get; set; }
+		public string AccessToken { get; set; }
 	}
 }

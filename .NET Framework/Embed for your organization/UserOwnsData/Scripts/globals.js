@@ -25,6 +25,11 @@ const globals = {
     tileContainer: null
 }
 
+// Cache logged in user's info
+const loggedInUser = {
+    accessToken: undefined
+};
+
 $(function() {
     globals.workspaceSelect = $("#workspace-select");
     globals.workspaceDefaultOption = $("#workspace-default-option").get(0);
@@ -47,4 +52,7 @@ $(function() {
     globals.reportSpinner = $("#report-spinner");
     globals.dashboardSpinner = $("#dashboard-spinner");
     globals.tileSpinner = $("#tile-spinner");
+
+    // Cache base endpoint for Power BI REST API
+    globals.powerBiApi = "https://api.powerbi.com/v1.0/myorg/";
 });

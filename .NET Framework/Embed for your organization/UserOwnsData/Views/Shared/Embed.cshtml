@@ -1,110 +1,109 @@
 ﻿@* Copyright (c) Microsoft Corporation.
-Licensed under the MIT license. *@
+    Licensed under the MIT license. *@
 
-@model UserOwnsData.Models.WorkspaceList
-@using System.Security.Claims
+@model UserOwnsData.Models.AuthDetails
 
 @{
-	ViewBag.Title = "Embed";
-	Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Embed";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="outer-div">
-	<header class="row">
-		<div class="heading col-lg-6 col-md-6">Power BI Embedded Sample</div>
-		<div class="user-info col-lg-6 col-md-6">
-			Welcome <strong><u>@Html.Raw(@HttpUtility.HtmlEncode(@ClaimsPrincipal.Current.FindFirst("name").Value))!</u></strong>
-		</div>
-	</header>
-	<div class="row config-container">
-		<div id="text-container" class="row col-lg-11 col-md-12">
+    <header class="row">
+        <div class="heading col-lg-6 col-md-6">Power BI Embedded Sample</div>
+        <div class="user-info col-lg-6 col-md-6">
+            Welcome <strong><u>@Model.UserName!</u></strong>
+        </div>
+    </header>
+    <div class="row config-container">
+        <div id="text-container" class="row col-lg-11 col-md-12">
 
-			<!-- Show radio buttons for Embed types -->
-			<div class="col-lg-4 col-md-12">
-				<label>Choose embed type</label><br>
+            <!-- Show radio buttons for Embed types -->
+            <div class="col-lg-4 col-md-12">
+                <label>Choose embed type</label><br>
 
-				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" class="custom-control-input" id="report" name="embedType" value="report" checked>
-					<label class="custom-control-label" for="report">Report</label>
-				</div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="report" name="embedType" value="report" checked>
+                    <label class="custom-control-label" for="report">Report</label>
+                </div>
 
-				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" class="custom-control-input" id="dashboard" name="embedType" value="dashboard">
-					<label class="custom-control-label" for="dashboard">Dashboard</label>
-				</div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="dashboard" name="embedType" value="dashboard">
+                    <label class="custom-control-label" for="dashboard">Dashboard</label>
+                </div>
 
-				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" class="custom-control-input" id="tile" name="embedType" value="tile">
-					<label class="custom-control-label" for="tile">Tile</label>
-				</div>
-			</div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="tile" name="embedType" value="tile">
+                    <label class="custom-control-label" for="tile">Tile</label>
+                </div>
+            </div>
 
-			<div class="row col-lg-8 col-md-12">
+            <div class="row col-lg-8 col-md-12">
 
-				<!-- Show select list for workspace(s) -->
-				<div class="row col-lg-4 col-md-12">
-					<label for="workspace-select">Choose workspace</label><br>
-					<select id="workspace-select" class="select-list col-lg-10 col-md-12">
-						<option id="workspace-default-option" value="" disabled selected>Choose workspace</option>
-						@foreach (var item in @Model.Workspaces)
-						{
-							<option id="workspace-default-option" value="@Html.Raw(@HttpUtility.HtmlEncode(@item.Id))">@Html.Raw(@HttpUtility.HtmlEncode(@item.Name))</option>
-						}
-					</select>
-				</div>
+                <!-- Show select list for workspace(s) -->
+                <div class="row col-lg-4 col-md-12">
+                    <label for="workspace-select">Choose workspace</label><br>
+                    <select id="workspace-select" class="select-list col-lg-10 col-md-12">
+                        <option id="workspace-default-option" value="" disabled selected>Choose workspace</option>
+                    </select>
+                </div>
 
-				<!-- Show select list for report(s) -->
-				<div id="report-div" class="row col-lg-4 col-md-12">
-					<label for="report-select">Choose report</label><br>
-					<select id="report-select" class="select-list col-lg-10 col-md-12" disabled>
-						<option value="" disabled selected>Choose report</option>
-					</select>
-				</div>
+                <!-- Show select list for report(s) -->
+                <div id="report-div" class="row col-lg-4 col-md-12">
+                    <label for="report-select">Choose report</label><br>
+                    <select id="report-select" class="select-list col-lg-10 col-md-12" disabled>
+                        <option value="" disabled selected>Choose report</option>
+                    </select>
+                </div>
 
-				<!-- Show select list for dashboard(s) -->
-				<div id="dashboard-div" class="row col-lg-4 col-md-12" hidden>
-					<label for="dashboard-select">Choose dashboard</label><br>
-					<select id="dashboard-select" class="select-list col-lg-10 col-md-12" disabled>
-						<option value="" disabled selected>Choose dashboard</option>
-					</select>
-				</div>
+                <!-- Show select list for dashboard(s) -->
+                <div id="dashboard-div" class="row col-lg-4 col-md-12" hidden>
+                    <label for="dashboard-select">Choose dashboard</label><br>
+                    <select id="dashboard-select" class="select-list col-lg-10 col-md-12" disabled>
+                        <option value="" disabled selected>Choose dashboard</option>
+                    </select>
+                </div>
 
-				<!-- Show select list for tile(s) -->
-				<div id="tile-div" class="row col-lg-4 col-md-12" hidden>
-					<label for="tile-select">Choose tile</label><br>
-					<select id="tile-select" class="select-list col-lg-10 col-md-12" disabled>
-						<option value="" disabled selected>Choose tile</option>
-					</select>
-				</div>
-			</div>
-		</div>
-		<div class="button-container col-lg-1 col-md-12">
-			<button class="embed-button" disabled>Embed</button>
-		</div>
-	</div>
+                <!-- Show select list for tile(s) -->
+                <div id="tile-div" class="row col-lg-4 col-md-12" hidden>
+                    <label for="tile-select">Choose tile</label><br>
+                    <select id="tile-select" class="select-list col-lg-10 col-md-12" disabled>
+                        <option value="" disabled selected>Choose tile</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="button-container col-lg-1 col-md-12">
+            <button class="embed-button" disabled>Embed</button>
+        </div>
+    </div>
 
-	<!-- Show errors to the user -->
-	<div id="error-container">
-	</div>
+    <!-- Show errors to the user -->
+    <div id="error-container">
+    </div>
 
-	<!-- Placeholder div when Power BI report is not embedded -->
-	<div class="report-wrapper col-lg-12 col-md-12 mt-12">
-		<img src="~/Content/img/spinner.svg" id="report-spinner" class="spinner col-lg-12 col-md-12" alt="loader">
-		<div id="report-container" class="report-container col-lg-12 col-md-12 mt-12" hidden></div>
-		<div class="report-display-text col-lg-12 col-md-12">Select workspace and report</div>
-	</div>
+    <!-- Placeholder div when Power BI report is not embedded -->
+    <div class="report-wrapper col-lg-12 col-md-12 mt-12">
+        <img src="~/Content/img/spinner.svg" id="report-spinner" class="spinner col-lg-12 col-md-12" alt="loader">
+        <div id="report-container" class="report-container col-lg-12 col-md-12 mt-12" hidden></div>
+        <div class="report-display-text col-lg-12 col-md-12">Select workspace and report</div>
+    </div>
 
-	<!-- Placeholder div when Power BI dashboard is not embedded -->
-	<div class="dashboard-wrapper col-lg-12 col-md-12 mt-12" hidden>
-		<img src="~/Content/img/spinner.svg" id="dashboard-spinner" class="spinner col-lg-12 col-md-12" alt="loader">
-		<div id="dashboard-container" class="dashboard-container col-lg-12 col-md-12 mt-12" hidden></div>
-		<div class="dashboard-display-text col-lg-12 col-md-12">Select workspace and dashboard</div>
-	</div>
+    <!-- Placeholder div when Power BI dashboard is not embedded -->
+    <div class="dashboard-wrapper col-lg-12 col-md-12 mt-12" hidden>
+        <img src="~/Content/img/spinner.svg" id="dashboard-spinner" class="spinner col-lg-12 col-md-12" alt="loader">
+        <div id="dashboard-container" class="dashboard-container col-lg-12 col-md-12 mt-12" hidden></div>
+        <div class="dashboard-display-text col-lg-12 col-md-12">Select workspace and dashboard</div>
+    </div>
 
-	<!-- Placeholder div when Power BI tile is not embedded -->
-	<div class="tile-wrapper col-lg-12 col-md-12 mt-12" hidden>
-		<img src="~/Content/img/spinner.svg" id="tile-spinner" class="spinner col-lg-12 col-md-12" alt="loader">
-		<div id="tile-container" class="tile-container col-lg-12 col-md-12 mt-12" hidden></div>
-		<div class="tile-display-text col-lg-12 col-md-12">Select workspace, dashboard and tile</div>
-	</div>
+    <!-- Placeholder div when Power BI tile is not embedded -->
+    <div class="tile-wrapper col-lg-12 col-md-12 mt-12" hidden>
+        <img src="~/Content/img/spinner.svg" id="tile-spinner" class="spinner col-lg-12 col-md-12" alt="loader">
+        <div id="tile-container" class="tile-container col-lg-12 col-md-12 mt-12" hidden></div>
+        <div class="tile-display-text col-lg-12 col-md-12">Select workspace, dashboard and tile</div>
+    </div>
 </div>
+
+<script>
+    loggedInUser.accessToken = "@Model.AccessToken";
+</script>

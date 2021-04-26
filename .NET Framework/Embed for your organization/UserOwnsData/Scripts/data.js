@@ -36,92 +36,123 @@ function resetTileList() {
     globals.tileSelect.get(0).options[0].selected = true;
 }
 
-// Fetch reports list from server
+// Fetch workspaces list from Power BI
+globals.getWorkspaces = function () {
+    const componentType = "workspace";
+    const componentListEndpoint = `${globals.powerBiApi}/groups`;
+
+    // Populates workspace select list
+    populateSelectList(componentType, componentListEndpoint, globals.workspaceSelect);
+}
+
+// Fetch reports list from Power BI
 function getReports(getSelectParams) {
-    $.ajax({
-        type: "POST",
-        url: "/embedinfo/getreport",
-        data: JSON.stringify(getSelectParams),
-        contentType: "application/json; charset=utf-8",
-        success: function(data) {
+    const componentType = "report";
+    const componentListEndpoint = `${globals.powerBiApi}/groups/${getSelectParams.workspaceId}/reports`;
 
-            // Populate select list
-            for (let i = 0; i < data.length; i++) {
-                globals.reportSelect.append(
-                    $("<option />")
-                    .text(data[i].Name)
-                    .val(data[i].Id)
-                );
-            }
-
-            if (data.length >= 1) {
-
-                // Enable report select list
-                globals.reportSelect.removeAttr("disabled");
-            }
-        },
-        error: function(err) {
-            showError(err);
-        }
-    });
+    // Populates report select list
+    populateSelectList(componentType, componentListEndpoint, globals.reportSelect);
 }
 
-// Fetch dashboards list from server
+// Fetch dashboards list from Power BI
 function getDashboards(getSelectParams) {
-    $.ajax({
-        type: "POST",
-        url: "/embedinfo/getdashboard",
-        data: JSON.stringify(getSelectParams),
-        contentType: "application/json; charset=utf-8",
-        success: function(data) {
+    const componentType = "dashboard";
+    const componentListEndpoint = `${globals.powerBiApi}/groups/${getSelectParams.workspaceId}/dashboards`;
 
-            // Populate select list
-            for (let i = 0; i < data.length; i++) {
-                globals.dashboardSelect.append(
-                    $("<option />")
-                    .text(data[i].DisplayName)
-                    .val(data[i].Id)
-                );
-            }
-
-            if (data.length >= 1) {
-
-                // Enable dashboard select list
-                globals.dashboardSelect.removeAttr("disabled");
-            }
-        },
-        error: function(err) {
-            showError(err);
-        }
-    });
+    // Populates dashboard select list
+    populateSelectList(componentType, componentListEndpoint, globals.dashboardSelect);
 }
 
-// Fetch tiles list from server
+// Fetch tiles list from Power BI
 function getTiles(getSelectParams) {
+    const componentType = "tile";
+    const componentListEndpoint = `${globals.powerBiApi}/groups/${getSelectParams.workspaceId}/dashboards/${getSelectParams.dashboardId}/tiles`;
+
+    // Populates tile select list
+    populateSelectList(componentType, componentListEndpoint, globals.tileSelect);
+}
+
+// Populates select list
+function populateSelectList(componentType, componentListEndpoint, componentContainer) {
+    let componentDisplayName;
+
+    // Set component select list display name depending on embed type
+    switch (componentType.toLowerCase()) {
+        case "workspace":
+        case "report":
+            componentDisplayName = "name";
+            break;
+        case "dashboard":
+            componentDisplayName = "displayName";
+            break;
+        case "tile":
+            componentDisplayName = "title";
+            break;
+        default:
+            showError("Invalid Power BI Component");
+    }
+
+    // Fetch component list from Power BI
     $.ajax({
-        type: "POST",
-        url: "/embedinfo/gettile",
-        data: JSON.stringify(getSelectParams),
+        type: "GET",
+        url: componentListEndpoint,
+        headers: {
+            "Authorization": `Bearer ${loggedInUser.accessToken}`
+        },
         contentType: "application/json; charset=utf-8",
         success: function(data) {
 
             // Populate select list
-            for (let i = 0; i < data.length; i++) {
-                globals.tileSelect.append(
+            for (let i = 0; i < data.value.length; i++) {
+                componentContainer.append(
                     $("<option />")
-                    .text(data[i].Title)
-                    .val(data[i].Id)
+                        .text(data.value[i][componentDisplayName])
+                        .val(data.value[i].id)
                 );
             }
 
-            if (data.length >= 1) {
+            if (data.value.length >= 1) {
 
                 // Enable tile select list
-                globals.tileSelect.removeAttr("disabled");
+                componentContainer.removeAttr("disabled");
             }
         },
         error: function(err) {
             showError(err);
         }
     });
+}
+
+// Retrieves embed configuration for Power BI report, dashboard and tile
+globals.getEmbedUrl = async function (embedParam, embedType) {
+    let componentDetailsEndpoint;
+
+    // Set endpoint for retrieving embed configurations depending on embed type
+    switch (embedType.toLowerCase()) {
+        case "report":
+            componentDetailsEndpoint = `${globals.powerBiApi}/groups/${embedParam.workspaceId}/reports/${embedParam.reportId}`;
+            break;
+        case "dashboard":
+            componentDetailsEndpoint = `${globals.powerBiApi}/groups/${embedParam.workspaceId}/dashboards/${embedParam.dashboardId}`;
+            break;
+        case "tile":
+            componentDetailsEndpoint = `${globals.powerBiApi}/groups/${embedParam.workspaceId}/dashboards/${embedParam.dashboardId}/tiles/${embedParam.tileId}`;
+            break;
+        default:
+            showError("Invalid Power BI Component");
+    }
+
+    let componentDetails = await $.ajax({
+        type: "GET",
+        url: componentDetailsEndpoint,
+        headers: {
+            "Authorization": `Bearer ${loggedInUser.accessToken}`
+        },
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            return data
+        }
+    });
+
+    return componentDetails.embedUrl;
 }

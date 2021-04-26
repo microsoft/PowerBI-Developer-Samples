@@ -49,4 +49,6 @@ $(function() {
 
     // Hide tile spinner with jQuery
     globals.tileSpinner.hide();
+
+    globals.getWorkspaces();
 });
