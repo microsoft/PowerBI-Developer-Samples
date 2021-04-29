@@ -9,12 +9,23 @@ UserOwnsData.initializeEventHandlers = function () {
     $("input[type=radio]").on("click", function () {
         UserOwnsData.workspaceDefaultOption.selected = "true";
 
+        // Hide report container
+        UserOwnsData.reportContainer.css({ visibility: "hidden" });
+        UserOwnsData.reportContainer.css({ height: 0 + 'px', width: 0 + 'px' });
+
+        // Hide dashboard container
+        UserOwnsData.dashboardContainer.css({ visibility: "hidden" });
+        UserOwnsData.dashboardContainer.css({ height: 0 + 'px', width: 0 + 'px' });
+
+        // Hide tile container
+        UserOwnsData.tileContainer.css({ visibility: "hidden" });   
+        UserOwnsData.tileContainer.css({ height: 0 + 'px', width: 0 + 'px' });
+
         // When report radio button is clicked
         if ($("#report").get(0).checked) {
             UserOwnsData.dashboardDiv.hide();
             UserOwnsData.tileDiv.hide();
             UserOwnsData.reportDiv.show();
-            UserOwnsData.reportContainer.hide();
             UserOwnsData.reportSpinner.hide();
             UserOwnsData.reportDisplayText.show();
             UserOwnsData.dashboardWrapper.hide();
@@ -33,7 +44,6 @@ UserOwnsData.initializeEventHandlers = function () {
             UserOwnsData.reportDiv.hide();
             UserOwnsData.tileDiv.hide();
             UserOwnsData.dashboardDiv.show();
-            UserOwnsData.dashboardContainer.hide();
             UserOwnsData.dashboardSpinner.hide();
             UserOwnsData.dashboardDisplayText.show();
             UserOwnsData.reportWrapper.hide();
@@ -50,7 +60,6 @@ UserOwnsData.initializeEventHandlers = function () {
             UserOwnsData.reportDiv.hide();
             UserOwnsData.dashboardDiv.show();
             UserOwnsData.tileDiv.show();
-            UserOwnsData.tileContainer.hide();
             UserOwnsData.tileSpinner.hide();
             UserOwnsData.tileDisplayText.show();
             UserOwnsData.reportWrapper.hide();
@@ -138,7 +147,6 @@ UserOwnsData.initializeEventHandlers = function () {
             embedParam.reportId = UserOwnsData.reportSelect.get(0).value;
             UserOwnsData.reportDisplayText.hide();
             $(".report-wrapper").removeClass("transparent-bg");
-            UserOwnsData.reportContainer.hide();
             UserOwnsData.reportSpinner.show();
 
             // Embed report
@@ -149,7 +157,6 @@ UserOwnsData.initializeEventHandlers = function () {
         else if ($("#dashboard").get(0).checked) {
             embedParam.dashboardId = UserOwnsData.dashboardSelect.get(0).value;
             UserOwnsData.dashboardDisplayText.hide();
-            UserOwnsData.dashboardContainer.hide();
             UserOwnsData.dashboardSpinner.show();
 
             // Embed dashboard
@@ -161,7 +168,6 @@ UserOwnsData.initializeEventHandlers = function () {
             embedParam.dashboardId = UserOwnsData.dashboardSelect.get(0).value;
             embedParam.tileId = UserOwnsData.tileSelect.get(0).value;
             UserOwnsData.tileDisplayText.hide();
-            UserOwnsData.tileContainer.hide();
             UserOwnsData.tileSpinner.show();
 
             // Embed tile

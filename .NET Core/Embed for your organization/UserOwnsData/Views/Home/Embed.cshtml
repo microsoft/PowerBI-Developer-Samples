@@ -6,6 +6,8 @@ Licensed under the MIT license.
 *@
 
 @model UserOwnsData.Models.AuthDetails
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 
 <div class="outer-div">
     <header class="row">
@@ -83,21 +85,21 @@ Licensed under the MIT license.
     <!-- Placeholder div when Power BI report is not embedded -->
     <div class="report-wrapper col-lg-12 col-md-12 mt-12">
         <img src="/img/spinner.svg" id="report-spinner" class="spinner col-lg-12 col-md-12" alt="loader">
-        <div id="report-container" class="report-container col-lg-12 col-md-12 mt-12" hidden></div>
+        <div id="report-container" class="report-container col-lg-12 col-md-12 mt-12"></div>
         <div class="report-display-text col-lg-12 col-md-12">Select workspace and report</div>
     </div>
 
     <!-- Placeholder div when Power BI dashboard is not embedded -->
     <div class="dashboard-wrapper col-lg-12 col-md-12 mt-12" hidden>
         <img src="/img/spinner.svg" id="dashboard-spinner" class="spinner col-lg-12 col-md-12" alt="loader">
-        <div id="dashboard-container" class="dashboard-container col-lg-12 col-md-12 mt-12" hidden></div>
+        <div id="dashboard-container" class="dashboard-container col-lg-12 col-md-12 mt-12"></div>
         <div class="dashboard-display-text col-lg-12 col-md-12">Select workspace and dashboard</div>
     </div>
 
     <!-- Placeholder div when Power BI tile is not embedded -->
     <div class="tile-wrapper col-lg-12 col-md-12 mt-12" hidden>
         <img src="/img/spinner.svg" id="tile-spinner" class="spinner col-lg-12 col-md-12" alt="loader">
-        <div id="tile-container" class="tile-container col-lg-12 col-md-12 mt-12" hidden></div>
+        <div id="tile-container" class="tile-container col-lg-12 col-md-12 mt-12"></div>
         <div class="tile-display-text col-lg-12 col-md-12">Select workspace, dashboard and tile</div>
     </div>
 </div>
@@ -112,4 +114,5 @@ Licensed under the MIT license.
 
 <script>
     loggedInUser.accessToken = "@Model.AccessToken";
+    UserOwnsData.powerBiHostname = @Json.Serialize(@Configuration.GetSection("PowerBiHostname").Value);
 </script>

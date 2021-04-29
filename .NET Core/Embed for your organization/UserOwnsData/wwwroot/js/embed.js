@@ -10,11 +10,6 @@ UserOwnsData.embedReport = async function (embedParam) {
     const models = window["powerbi-client"].models;
     const embedType = "report";
 
-    // If report is not embedded previously then call bootstrap
-    if (!UserOwnsData.isEmbedded(embedType)) {
-        powerbi.bootstrap(UserOwnsData.reportContainer.get(0), { type: embedType });
-    }
-
     let embedUrl;
 
     try {
@@ -35,6 +30,25 @@ UserOwnsData.embedReport = async function (embedParam) {
         // }
     };
 
+    // Check if the embed url is for RDL report
+    let isRDLReport = embedUrl.toLowerCase().indexOf("/rdlembed?") >= 0;
+ 
+    // Check if reset is required
+    let resetRequired = UserOwnsData.isPreviousReportRDL || isRDLReport;
+
+    UserOwnsData.isPreviousReportRDL = isRDLReport;
+
+    // Reset report container in case the current report or perviously embedded report is a RDL Report
+    if (resetRequired) {
+        powerbi.reset(UserOwnsData.reportContainer.get(0));
+    }
+
+    // Show report container as there is no loaded event for RDL reports
+    if (isRDLReport) {
+        $(".report-wrapper").addClass("transparent-bg");
+        showEmbedContainer(UserOwnsData.reportSpinner, UserOwnsData.reportContainer);
+    }
+
     // Embed Power BI report
     const report = powerbi.embed(UserOwnsData.reportContainer.get(0), reportConfig);
 
@@ -43,10 +57,9 @@ UserOwnsData.embedReport = async function (embedParam) {
 
     // Triggers when a report schema is successfully loaded
     report.on("loaded", function () {
-        UserOwnsData.reportSpinner.hide();
-        $(".report-wrapper").addClass("transparent-bg");
-        UserOwnsData.reportContainer.show();
         console.log("Report load successful");
+        $(".report-wrapper").addClass("transparent-bg");
+        showEmbedContainer(UserOwnsData.reportSpinner, UserOwnsData.reportContainer);
     });
 
     // Clear any other rendered handler events
@@ -101,9 +114,8 @@ UserOwnsData.embedDashboard = async function (embedParam) {
 
     // Triggers when a dashboard schema is successfully loaded
     dashboard.on("loaded", function () {
-        UserOwnsData.dashboardSpinner.hide();
-        UserOwnsData.dashboardContainer.show();
         console.log("Dashboard load successful");
+        showEmbedContainer(UserOwnsData.dashboardSpinner, UserOwnsData.dashboardContainer);
     });
 
     // Clear any other tileClicked handler events
@@ -159,9 +171,8 @@ UserOwnsData.embedTile = async function (embedParam) {
 
     // Handle tileLoad event
     tile.on("tileLoaded", function (event) {
-        UserOwnsData.tileSpinner.hide();
-        UserOwnsData.tileContainer.show();
         console.log("Tile load successful");
+        showEmbedContainer(UserOwnsData.tileSpinner, UserOwnsData.tileContainer);
     });
 
     // Clear any other tileClicked handler events
@@ -183,4 +194,15 @@ UserOwnsData.isEmbedded = function (embedType) {
         }
     }
     return false;
+}
+
+// Show report, dashboard and tile container once it is loaded
+function showEmbedContainer(componentSpinner, componentContainer) {
+    componentSpinner.hide();
+
+    // Show embed container
+    componentContainer.css({ visibility: "visible" });
+
+    // Remove height and width property from embed container
+    componentContainer.css({ "height": "", "width": "" });
 }

@@ -24,17 +24,14 @@ $(function () {
     UserOwnsData.tileWrapper.hide();
     UserOwnsData.tileWrapper.get(0).hidden = false;
 
-    // Hide report container with jQuery
-    UserOwnsData.reportContainer.hide();
-    UserOwnsData.reportContainer.get(0).hidden = false;
+    // Hide report container
+    UserOwnsData.reportContainer.css({ height: 0 + 'px', width: 0 + 'px' });
 
-    // Hide dashboard container with jQuery
-    UserOwnsData.dashboardContainer.hide();
-    UserOwnsData.dashboardContainer.get(0).hidden = false;
+    // Hide dashboard container
+    UserOwnsData.dashboardContainer.css({ height: 0 + 'px', width: 0 + 'px' });
 
-    // Hide tile container with jQuery
-    UserOwnsData.tileContainer.hide();
-    UserOwnsData.tileContainer.get(0).hidden = false;
+    // Hide tile container
+    UserOwnsData.tileContainer.css({ height: 0 + 'px', width: 0 + 'px' });
 
     // Hide report spinner with jQuery
     UserOwnsData.reportSpinner.hide();
@@ -44,6 +41,11 @@ $(function () {
 
     // Hide tile spinner with jQuery
     UserOwnsData.tileSpinner.hide();
+
+    // Apply bootstrap to report, dashboard, and tile containers
+    powerbi.bootstrap(UserOwnsData.reportContainer.get(0), { type: "report", hostname: UserOwnsData.powerBiHostname });
+    powerbi.bootstrap(UserOwnsData.dashboardContainer.get(0), { type: "dashboard", hostname: UserOwnsData.powerBiHostname });
+    powerbi.bootstrap(UserOwnsData.tileContainer.get(0), { type: "tile", hostname: UserOwnsData.powerBiHostname });
 
     UserOwnsData.getWorkspaces();
 });
