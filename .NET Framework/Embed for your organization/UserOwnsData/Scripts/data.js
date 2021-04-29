@@ -5,35 +5,20 @@
 
 // Reset report list
 function resetReportList() {
-    let len = globals.reportSelect.get(0).options.length;
-    for (let i = 1; i < len; i++) {
-        globals.reportSelect.get(0).remove(i);
-    }
-
-    // Set default option as selected
-    globals.reportSelect.get(0).options[0].selected = true;
+    // Clear the dropdown list and add a default value
+    globals.reportSelect.empty().append('<option value="" disabled selected>Choose report</option>');
 }
 
 // Reset dashboard list
 function resetDashboardList() {
-    let len = globals.dashboardSelect.get(0).options.length;
-    for (let i = 1; i < len; i++) {
-        globals.dashboardSelect.get(0).remove(i);
-    }
-
-    // Set default option as selected
-    globals.dashboardSelect.get(0).options[0].selected = true;
+    // Clear the dropdown list and add a default value
+    globals.dashboardSelect.empty().append('<option value="" disabled selected>Choose dashboard</option>');
 }
 
 // Reset tile list
 function resetTileList() {
-    let len = globals.tileSelect.get(0).options.length;
-    for (let i = 1; i < len; i++) {
-        globals.tileSelect.get(0).remove(i);
-    }
-
-    // Set default option as selected
-    globals.tileSelect.get(0).options[0].selected = true;
+    // Clear the dropdown list and add a default value
+    globals.tileSelect.empty().append('<option value="" disabled selected>Choose tile</option>');
 }
 
 // Fetch workspaces list from Power BI

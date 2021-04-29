@@ -36,6 +36,25 @@ async function embedReport(embedParam) {
         // }
     };
 
+    // Check if the embed url is for RDL report
+    let isRDLReport = embedUrl.toLowerCase().indexOf("/rdlembed?") >= 0;
+
+    // Check if reset is required
+    let resetRequired = globals.isPreviousReportRDL || isRDLReport;
+
+    globals.isPreviousReportRDL = isRDLReport;
+
+    // Reset report container in case the current report or perviously embedded report is a RDL Report
+    if (resetRequired) {
+        powerbi.reset(globals.reportContainer.get(0));
+    }
+
+    // Show report container as there is no loaded event for RDL reports
+    if (isRDLReport) {
+        $(".report-wrapper").addClass("transparent-bg");
+        showEmbedContainer(globals.reportSpinner, globals.reportContainer);
+    }
+
     // Embed Power BI report
     let report = powerbi.embed(globals.reportContainer.get(0), reportConfig);
 
@@ -176,4 +195,10 @@ async function embedTile(embedParam) {
 
 function isEmbedded(embedType) {
     return powerbi.embeds.filter(e => e.embedtype === embedType).length > 0;
+}
+
+// Show report, dashboard and tile container once it is loaded
+function showEmbedContainer(componentSpinner, componentContainer) {
+    componentSpinner.hide();
+    componentContainer.show();
 }

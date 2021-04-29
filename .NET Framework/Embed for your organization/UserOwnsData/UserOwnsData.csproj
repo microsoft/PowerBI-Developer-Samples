@@ -185,7 +185,6 @@
     <Compile Include="Controllers\EmbedInfoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Models\AuthDetails.cs" />
-    <Compile Include="Models\EmbedConfigModel.cs" />
     <Compile Include="Models\ErrorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ConfigValidatorService.cs" />
