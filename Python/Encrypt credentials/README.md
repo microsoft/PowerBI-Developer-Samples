@@ -17,7 +17,7 @@ Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
 
 1. [Install](https://docs.python.org/3/using/index.html) [Python 3](https://www.python.org/downloads/) and add its installation path to the *Path* environment variable.
 
-2. Run the following command in CMD/PowerShell in the path where [requirements.txt](./Embed%20for%20your%20customers/requirements.txt) file is located.<br>
+2. Run the following command in CMD/PowerShell in the path where [requirements.txt](./requirements.txt) file is located.<br>
 
    `pip3 install -r requirements.txt`
 
@@ -26,9 +26,9 @@ Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
 
 1. Open IDE.
 
-2. Open [AppOwnsData](./Embed%20for%20your%20customers/AppOwnsData) folder.
+2. Open [Encryption sample](./Encryption%20sample) folder.
 
-3. Fill in the required parameters in the [config.py](./Embed%20for%20your%20customers/AppOwnsData/config.py) file related to AAD app, Power BI report, workspace, and user account information.
+3. Fill in the required parameters in the [config.py](./Encryption%20sample/config.py) file related to AAD app, Power BI report, workspace, and user account information.
 
 4. Run the following command in CMD/PowerShell to start the application.<br>
 
