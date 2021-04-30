@@ -43,9 +43,9 @@ def get_datasources_in_group():
             return Response(api_response, api_response.status_code)
         else:
             if not api_response.text:
-                return json.dumps({'errorMsg': str(f'Error while retrieving Data sources\n{api_response.reason}\nRequestId:\t{api_response.headers.get("RequestId")}')}), api_response.status_code
+                return json.dumps({'errorMsg': str(f'Error {api_response.status_code} {api_response.reason}\nRequest Id:\t{api_response.headers.get("RequestId")}')}), api_response.status_code
             else:
-                return json.dumps({'errorMsg': str(f'Error while retrieving Data sources\n{api_response.reason}\n{api_response.text}\nRequestId:\t{api_response.headers.get("RequestId")}')}), api_response.status_code
+                return json.dumps({'errorMsg': str(f'Error {api_response.status_code} {api_response.reason}\n{api_response.text}\nRequest Id:\t{api_response.headers.get("RequestId")}')}), api_response.status_code
 
     except Exception as ex:
         return json.dumps({'errorMsg': str(ex)}), 500
@@ -69,7 +69,7 @@ def update_datasource():
         gateway_api_response = data_source_service.get_gateway(access_token, gateway_id)
 
         if not gateway_api_response.ok:
-            return json.dumps({'errorMsg' : str(f'Error while retrieving gateway\n{gateway_api_response.reason}\nRequestId:\t{gateway_api_response.headers.get("RequestId")}')}), gateway_api_response.status_code
+            return json.dumps({'errorMsg' : str(f'Error {gateway_api_response.status_code} {gateway_api_response.reason}\nRequest Id:\t{gateway_api_response.headers.get("RequestId")}')}), gateway_api_response.status_code
 
         gateway = gateway_api_response.json()
 
@@ -84,7 +84,7 @@ def update_datasource():
         if api_response.ok:
             return Response(api_response, api_response.status_code)
         else:
-            return json.dumps({'errorMsg': str(f'Error while updating Data source\n{api_response.reason}\nRequestId:\t{api_response.headers.get("RequestId")}')}), api_response.status_code
+            return json.dumps({'errorMsg': str(f'Error {api_response.status_code} {api_response.reason}\nRequest Id:\t{api_response.headers.get("RequestId")}')}), api_response.status_code
 
     except KeyError as tx:
         return json.dumps({'errorMsg': f'{str(tx)} not found'}), 400
@@ -113,7 +113,7 @@ def add_datasource():
         gateway_api_response = data_source_service.get_gateway(access_token, gateway_id)
 
         if not gateway_api_response.ok:
-            return json.dumps({'errorMsg' : str(f'Error while retrieving gateway\n{gateway_api_response.reason}\nRequestId:\t{gateway_api_response.headers.get("RequestId")}')}), gateway_api_response.status_code
+            return json.dumps({'errorMsg' : str(f'Error {gateway_api_response.status_code} {gateway_api_response.reason}\nRequest Id:\t{gateway_api_response.headers.get("RequestId")}')}), gateway_api_response.status_code
 
         gateway = gateway_api_response.json()
 
@@ -126,7 +126,7 @@ def add_datasource():
         if api_response.ok:
             return Response(api_response, api_response.status_code)
         else:
-            return json.dumps({'errorMsg': str(f'Error while adding Data source\n{api_response.reason}\nRequestId:\t{api_response.headers.get("RequestId")}')}), api_response.status_code
+            return json.dumps({'errorMsg': str(f'Error {api_response.status_code} {api_response.reason}\nRequest Id:\t{api_response.headers.get("RequestId")}')}), api_response.status_code
     
     except KeyError as tx:
         return json.dumps({'errorMsg': f'{str(tx)} not found'}), 400
@@ -154,7 +154,7 @@ def encrypt_credentials():
         gateway_api_response = data_source_service.get_gateway(access_token, gateway_id)
 
         if not gateway_api_response.ok:
-            return json.dumps({'errorMsg' : str(f'Error while retrieving gateway\n{gateway_api_response.reason}\nRequestId:\t{gateway_api_response.headers.get("RequestId")}')}), gateway_api_response.status_code
+            return json.dumps({'errorMsg' : str(f'Error {gateway_api_response.status_code} {gateway_api_response.reason}\nRequest Id:\t{gateway_api_response.headers.get("RequestId")}')}), gateway_api_response.status_code
 
         gateway = gateway_api_response.json()
 
