@@ -32,9 +32,6 @@ Licensed under the MIT license.
     // Get a reference to the embedded report HTML element
     const reportContainer = $('#embedContainer')[0];
 
-    // Bootstrap the embed container for report
-    powerbi.bootstrap(reportContainer, { type: 'report' });
-
     // Read embed application token from Model
     const accessToken = "@Model.EmbedToken.Token";
 

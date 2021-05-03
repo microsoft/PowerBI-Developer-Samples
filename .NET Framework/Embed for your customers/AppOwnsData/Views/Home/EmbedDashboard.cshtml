@@ -33,9 +33,6 @@ Licensed under the MIT license.
     // Get a reference to the embedded dashboard HTML element
     const dashboardContainer = $('#dashboardContainer')[0];
 
-    // Bootstrap the embed container for dashboard
-    powerbi.bootstrap(dashboardContainer, { type: 'dashboard' });
-
     // Read embed application token from Model
     const accessToken = "@Model.EmbedToken.Token";
 

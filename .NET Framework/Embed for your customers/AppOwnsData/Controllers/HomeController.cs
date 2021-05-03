@@ -53,11 +53,11 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             catch (HttpOperationException exc)
             {
                 m_errorMessage = string.Format("Status: {0} ({1})\r\nResponse: {2}\r\nRequestId: {3}", exc.Response.StatusCode, (int)exc.Response.StatusCode, exc.Response.Content, exc.Response.Headers["RequestId"].FirstOrDefault());
-                return View("Error", m_errorMessage);
+                return View("Error", BuildErrorModel(m_errorMessage));
             }
             catch (Exception ex)
             {
-                return View("Error", ex.Message);
+                return View("Error", BuildErrorModel(ex.Message));
             }
         }
 
@@ -76,11 +76,11 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             catch (HttpOperationException exc)
             {
                 m_errorMessage = string.Format("Status: {0} ({1})\r\nResponse: {2}\r\nRequestId: {3}", exc.Response.StatusCode, (int)exc.Response.StatusCode, exc.Response.Content, exc.Response.Headers["RequestId"].FirstOrDefault());
-                return View("Error", m_errorMessage);
+                return View("Error", BuildErrorModel(m_errorMessage));
             }
             catch (Exception ex)
             {
-                return View("Error", ex.Message);
+                return View("Error", BuildErrorModel(ex.Message));
             }
         }
 
@@ -99,11 +99,11 @@ namespace PowerBIEmbedded_AppOwnsData.Controllers
             catch (HttpOperationException exc)
             {
                 m_errorMessage = string.Format("Status: {0} ({1})\r\nResponse: {2}\r\nRequestId: {3}", exc.Response.StatusCode, (int)exc.Response.StatusCode, exc.Response.Content, exc.Response.Headers["RequestId"].FirstOrDefault());
-                return View("Error", m_errorMessage);
+                return View("Error", BuildErrorModel(m_errorMessage));
             }
             catch (Exception ex)
             {
-                return View("Error", ex.Message);
+                return View("Error", BuildErrorModel(ex.Message));
             }
         }
 
