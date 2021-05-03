@@ -23,6 +23,7 @@ const globals = {
     reportContainer: null,
     dashboardContainer: null,
     tileContainer: null,
+    powerBiHostname: null,
     isPreviousReportRDL: null
 }
 

@@ -9,12 +9,23 @@ function initializeEventHandlers() {
     $("input[type=radio]").on("click", function() {
         globals.workspaceDefaultOption.selected = "true";
 
+        // Hide report container
+        globals.reportContainer.css({ visibility: "hidden" });
+        globals.reportContainer.css({ height: 0 + 'px', width: 0 + 'px' });
+
+        // Hide dashboard container
+        globals.dashboardContainer.css({ visibility: "hidden" });
+        globals.dashboardContainer.css({ height: 0 + 'px', width: 0 + 'px' });
+
+        // Hide tile container
+        globals.tileContainer.css({ visibility: "hidden" });   
+        globals.tileContainer.css({ height: 0 + 'px', width: 0 + 'px' });        
+
         // When report radio button is clicked
         if ($("#report").get(0).checked) {
             globals.dashboardDiv.hide();
             globals.tileDiv.hide();
             globals.reportDiv.show();
-            globals.reportContainer.hide();
             globals.reportSpinner.hide();
             globals.reportDisplayText.show();
             globals.dashboardWrapper.hide();
@@ -33,7 +44,6 @@ function initializeEventHandlers() {
             globals.reportDiv.hide();
             globals.tileDiv.hide();
             globals.dashboardDiv.show();
-            globals.dashboardContainer.hide();
             globals.dashboardSpinner.hide();
             globals.dashboardDisplayText.show();
             globals.reportWrapper.hide();
@@ -50,7 +60,6 @@ function initializeEventHandlers() {
             globals.reportDiv.hide();
             globals.dashboardDiv.show();
             globals.tileDiv.show();
-            globals.tileContainer.hide();
             globals.tileSpinner.hide();
             globals.tileDisplayText.show();
             globals.reportWrapper.hide();
@@ -138,7 +147,6 @@ function initializeEventHandlers() {
             embedParam.reportId = globals.reportSelect.get(0).value;
             globals.reportDisplayText.hide();
             $(".report-wrapper").removeClass("transparent-bg");
-            globals.reportContainer.hide();
             globals.reportSpinner.show();
 
             // Embed report
@@ -149,7 +157,6 @@ function initializeEventHandlers() {
         else if ($("#dashboard").get(0).checked) {
             embedParam.dashboardId = globals.dashboardSelect.get(0).value;
             globals.dashboardDisplayText.hide();
-            globals.dashboardContainer.hide();
             globals.dashboardSpinner.show();
 
             // Embed dashboard
@@ -161,7 +168,6 @@ function initializeEventHandlers() {
             embedParam.dashboardId = globals.dashboardSelect.get(0).value;
             embedParam.tileId = globals.tileSelect.get(0).value;
             globals.tileDisplayText.hide();
-            globals.tileContainer.hide();
             globals.tileSpinner.show();
 
             // Embed tile

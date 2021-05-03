@@ -10,11 +10,6 @@ async function embedReport(embedParam) {
     let models = window["powerbi-client"].models;
     let embedType = "report";
 
-    // If report is not embedded previously then call bootstrap
-    if (!isEmbedded(embedType)) {
-        powerbi.bootstrap(globals.reportContainer.get(0), { type: embedType });
-    }
-
     let embedUrl;
 
     try {
@@ -64,9 +59,8 @@ async function embedReport(embedParam) {
     // Triggers when a report schema is successfully loaded
     report.on("loaded", function() {
         console.log("Report loaded");
-        globals.reportSpinner.hide();
         $(".report-wrapper").addClass("transparent-bg");
-        globals.reportContainer.show();
+        showEmbedContainer(globals.reportSpinner, globals.reportContainer);
     });
 
     // Clear any other rendered handler events
@@ -122,8 +116,7 @@ async function embedDashboard(embedParam) {
     // Triggers when a dashboard schema is successfully loaded
     dashboard.on("loaded", function() {
         console.log("Dashboard loaded");
-        globals.dashboardSpinner.hide();
-        globals.dashboardContainer.show();
+        showEmbedContainer(globals.dashboardSpinner, globals.dashboardContainer);
     });
 
     // Clear any other tileClicked handler events
@@ -180,8 +173,7 @@ async function embedTile(embedParam) {
     // Handle tileLoad event
     tile.on("tileLoaded", function(event) {
         console.log("Tile loaded");
-        globals.tileSpinner.hide();
-        globals.tileContainer.show();
+        showEmbedContainer(globals.tileSpinner, globals.tileContainer);
     });
 
     // Clear any other tileClicked handler events
@@ -193,12 +185,13 @@ async function embedTile(embedParam) {
     });
 }
 
-function isEmbedded(embedType) {
-    return powerbi.embeds.filter(e => e.embedtype === embedType).length > 0;
-}
-
 // Show report, dashboard and tile container once it is loaded
 function showEmbedContainer(componentSpinner, componentContainer) {
     componentSpinner.hide();
-    componentContainer.show();
+
+    // Show embed container
+    componentContainer.css({ visibility: "visible" });
+
+    // Remove height and width property from embed container
+    componentContainer.css({ "height": "", "width": "" });
 }

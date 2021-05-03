@@ -86,17 +86,19 @@ function populateSelectList(componentType, componentListEndpoint, componentConta
         },
         contentType: "application/json; charset=utf-8",
         success: function(data) {
+            // Sort dropdown list
+            let sortedList = data.value.sort((a, b) => (a[componentDisplayName].toLowerCase() > b[componentDisplayName].toLowerCase()) ? 1 : -1);
 
             // Populate select list
-            for (let i = 0; i < data.value.length; i++) {
+            for (let i = 0; i < sortedList.length; i++) {
                 componentContainer.append(
                     $("<option />")
-                        .text(data.value[i][componentDisplayName])
-                        .val(data.value[i].id)
+                        .text(sortedList[i][componentDisplayName])
+                        .val(sortedList[i].id)
                 );
             }
 
-            if (data.value.length >= 1) {
+            if (sortedList.length >= 1) {
 
                 // Enable tile select list
                 componentContainer.removeAttr("disabled");
