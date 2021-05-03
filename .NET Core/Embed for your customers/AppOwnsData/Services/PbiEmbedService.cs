@@ -45,16 +45,34 @@ namespace AppOwnsData.Services
             // Get report info
             var pbiReport = pbiClient.Reports.GetReportInGroup(workspaceId, reportId);
 
-            // Create list of datasets
-            var datasetIds = new List<Guid>();
+            //  Check if dataset is present for the corresponding report
+            //  If isRDLReport is true then it is a RDL Report 
+            var isRDLReport = String.IsNullOrEmpty(pbiReport.DatasetId);
 
-            // Add dataset associated to the report
-            datasetIds.Add(Guid.Parse(pbiReport.DatasetId));
+            EmbedToken embedToken;
 
-            // Append additional dataset to the list to achieve dynamic binding later
-            if (additionalDatasetId != Guid.Empty)
+            // Generate embed token for RDL report if dataset is not present
+            if (isRDLReport)
             {
-                datasetIds.Add(additionalDatasetId);
+                // Get Embed token for RDL Report
+                embedToken = GetEmbedTokenForRDLReport(workspaceId, reportId);
+            }
+            else
+            {
+                // Create list of datasets
+                var datasetIds = new List<Guid>();
+
+                // Add dataset associated to the report
+                datasetIds.Add(Guid.Parse(pbiReport.DatasetId));
+
+                // Append additional dataset to the list to achieve dynamic binding later
+                if (additionalDatasetId != Guid.Empty)
+                {
+                    datasetIds.Add(additionalDatasetId);
+                }
+
+                // Get Embed token multiple resources
+                embedToken = GetEmbedToken(reportId, datasetIds, workspaceId);
             }
 
             // Add report data for embedding
@@ -64,9 +82,6 @@ namespace AppOwnsData.Services
                     ReportId = pbiReport.Id, ReportName = pbiReport.Name, EmbedUrl = pbiReport.EmbedUrl
                 }
             };
-
-            // Get Embed token multiple resources
-            var embedToken = GetEmbedToken(reportId, datasetIds, workspaceId);
 
             // Capture embed params
             var embedParams = new EmbedParams
@@ -83,6 +98,7 @@ namespace AppOwnsData.Services
         /// Get embed params for multiple reports for a single workspace
         /// </summary>
         /// <returns>Wrapper object containing Embed token, Embed URL, Report Id, and Report name for multiple reports</returns>
+        /// <remarks>This function is not supported for RDL Report</remakrs>
         public EmbedParams GetEmbedParams(Guid workspaceId, IList<Guid> reportIds, [Optional] IList<Guid> additionalDatasetIds)
         {
             // Note: This method is an example and is not consumed in this sample app
@@ -131,6 +147,7 @@ namespace AppOwnsData.Services
         /// Get Embed token for single report, multiple datasets, and an optional target workspace
         /// </summary>
         /// <returns>Embed token</returns>
+        /// <remarks>This function is not supported for RDL Report</remakrs>
         public EmbedToken GetEmbedToken(Guid reportId, IList<Guid> datasetIds, [Optional] Guid targetWorkspaceId)
         {
             PowerBIClient pbiClient = this.GetPowerBIClient();
@@ -156,6 +173,7 @@ namespace AppOwnsData.Services
         /// Get Embed token for multiple reports, datasets, and an optional target workspace
         /// </summary>
         /// <returns>Embed token</returns>
+        /// <remarks>This function is not supported for RDL Report</remakrs>
         public EmbedToken GetEmbedToken(IList<Guid> reportIds, IList<Guid> datasetIds, [Optional] Guid targetWorkspaceId)
         {
             // Note: This method is an example and is not consumed in this sample app
@@ -189,6 +207,7 @@ namespace AppOwnsData.Services
         /// Get Embed token for multiple reports, datasets, and optional target workspaces
         /// </summary>
         /// <returns>Embed token</returns>
+        /// <remarks>This function is not supported for RDL Report</remakrs>
         public EmbedToken GetEmbedToken(IList<Guid> reportIds, IList<Guid> datasetIds, [Optional] IList<Guid> targetWorkspaceIds)
         {
             // Note: This method is an example and is not consumed in this sample app
@@ -224,5 +243,24 @@ namespace AppOwnsData.Services
 
             return embedToken;
         }
-    }
+
+        /// <summary>
+        /// Get Embed token for RDL Report
+        /// </summary>
+        /// <returns>Embed token</returns>
+        public EmbedToken GetEmbedTokenForRDLReport(Guid targetWorkspaceId, Guid reportId, string accessLevel = "view")
+        {
+            PowerBIClient pbiClient = this.GetPowerBIClient();
+
+            // Generate token request for RDL Report
+            var generateTokenRequestParameters = new GenerateTokenRequest(
+                accessLevel: accessLevel
+            );
+
+            // Generate Embed token
+            var embedToken = pbiClient.Reports.GenerateTokenInGroup(targetWorkspaceId, reportId, generateTokenRequestParameters);
+
+            return embedToken;
+        }
+    }  
 }
