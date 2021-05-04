@@ -29,17 +29,14 @@ $(function() {
     globals.tileWrapper.hide();
     globals.tileWrapper.get(0).hidden = false;
 
-    // Hide report container with jQuery
-    globals.reportContainer.hide();
-    globals.reportContainer.get(0).hidden = false;
+    // Hide report container
+    globals.reportContainer.css({ height: 0 + 'px', width: 0 + 'px' });
 
-    // Hide dashboard container with jQuery
-    globals.dashboardContainer.hide();
-    globals.dashboardContainer.get(0).hidden = false;
+    // Hide dashboard container
+    globals.dashboardContainer.css({ height: 0 + 'px', width: 0 + 'px' });
 
-    // Hide tile container with jQuery
-    globals.tileContainer.hide();
-    globals.tileContainer.get(0).hidden = false;
+    // Hide tile container
+    globals.tileContainer.css({ height: 0 + 'px', width: 0 + 'px' });
 
     // Hide report spinner with jQuery
     globals.reportSpinner.hide();
@@ -49,4 +46,11 @@ $(function() {
 
     // Hide tile spinner with jQuery
     globals.tileSpinner.hide();
+
+    // Apply bootstrap to report, dashboard, and tile containers
+    powerbi.bootstrap(globals.reportContainer.get(0), { type: "report", hostname: globals.powerBiHostname });
+    powerbi.bootstrap(globals.dashboardContainer.get(0), { type: "dashboard", hostname: globals.powerBiHostname });
+    powerbi.bootstrap(globals.tileContainer.get(0), { type: "tile", hostname: globals.powerBiHostname });
+
+    globals.getWorkspaces();
 });

@@ -4,178 +4,183 @@
 // ----------------------------------------------------------------------------
 
 // Embed Power BI report
-UserOwnsData.embedReport = function (embedParam) {
+UserOwnsData.embedReport = async function (embedParam) {
 
     // For setting type of token in embed config
     const models = window["powerbi-client"].models;
     const embedType = "report";
 
-    // If report is not embedded previously then call bootstrap
-    if (!UserOwnsData.isEmbedded(embedType)) {
-        powerbi.bootstrap(UserOwnsData.reportContainer.get(0), { type: embedType });
+    let embedUrl;
+
+    try {
+        // Retrieves embed url for Power BI report
+        embedUrl = await UserOwnsData.getEmbedUrl(embedParam, embedType);
+    } catch (error) {
+        UserOwnsData.showError(error);
     }
 
-    $.ajax({
-        type: "GET",
-        url: "/embedinfo/reportembedurl",
-        data: embedParam,
-        contentType: "application/json; charset=utf-8",
-        success: function (embedConfig) {
-            const reportConfig = {
-                type: embedType,
-                tokenType: models.TokenType.Aad,
-                accessToken: embedConfig.accessToken,
-                embedUrl: embedConfig.embedUrl,
-                // Enable this setting to remove gray shoulders from embedded report
-                // settings: {
-                //     background: models.BackgroundType.Transparent
-                // }
-            };
+    const reportConfig = {
+        type: embedType,
+        tokenType: models.TokenType.Aad,
+        accessToken: loggedInUser.accessToken,
+        embedUrl: embedUrl,
+        // Enable this setting to remove gray shoulders from embedded report
+        // settings: {
+        //     background: models.BackgroundType.Transparent
+        // }
+    };
 
-            // Embed Power BI report
-            const report = powerbi.embed(UserOwnsData.reportContainer.get(0), reportConfig);
+    // Check if the embed url is for RDL report
+    let isRDLReport = embedUrl.toLowerCase().indexOf("/rdlembed?") >= 0;
+ 
+    // Check if reset is required
+    let resetRequired = UserOwnsData.isPreviousReportRDL || isRDLReport;
 
-            // Clear any other loaded handler events
-            report.off("loaded");
+    UserOwnsData.isPreviousReportRDL = isRDLReport;
 
-            // Triggers when a report schema is successfully loaded
-            report.on("loaded", function () {
-                UserOwnsData.reportSpinner.hide();
-                $(".report-wrapper").addClass("transparent-bg");
-                UserOwnsData.reportContainer.show();
-                console.log("Report load successful");
-            });
+    // Reset report container in case the current report or perviously embedded report is a RDL Report
+    if (resetRequired) {
+        powerbi.reset(UserOwnsData.reportContainer.get(0));
+    }
 
-            // Clear any other rendered handler events
-            report.off("rendered");
+    // Show report container as there is no loaded event for RDL reports
+    if (isRDLReport) {
+        $(".report-wrapper").addClass("transparent-bg");
+        showEmbedContainer(UserOwnsData.reportSpinner, UserOwnsData.reportContainer);
+    }
 
-            // Triggers when a report is successfully embedded in UI
-            report.on("rendered", function () {
-                console.log("Report render successful");
-            });
+    // Embed Power BI report
+    const report = powerbi.embed(UserOwnsData.reportContainer.get(0), reportConfig);
 
-            // Clear any other error handler event
-            report.off("error");
+    // Clear any other loaded handler events
+    report.off("loaded");
 
-            // Below patch of code is for handling errors that occur during embedding
-            report.on("error", function (event) {
-                const errorMsg = event.detail;
+    // Triggers when a report schema is successfully loaded
+    report.on("loaded", function () {
+        console.log("Report load successful");
+        $(".report-wrapper").addClass("transparent-bg");
+        showEmbedContainer(UserOwnsData.reportSpinner, UserOwnsData.reportContainer);
+    });
 
-                // Use errorMsg variable to log error in any destination of choice
-                console.error(errorMsg);
-                return;
-            });
-        },
-        error: function (err) {
-            UserOwnsData.showError(err);
-        }
+    // Clear any other rendered handler events
+    report.off("rendered");
+
+    // Triggers when a report is successfully embedded in UI
+    report.on("rendered", function () {
+        console.log("Report render successful");
+    }); 
+
+    // Clear any other error handler event
+    report.off("error");
+
+    // Below patch of code is for handling errors that occur during embedding
+    report.on("error", function (event) {
+        const errorMsg = event.detail;
+
+        // Use errorMsg variable to log error in any destination of choice
+        console.error(errorMsg);
+        return;
     });
 }
 
 // Embed Power BI dashboard
-UserOwnsData.embedDashboard = function (embedParam) {
+UserOwnsData.embedDashboard = async function (embedParam) {
 
     // For setting type of token in embed config
     const models = window["powerbi-client"].models;
     const embedType = "dashboard";
 
-    $.ajax({
-        type: "GET",
-        url: "/embedinfo/dashboardembedurl",
-        data: embedParam,
-        contentType: "application/json; charset=utf-8",
-        success: function (embedConfig) {
-            const dashboardConfig = {
-                type: embedType,
-                tokenType: models.TokenType.Aad,
-                accessToken: embedConfig.accessToken,
-                embedUrl: embedConfig.embedUrl,
-            };
+    let embedUrl;
 
-            // Embed Power BI dashboard
-            const dashboard = powerbi.embed(UserOwnsData.dashboardContainer.get(0), dashboardConfig);
+    try {
+        // Retrieves embed url for Power BI dashboard
+        embedUrl = await UserOwnsData.getEmbedUrl(embedParam, embedType);
+    } catch (error) {
+        UserOwnsData.showError(error);
+    }
 
-            // Clear any other loaded handler events
-            dashboard.off("loaded");
+    const dashboardConfig = {
+        type: embedType,
+        tokenType: models.TokenType.Aad,
+        accessToken: loggedInUser.accessToken,
+        embedUrl: embedUrl,
+    };
 
-            // Triggers when a dashboard schema is successfully loaded
-            dashboard.on("loaded", function () {
-                UserOwnsData.dashboardSpinner.hide();
-                UserOwnsData.dashboardContainer.show();
-                console.log("Dashboard load successful");
-            });
+    // Embed Power BI dashboard
+    const dashboard = powerbi.embed(UserOwnsData.dashboardContainer.get(0), dashboardConfig);
 
-            // Clear any other tileClicked handler events
-            dashboard.off("tileClicked");
+    // Clear any other loaded handler events
+    dashboard.off("loaded");
 
-            // Handle tileClicked event
-            dashboard.on("tileClicked", function (event) {
-                console.log("Tile clicked");
-            });
+    // Triggers when a dashboard schema is successfully loaded
+    dashboard.on("loaded", function () {
+        console.log("Dashboard load successful");
+        showEmbedContainer(UserOwnsData.dashboardSpinner, UserOwnsData.dashboardContainer);
+    });
 
-            // Clear any other error handler event
-            dashboard.off("error");
+    // Clear any other tileClicked handler events
+    dashboard.off("tileClicked");
 
-            // Below patch of code is for handling errors that occur during embedding
-            dashboard.on("error", function (event) {
-                const errorMsg = event.detail;
+    // Handle tileClicked event
+    dashboard.on("tileClicked", function (event) {
+        console.log("Tile clicked");
+    });
 
-                // Use errorMsg variable to log error in any destination of choice
-                console.error(errorMsg);
-                return;
-            });
-        },
-        error: function (err) {
-            UserOwnsData.showError(err);
-        }
+    // Clear any other error handler event
+    dashboard.off("error");
+
+    // Below patch of code is for handling errors that occur during embedding
+    dashboard.on("error", function (event) {
+        const errorMsg = event.detail;
+
+        // Use errorMsg variable to log error in any destination of choice
+        console.error(errorMsg);
+        return;
     });
 }
 
 // Embed Power BI tile
-UserOwnsData.embedTile = function (embedParam) {
+UserOwnsData.embedTile = async function (embedParam) {
 
     // For setting type of token in embed config
     const models = window["powerbi-client"].models;
     const embedType = "tile";
 
-    $.ajax({
-        type: "GET",
-        url: "/embedinfo/tileembedurl",
-        data: embedParam,
-        contentType: "application/json; charset=utf-8",
-        success: function (embedConfig) {
-            const tileConfig = {
-                type: embedType,
-                tokenType: models.TokenType.Aad,
-                accessToken: embedConfig.accessToken,
-                embedUrl: embedConfig.embedUrl,
-                dashboardId: embedParam.dashboardId
-            };
+    let embedUrl;
 
-            // Embed Power BI tile
-            const tile = powerbi.embed(UserOwnsData.tileContainer.get(0), tileConfig);
+    try {
+        // Retrieves embed url for Power BI tile
+        embedUrl = await UserOwnsData.getEmbedUrl(embedParam, embedType);
+    } catch (error) {
+        UserOwnsData.showError(error);
+    }
 
-            // Clear any other tileLoaded handler events
-            tile.off("tileLoaded");
+    const tileConfig = {
+        type: embedType,
+        tokenType: models.TokenType.Aad,
+        accessToken: loggedInUser.accessToken,
+        embedUrl: embedUrl,
+        dashboardId: embedParam.dashboardId
+    };
 
-            // Handle tileLoad event
-            tile.on("tileLoaded", function (event) {
-                UserOwnsData.tileSpinner.hide();
-                UserOwnsData.tileContainer.show();
-                console.log("Tile load successful");
-            });
+    // Embed Power BI tile
+    const tile = powerbi.embed(UserOwnsData.tileContainer.get(0), tileConfig);
 
-            // Clear any other tileClicked handler events
-            tile.off("tileClicked");
+    // Clear any other tileLoaded handler events
+    tile.off("tileLoaded");
 
-            // Handle tileClicked event
-            tile.on("tileClicked", function (event) {
-                console.log("Tile clicked");
-            });
-        },
-        error: function (err) {
-            UserOwnsData.showError(err);
-        }
+    // Handle tileLoad event
+    tile.on("tileLoaded", function (event) {
+        console.log("Tile load successful");
+        showEmbedContainer(UserOwnsData.tileSpinner, UserOwnsData.tileContainer);
+    });
+
+    // Clear any other tileClicked handler events
+    tile.off("tileClicked");
+
+    // Handle tileClicked event
+    tile.on("tileClicked", function (event) {
+        console.log("Tile clicked");
     });
 }
 
@@ -189,4 +194,15 @@ UserOwnsData.isEmbedded = function (embedType) {
         }
     }
     return false;
+}
+
+// Show report, dashboard and tile container once it is loaded
+function showEmbedContainer(componentSpinner, componentContainer) {
+    componentSpinner.hide();
+
+    // Show embed container
+    componentContainer.css({ visibility: "visible" });
+
+    // Remove height and width property from embed container
+    componentContainer.css({ "height": "", "width": "" });
 }

@@ -5,152 +5,141 @@
 
 // Reset report list
 UserOwnsData.resetReportList = function () {
-    const len = UserOwnsData.reportSelect.get(0).options.length;
-    for (let i = 1; i < len; i++) {
-        UserOwnsData.reportSelect.get(0).remove(i);
-    }
-
-    // Set default option as selected
-    UserOwnsData.reportSelect.get(0).options[0].selected = true;
+    // Clear the dropdown list and add a default value
+    UserOwnsData.reportSelect.empty().append('<option value="" disabled selected>Choose report</option>');
 }
 
 // Reset dashboard list
 UserOwnsData.resetDashboardList = function () {
-    const len = UserOwnsData.dashboardSelect.get(0).options.length;
-    for (let i = 1; i < len; i++) {
-        UserOwnsData.dashboardSelect.get(0).remove(i);
-    }
-
-    // Set default option as selected
-    UserOwnsData.dashboardSelect.get(0).options[0].selected = true;
+    // Clear the dropdown list and add a default value
+    UserOwnsData.dashboardSelect.empty().append('<option value="" disabled selected>Choose dashboard</option>');
 }
 
 // Reset tile list
 UserOwnsData.resetTileList = function () {
-    const len = UserOwnsData.tileSelect.get(0).options.length;
-    for (let i = 1; i < len; i++) {
-        UserOwnsData.tileSelect.get(0).remove(i);
-    }
-
-    // Set default option as selected
-    UserOwnsData.tileSelect.get(0).options[0].selected = true;
+    // Clear the dropdown list and add a default value
+    UserOwnsData.tileSelect.empty().append('<option value="" disabled selected>Choose tile</option>');
 }
 
 // Fetch workspaces list from server
-UserOwnsData.getWorkspaces = function (getSelectParams) {
-    $.ajax({
-        type: "GET",
-        url: "/embedinfo/getworkspace",
-        data: getSelectParams,
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
+UserOwnsData.getWorkspaces = function () {
+    const componentType = "workspace";
+    const componentListEndpoint = `${UserOwnsData.powerBiApi}/groups`;
 
-            // Populate select list
-            for (let i = 0; i < data.length; i++) {
-                UserOwnsData.workspaceSelect.append(
-                    $("<option />")
-                        .text(data[i].name)
-                        .val(data[i].id)
-                );
-            }
-
-            if (data.length >= 1) {
-                // Enable workspace select list
-                UserOwnsData.workspaceSelect.removeAttr("disabled");
-            }
-        },
-        error: function (err) {
-            UserOwnsData.showError(err);
-        }
-    });
+    // Populates workspace select list
+    populateSelectList(componentType, componentListEndpoint, UserOwnsData.workspaceSelect);
 }
 
 // Fetch reports list from server
 UserOwnsData.getReports = function (getSelectParams) {
-    $.ajax({
-        type: "GET",
-        url: "/embedinfo/getreport",
-        data: getSelectParams,
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
+    const componentType = "report";
+    const componentListEndpoint = `${UserOwnsData.powerBiApi}/groups/${getSelectParams.workspaceId}/reports`;
 
-            // Populate select list
-            for (let i = 0; i < data.length; i++) {
-                UserOwnsData.reportSelect.append(
-                    $("<option />")
-                        .text(data[i].name)
-                        .val(data[i].id)
-                );
-            }
-
-            if (data.length >= 1) {
-
-                // Enable report select list
-                UserOwnsData.reportSelect.removeAttr("disabled");
-            }
-        },
-        error: function (err) {
-            UserOwnsData.showError(err);
-        }
-    });
+    // Populates report select list
+    populateSelectList(componentType, componentListEndpoint, UserOwnsData.reportSelect);
 }
 
 // Fetch dashboards list from server
 UserOwnsData.getDashboards = function (getSelectParams) {
-    $.ajax({
-        type: "GET",
-        url: "/embedinfo/getdashboard",
-        data: getSelectParams,
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
+    const componentType = "dashboard";
+    const componentListEndpoint = `${UserOwnsData.powerBiApi}/groups/${getSelectParams.workspaceId}/dashboards`;
 
-            // Populate select list
-            for (let i = 0; i < data.length; i++) {
-                UserOwnsData.dashboardSelect.append(
-                    $("<option />")
-                        .text(data[i].displayName)
-                        .val(data[i].id)
-                );
-            }
-
-            if (data.length >= 1) {
-
-                // Enable dashboard select list
-                UserOwnsData.dashboardSelect.removeAttr("disabled");
-            }
-        },
-        error: function (err) {
-            UserOwnsData.showError(err);
-        }
-    });
+    // Populates dashboard select list
+    populateSelectList(componentType, componentListEndpoint, UserOwnsData.dashboardSelect);
 }
 
 // Fetch tiles list from server
 UserOwnsData.getTiles = function (getSelectParams) {
+    const componentType = "tile";
+    const componentListEndpoint = `${UserOwnsData.powerBiApi}/groups/${getSelectParams.workspaceId}/dashboards/${getSelectParams.dashboardId}/tiles`;
+
+    // Populates tile select list
+    populateSelectList(componentType, componentListEndpoint, UserOwnsData.tileSelect);
+}
+
+// Populates select list
+function populateSelectList(componentType, componentListEndpoint, componentContainer) {
+    let componentDisplayName;
+
+    // Set component select list display name depending on embed type
+    switch (componentType.toLowerCase()) {
+        case "workspace":
+        case "report":
+            componentDisplayName = "name";
+            break;
+        case "dashboard":
+            componentDisplayName = "displayName";
+            break;
+        case "tile":
+            componentDisplayName = "title";
+            break;
+        default:
+            showError("Invalid Power BI Component");
+    }
+
+    // Fetch component list from Power BI
     $.ajax({
         type: "GET",
-        url: "/embedinfo/gettile",
-        data: getSelectParams,
+        url: componentListEndpoint,
+        headers: {
+            "Authorization": `Bearer ${loggedInUser.accessToken}`
+        },
         contentType: "application/json; charset=utf-8",
-        success: function (data) {
+        success: function(data) {
+            // Sort dropdown list
+            let sortedList = data.value.sort((a, b) => (a[componentDisplayName].toLowerCase() > b[componentDisplayName].toLowerCase()) ? 1 : -1);
 
             // Populate select list
-            for (let i = 0; i < data.length; i++) {
-                UserOwnsData.tileSelect.append(
+            for (let i = 0; i < sortedList.length; i++) {
+                componentContainer.append(
                     $("<option />")
-                        .text(data[i].title)
-                        .val(data[i].id)
+                        .text(sortedList[i][componentDisplayName])
+                        .val(sortedList[i].id)
                 );
             }
 
-            if (data.length >= 1) {
+            if (sortedList.length >= 1) {
 
                 // Enable tile select list
-                UserOwnsData.tileSelect.removeAttr("disabled");
+                componentContainer.removeAttr("disabled");
             }
         },
-        error: function (err) {
-            UserOwnsData.showError(err);
+        error: function(err) {
+            showError(err);
         }
     });
+}
+
+// Retrieves embed configuration for Power BI report, dashboard and tile
+UserOwnsData.getEmbedUrl = async function (embedParam, embedType) {
+    let componentDetailsEndpoint;
+
+    // Set endpoint for retrieving embed configurations depending on embed type
+    switch(embedType.toLowerCase()) {
+        case "report":
+            componentDetailsEndpoint = `${UserOwnsData.powerBiApi}/groups/${embedParam.workspaceId}/reports/${embedParam.reportId}`;
+            break;
+        case "dashboard":
+            componentDetailsEndpoint = `${UserOwnsData.powerBiApi}/groups/${embedParam.workspaceId}/dashboards/${embedParam.dashboardId}`;
+            break;
+        case "tile":
+            componentDetailsEndpoint = `${UserOwnsData.powerBiApi}/groups/${embedParam.workspaceId}/dashboards/${embedParam.dashboardId}/tiles/${embedParam.tileId}`;
+            break;
+        default:
+            UserOwnsData.showError("Invalid Power BI Component");
+    }
+
+    let componentDetails = await $.ajax({
+        type: "GET",
+        url: componentDetailsEndpoint,
+        headers: {
+            "Authorization": `Bearer ${loggedInUser.accessToken}`
+        },
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            return data
+        }
+    });
+
+    return componentDetails.embedUrl;
 }

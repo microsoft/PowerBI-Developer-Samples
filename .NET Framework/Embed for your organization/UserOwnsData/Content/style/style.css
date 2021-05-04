@@ -35,6 +35,7 @@ Licensed under the MIT license. */
     height: calc(74vw * 0.5625); /* 16:9 aspect ratio */
     max-height: 75vh;
     padding: 0;
+    visibility: hidden;
 }
 
 .dashboard-display-text {
@@ -93,6 +94,7 @@ Licensed under the MIT license. */
     height: calc(0.5625 * (100vw - 206px)); /* 16:9 aspect ratio */
     max-height: 75vh;
     padding: 0;
+    visibility: hidden;
 }
 
 .report-wrapper {
@@ -153,6 +155,7 @@ Licensed under the MIT license. */
     height: calc(0.5625 * (100vw - 206px)); /* 16:9 aspect ratio */
     max-height: 75vh;
     padding: 0;
+    visibility: hidden;
 }
 
 .tile-display-text {

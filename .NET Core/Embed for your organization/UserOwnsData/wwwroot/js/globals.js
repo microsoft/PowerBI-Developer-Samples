@@ -5,7 +5,7 @@
 
 // Cache logged in user's info
 const loggedInUser = {
-    name: undefined
+    accessToken: undefined
 };
 
 $(function() {
@@ -31,4 +31,10 @@ $(function() {
     UserOwnsData.reportSpinner = $("#report-spinner");
     UserOwnsData.dashboardSpinner = $("#dashboard-spinner");
     UserOwnsData.tileSpinner = $("#tile-spinner");
+
+    // Set default state of isPreviousReportRDL flag
+    UserOwnsData.isPreviousReportRDL = false;
+
+    // Cache base endpoint for Power BI REST API
+    UserOwnsData.powerBiApi = "https://api.powerbi.com/v1.0/myorg/";
 });

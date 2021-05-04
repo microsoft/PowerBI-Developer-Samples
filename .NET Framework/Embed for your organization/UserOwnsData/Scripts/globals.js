@@ -22,8 +22,15 @@ const globals = {
     tileSelect: null,
     reportContainer: null,
     dashboardContainer: null,
-    tileContainer: null
+    tileContainer: null,
+    powerBiHostname: null,
+    isPreviousReportRDL: null
 }
+
+// Cache logged in user's info
+const loggedInUser = {
+    accessToken: undefined
+};
 
 $(function() {
     globals.workspaceSelect = $("#workspace-select");
@@ -47,4 +54,10 @@ $(function() {
     globals.reportSpinner = $("#report-spinner");
     globals.dashboardSpinner = $("#dashboard-spinner");
     globals.tileSpinner = $("#tile-spinner");
+
+    // Set default state of isPreviousReportRDL flag
+    globals.isPreviousReportRDL = false;
+
+    // Cache base endpoint for Power BI REST API
+    globals.powerBiApi = "https://api.powerbi.com/v1.0/myorg/";
 });

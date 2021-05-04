@@ -4,7 +4,7 @@
 
 1. [.NET Framework 4.8](https://aka.ms/dotnet48)
 
-2. IDE/code editor. We recommend using Visual Studio.
+2. IDE/code editor. We recommend using Visual Studio 2019.
 
 # Embed for your customers
 
@@ -18,11 +18,13 @@ Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
 
 2. Fill in the required parameters in the [Web.config](Embed%20for%20your%20customers/AppOwnsData/Web.config) file.
 
-3. Restore NuGet packages.
+3. Restore NuGet packages (right click on [AppOwnsData.sln](Embed%20for%20your%20customers/AppOwnsData.sln) file in Visual Studio solution explorer window and click **Restore NuGet packages**).
 
-4. Build the application.
+4. Restore client side libraries (right click on [AppOwnsData.sln](Embed%20for%20your%20customers/AppOwnsData.sln) file in Visual Studio solution explorer window and click **Restore Client-Side Libraries**).
 
-5. Run the application.
+5. Build the application.
+
+6. Run the application.
 
 # Embed for your organization
 
@@ -42,11 +44,13 @@ Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
 
 2. Fill in the required parameters in the [Web.config](Embed%20for%20your%20organization\UserOwnsData\Web.config) file related to AAD app.
 
-3. Restore NuGet packages.
+3. Restore NuGet packages (right click on [UserOwnsData.sln](Embed%20for%20your%20organization\UserOwnsData.sln) file in Visual Studio solution explorer window and click **Restore NuGet packages**).
 
-4. Build the application.
+4. Restore client side libraries (right click on [UserOwnsData.sln](Embed%20for%20your%20organization\UserOwnsData.sln) file in Visual Studio solution explorer window and click **Restore Client-Side Libraries**).
 
-5. Run the application.
+5. Build the application.
+
+6. Run the application.
 
 #### Supported browsers:
 

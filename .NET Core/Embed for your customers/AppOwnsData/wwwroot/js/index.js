@@ -6,21 +6,18 @@
 $(function () {
     var models = window["powerbi-client"].models;
     var reportContainer = $("#report-container").get(0);
-    
-    // Initialize iframe for embedding report
-    powerbi.bootstrap(reportContainer, { type: "report" });
-    
+
     $.ajax({
         type: "GET",
         url: "/embedinfo/getembedinfo",
         success: function (data) {
-            embedData = $.parseJSON(data);
+            embedParams = $.parseJSON(data);
             reportLoadConfig = {
                 type: "report",
                 tokenType: models.TokenType.Embed,
-                accessToken: embedData.EmbedToken.Token,
+                accessToken: embedParams.EmbedToken.Token,
                 // You can embed different reports as per your need
-                embedUrl: embedData.EmbedReport[0].EmbedUrl,
+                embedUrl: embedParams.EmbedReport[0].EmbedUrl,
 
                 // Enable this setting to remove gray shoulders from embedded report
                 // settings: {
@@ -30,11 +27,11 @@ $(function () {
 
             // Use the token expiry to regenerate Embed token for seamless end user experience
             // Refer https://aka.ms/RefreshEmbedToken
-            tokenExpiry = embedData.EmbedToken.Expiration;
-            
+            tokenExpiry = embedParams.EmbedToken.Expiration;
+
             // Embed Power BI report when Access token and Embed URL are available
             var report = powerbi.embed(reportContainer, reportLoadConfig);
-            
+
             // Clear any other loaded handler events
             report.off("loaded");
 

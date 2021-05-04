@@ -5,12 +5,10 @@
 
 namespace UserOwnsData.Controllers
 {
-	using UserOwnsData.Models;
-	using UserOwnsData.Services;
-	using UserOwnsData.Services.Security;
-	using System;
 	using System.Net;
 	using System.Web.Mvc;
+	using UserOwnsData.Models;
+	using UserOwnsData.Services;
 
 	public class HomeController : Controller
 	{
@@ -24,11 +22,7 @@ namespace UserOwnsData.Controllers
 			string configValidationResult = ConfigValidatorService.ValidateConfig();
 			if (configValidationResult != null)
 			{
-				ErrorModel errorModel = new ErrorModel
-				{
-					ErrorCode = (HttpStatusCode)400,
-					ErrorMessage = configValidationResult
-				};
+				ErrorModel errorModel = Utils.GetErrorModel((HttpStatusCode)400, configValidationResult);
 				return View("Error", errorModel);
 			}
 			return View();
