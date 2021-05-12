@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.encryptcredentialsample.encryptcredential.models.CredentialDetails;
 import com.encryptcredentialsample.encryptcredential.models.CredentialDetailsRequestBody;
+import com.encryptcredentialsample.encryptcredential.models.Gateway;
 import com.encryptcredentialsample.encryptcredential.models.GatewayPublicKey;
 
 public class UpdateCredentialsService {
@@ -36,9 +37,15 @@ public class UpdateCredentialsService {
 		// Encrypt the credentials Asymmetric Key Encryption
 		AsymmetricKeyEncryptorService credentialsEncryptor = new AsymmetricKeyEncryptorService(pubKey);
 		String encryptedCredentialsString = credentialsEncryptor.encodeCredentials(serializedCredentials);
-
-		// Credential Details class object for request body
-		CredentialDetails credentialDetails = new CredentialDetails(credType, encryptedCredentialsString, privacyLevel);
+		
+		Gateway gateway = GetDatasourceData.getGateway(accessToken, gatewayId);
+		CredentialDetails credentialDetails = null;
+		// Name is null in case of cloud gateway
+        if (gateway.Name == null) {
+        	credentialDetails = new CredentialDetails(credType, serializedCredentials, "NotEncrypted", privacyLevel);
+        } else {
+        	credentialDetails = new CredentialDetails(credType, encryptedCredentialsString, "Encrypted", privacyLevel);
+        }
 
 		// Converting CredentialDetails class object to json string
 		CredentialDetailsRequestBody requestBodyObj = new CredentialDetailsRequestBody(credentialDetails);
