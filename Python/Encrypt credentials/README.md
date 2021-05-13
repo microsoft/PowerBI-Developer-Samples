@@ -37,7 +37,10 @@ Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
 
 5. Open **http://localhost:5000** in browser or follow the direction in the output log.
 
-> **Note:** Whenever you update the config file you must restart the app.
+> **Note:** 
+> 1. Whenever you update the config file you must restart the app.
+> 2. The Azure AD Service Principal which is used for authentication should have admin rights on the corresponding workspace.
+> 3. If Service Principal mode is used for authentication and on-premises gateway is used, then SP should be the gateway admin.
 
 #### Supported browsers:
 
