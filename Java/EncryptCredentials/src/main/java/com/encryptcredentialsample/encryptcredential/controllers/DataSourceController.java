@@ -151,15 +151,16 @@ public class DataSourceController extends HttpServlet {
 			// Serialize credentials for encryption
 			String serializedCredentials = Utils.serializeCredentials(request.credentialsArray, request.credType);
 			String credentials = null;
+
 			// Name is null in case of cloud gateway
-			if(selectedGateway.Name == null) {
-				credentials = serializedCredentials;
-			} else {
+			if(selectedGateway.name != null) {
 				// Encrypt the credentials Asymmetric Key Encryption
 				AsymmetricKeyEncryptorService credentialsEncryptor = new AsymmetricKeyEncryptorService(selectedGateway.publicKey);
 				credentials = credentialsEncryptor.encodeCredentials(serializedCredentials);
-			}			
-			
+			} else {				
+				credentials = serializedCredentials;	
+			}
+	
 			return ResponseEntity.status(HttpStatus.OK).body(credentials);
 		} catch (HttpClientErrorException hcex) {
 			return generateResponseForException(hcex);

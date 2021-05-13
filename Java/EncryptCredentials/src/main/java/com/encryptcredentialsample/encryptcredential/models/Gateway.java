@@ -6,6 +6,6 @@
 package com.encryptcredentialsample.encryptcredential.models;
 
 public class Gateway {
-	public String Name = null;
+	public String name;
 	public GatewayPublicKey publicKey;
 }

@@ -37,14 +37,17 @@ public class UpdateCredentialsService {
 		// Encrypt the credentials Asymmetric Key Encryption
 		AsymmetricKeyEncryptorService credentialsEncryptor = new AsymmetricKeyEncryptorService(pubKey);
 		String encryptedCredentialsString = credentialsEncryptor.encodeCredentials(serializedCredentials);
-		
+
 		Gateway gateway = GetDatasourceData.getGateway(accessToken, gatewayId);
+
+		// Credential Details class object for request body
 		CredentialDetails credentialDetails = null;
-		// Name is null in case of cloud gateway
-        if (gateway.Name == null) {
-        	credentialDetails = new CredentialDetails(credType, serializedCredentials, "NotEncrypted", privacyLevel);
-        } else {
+
+		 //Name is null in case of cloud gateway
+        if (gateway.name != null) {
         	credentialDetails = new CredentialDetails(credType, encryptedCredentialsString, "Encrypted", privacyLevel);
+        } else {
+        	credentialDetails = new CredentialDetails(credType, serializedCredentials, "NotEncrypted", privacyLevel);
         }
 
 		// Converting CredentialDetails class object to json string

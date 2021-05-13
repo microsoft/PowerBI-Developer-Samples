@@ -39,19 +39,16 @@ public class AddCredentialsService {
 		String encryptedCredentialsString = credentialsEncryptor.encodeCredentials(serializedCredentials);
 		
 		Gateway gateway = GetDatasourceData.getGateway(accessToken, gatewayId);
-		CredentialDetails credentialDetails = null;
-		// Name is null in case of cloud gateway
-        if (gateway.Name == null) {
-        	credentialDetails = new CredentialDetails(credType, serializedCredentials, "NotEncrypted", privacyLevel);
-        } else {
-        	credentialDetails = new CredentialDetails(credType, encryptedCredentialsString, "Encrypted", privacyLevel);
-        }
-        
-		
+
 		// Credential Details class object for request body
-		
-		
-		PublishDatasourceToGatewayRequest requestBodyObjKey = new PublishDatasourceToGatewayRequest(dataSourceType, connectionDetails, credentialDetails, dataSourceName);
+		CredentialDetails credentialDetails = null;
+
+		// Name is null in case of cloud gateway
+		if (gateway.name != null) {
+			credentialDetails = new CredentialDetails(credType, encryptedCredentialsString, "Encrypted", privacyLevel);
+        }
+
+        PublishDatasourceToGatewayRequest requestBodyObjKey = new PublishDatasourceToGatewayRequest(dataSourceType, connectionDetails, credentialDetails, dataSourceName);
 		
 		return makeAddDataSourcePostRequest(gatewayId, requestBodyObjKey, accessToken);
 	}
