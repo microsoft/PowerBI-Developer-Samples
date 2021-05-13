@@ -43,7 +43,7 @@ public class AddCredentialsService {
 		// Credential Details class object for request body
 		CredentialDetails credentialDetails = null;
 
-		// Name is null in case of cloud gateway
+		// Cloud gateway does not contain name property
 		if (gateway.name != null) {
 			credentialDetails = new CredentialDetails(credType, encryptedCredentialsString, "Encrypted", privacyLevel);
         }
