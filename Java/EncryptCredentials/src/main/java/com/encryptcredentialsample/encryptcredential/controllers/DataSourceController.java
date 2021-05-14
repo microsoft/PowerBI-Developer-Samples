@@ -122,7 +122,7 @@ public class DataSourceController extends HttpServlet {
 			Gateway gateway = GetDatasourceData.getGateway(accessToken, request.gatewayId);
 
 			if (gateway.name == null) {
-				throw new Exception("Add data source is not supported for cloud gateway.");
+				throw new Exception("Error: Add data source is not supported for cloud gateway.");
 			}
 			return AddCredentialsService.addDataSource(
 					accessToken, 
