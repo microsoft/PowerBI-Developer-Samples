@@ -37,8 +37,6 @@ public class AddCredentialsService {
 		// Encrypt the credentials Asymmetric Key Encryption
 		AsymmetricKeyEncryptorService credentialsEncryptor = new AsymmetricKeyEncryptorService(pubKey);
 		String encryptedCredentialsString = credentialsEncryptor.encodeCredentials(serializedCredentials);
-		
-		Gateway gateway = GetDatasourceData.getGateway(accessToken, gatewayId);
 
 		// Credential Details class object for request body
 		CredentialDetails credentialDetails = new CredentialDetails(credType, encryptedCredentialsString, "Encrypted", privacyLevel);
