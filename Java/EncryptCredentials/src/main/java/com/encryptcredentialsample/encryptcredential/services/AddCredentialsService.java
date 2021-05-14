@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import com.encryptcredentialsample.encryptcredential.models.CredentialDetails;
-import com.encryptcredentialsample.encryptcredential.models.Gateway;
 import com.encryptcredentialsample.encryptcredential.models.GatewayPublicKey;
 import com.encryptcredentialsample.encryptcredential.models.PublishDatasourceToGatewayRequest;
 
