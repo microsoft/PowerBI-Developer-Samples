@@ -41,12 +41,7 @@ public class AddCredentialsService {
 		Gateway gateway = GetDatasourceData.getGateway(accessToken, gatewayId);
 
 		// Credential Details class object for request body
-		CredentialDetails credentialDetails = null;
-
-		// Cloud gateway does not contain name property
-		if (gateway.name != null) {
-			credentialDetails = new CredentialDetails(credType, encryptedCredentialsString, "Encrypted", privacyLevel);
-        }
+		CredentialDetails credentialDetails = new CredentialDetails(credType, encryptedCredentialsString, "Encrypted", privacyLevel);
 
         PublishDatasourceToGatewayRequest requestBodyObjKey = new PublishDatasourceToGatewayRequest(dataSourceType, connectionDetails, credentialDetails, dataSourceName);
 		
