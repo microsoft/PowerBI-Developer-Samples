@@ -9,6 +9,7 @@ import os
 
 # Initialize the Flask app
 app = Flask(__name__)
+app.config['TEMPLATES_AUTO_RELOAD'] = True # so we dont need to stop/start server to refresh
 
 # Load configuration
 app.config.from_object('config.BaseConfig')
@@ -18,6 +19,17 @@ def index():
     '''Returns a static HTML page'''
 
     return render_template('index.html')
+
+
+# EH: to run our test/demo pages
+@app.route('/<testpage>')
+def test(testpage):
+    '''Returns a static HTML page'''
+    print("here : " + testpage)
+
+    return render_template(f'{testpage}.html')
+# EH: to run our test/demo pages
+
 
 @app.route('/getembedinfo', methods=['GET'])
 def get_embed_info():
@@ -40,4 +52,4 @@ def getfavicon():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'img/favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
