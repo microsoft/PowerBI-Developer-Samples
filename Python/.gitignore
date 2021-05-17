@@ -20,3 +20,7 @@ pip-log.txt
 venv
 *.pyc
 build
+
+# EH: avoid config files with sensitive data
+config.py
+Embed*for*your*customers/AppOwnsData/config.py
