@@ -155,9 +155,9 @@ public class DataSourceController extends HttpServlet {
 			String serializedCredentials = Utils.serializeCredentials(request.credentialsArray, request.credType);
 			String credentials = null;
 
-			// Cloud gateway does not contain name property
+			// On-premises gateway contains name property
 			if(selectedGateway.name != null) {
-				// Encrypt the credentials Asymmetric Key Encryption
+				// Encrypt the credentials Asymmetric Key Encryption if on-premise gateway is used
 				AsymmetricKeyEncryptorService credentialsEncryptor = new AsymmetricKeyEncryptorService(selectedGateway.publicKey);
 				credentials = credentialsEncryptor.encodeCredentials(serializedCredentials);
 			} else {

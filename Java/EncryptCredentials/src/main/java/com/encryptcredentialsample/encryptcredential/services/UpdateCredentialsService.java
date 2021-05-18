@@ -39,14 +39,15 @@ public class UpdateCredentialsService {
 		Gateway gateway = GetDatasourceData.getGateway(accessToken, gatewayId);	
 		String encryptedConnection = null;
 		
-		// Cloud gateway does not contain name property
+		// On-premises gateway contains name property
+        // Use on-premises gateway
         if (gateway.name != null) {
         	encryptedConnection = "Encrypted";
     		// Encrypt the credentials Asymmetric Key Encryption
     		AsymmetricKeyEncryptorService credentialsEncryptor = new AsymmetricKeyEncryptorService(pubKey);
         	encryptedCredentialsString = credentialsEncryptor.encodeCredentials(serializedCredentials);
         } else {
-			// Return serialized data in case of cloud gateway
+			// Use cloud gateway
         	encryptedConnection = "NotEncrypted";
         	encryptedCredentialsString = serializedCredentials;	
         }
