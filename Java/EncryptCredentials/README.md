@@ -60,6 +60,10 @@ Click File > Open Project from File System > Click on Directory > Select [Update
 
 2. Do not use default browser provided by eclipse for running the sample on server.
 
+> **Note:** 
+> 1. The Azure AD Service Principal which is used for authentication should have admin rights on the corresponding workspace.
+> 2. If Service Principal mode is used for authentication and on-premises gateway is used, then SP should be the gateway admin.
+
 ## Troubleshoot
 
 Windows shows "File path too long" during Eclipse IDE setup extraction.
