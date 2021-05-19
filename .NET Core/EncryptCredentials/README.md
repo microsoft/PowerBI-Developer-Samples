@@ -29,6 +29,10 @@ Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
 
 3. Mozilla Firefox
 
+> **Note:** 
+> 1. The Azure AD Service Principal which is used for authentication should have admin rights on the corresponding workspace.
+> 2. If Service Principal mode is used for authentication and on-premises gateway is used, then SP should be the gateway admin.
+
 ## Important
 
 For security reasons, in a real world application, passwords and secrets should not be stored in config files. Instead, consider securing your credentials with an application such as Key Vault.

@@ -57,7 +57,4 @@ $(function() {
 
     // Set default state of isPreviousReportRDL flag
     globals.isPreviousReportRDL = false;
-
-    // Cache base endpoint for Power BI REST API
-    globals.powerBiApi = "https://api.powerbi.com/v1.0/myorg/";
 });
