@@ -17,10 +17,10 @@ public class CredentialDetails {
 
 	public String privacyLevel;
 
-	public CredentialDetails(String credentialType, String serializedCredentials, String privacyLevel) {
+	public CredentialDetails(String credentialType, String serializedCredentials, String encryptedConnection, String privacyLevel) {
 		this.credentialType = credentialType;
 		this.credentials = serializedCredentials;
-		this.encryptedConnection = "Encrypted";
+		this.encryptedConnection = encryptedConnection;
 		this.encryptionAlgorithm = "RSA-OAEP";
 		this.privacyLevel = privacyLevel;
 	}

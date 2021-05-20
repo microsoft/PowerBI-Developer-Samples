@@ -36,11 +36,11 @@ public class AddCredentialsService {
 		// Encrypt the credentials Asymmetric Key Encryption
 		AsymmetricKeyEncryptorService credentialsEncryptor = new AsymmetricKeyEncryptorService(pubKey);
 		String encryptedCredentialsString = credentialsEncryptor.encodeCredentials(serializedCredentials);
-		
+
 		// Credential Details class object for request body
-		CredentialDetails credentialDetails = new CredentialDetails(credType, encryptedCredentialsString, privacyLevel);
-		
-		PublishDatasourceToGatewayRequest requestBodyObjKey = new PublishDatasourceToGatewayRequest(dataSourceType, connectionDetails, credentialDetails, dataSourceName);
+		CredentialDetails credentialDetails = new CredentialDetails(credType, encryptedCredentialsString, "Encrypted", privacyLevel);
+
+        PublishDatasourceToGatewayRequest requestBodyObjKey = new PublishDatasourceToGatewayRequest(dataSourceType, connectionDetails, credentialDetails, dataSourceName);
 		
 		return makeAddDataSourcePostRequest(gatewayId, requestBodyObjKey, accessToken);
 	}
