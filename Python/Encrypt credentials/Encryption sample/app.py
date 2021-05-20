@@ -36,8 +36,7 @@ def get_datasources_in_group():
         access_token = AadService.get_access_token()
 
         data_source_service = GetDatasourceService()
-        api_response = data_source_service.get_datasources_in_group(
-            access_token, group_id, dataset_id)
+        api_response = data_source_service.get_datasources_in_group(access_token, group_id, dataset_id)
 
         if api_response.ok:
             return Response(api_response, api_response.status_code)
@@ -77,10 +76,8 @@ def update_datasource():
         update_creds_service = UpdateCredentialsService()
         api_response = update_creds_service.update_datasource(
             access_token, request_data['credType'], request_data[
-                'privacyLevel'], request_data['credentialsArray'], gateway['publicKey'],
-                     request_data['gatewayId'], request_data['datasourceId'])
+                'privacyLevel'], request_data['credentialsArray'], gateway, request_data['datasourceId'])
 
-        # check for any class to check for 200 response, dont use the status_code
         if api_response.ok:
             return Response(api_response, api_response.status_code)
         else:
@@ -104,7 +101,7 @@ def add_datasource():
         request_data = request.json['data']
 
         # Validate the credentials data by the user
-        data_validation_service =  DataValidationService()
+        data_validation_service = DataValidationService()
         data_validation_service.validate_add_data_source(request_data)
         
         gateway_id = request_data['gatewayId']
@@ -117,11 +114,16 @@ def add_datasource():
 
         gateway = gateway_api_response.json()
 
+        # If cloud gateway is used, return error
+        if 'name' not in gateway:
+            reason = 'Add data source is not supported for cloud gateway.'
+            return json.dumps({'errorMsg': str(f'Error: {reason} ')}), 400
+
         # Send fetched data to add data source
         add_datasource_service = AddCredentialsService()
         api_response = add_datasource_service.add_data_source(
-            access_token, request_data['gatewayId'], request_data['dataSourceType'], request_data['connectionDetails'], request_data[
-                'dataSourceName'], request_data['credType'], request_data['privacyLevel'], request_data['credentialsArray'], gateway['publicKey'])
+            access_token, gateway, request_data['dataSourceType'], request_data['connectionDetails'], request_data[
+                'dataSourceName'], request_data['credType'], request_data['privacyLevel'], request_data['credentialsArray'])
 
         if api_response.ok:
             return Response(api_response, api_response.status_code)
@@ -159,15 +161,17 @@ def encrypt_credentials():
         gateway = gateway_api_response.json()
 
         # Serialize credentials for encryption
-        serialized_credentials = Utils.serialize_credentials(
-            request_data['credentialsArray'], request_data['credType'])
+        serialized_credentials = Utils.serialize_credentials(request_data['credentialsArray'], request_data['credType'])
+
+        # Cloud gateway does not contain name property
+        if 'name' not in gateway:
+            return serialized_credentials
 
         # Encrypt the credentials Asymmetric Key Encryption
-        asymmetric_encryptor_service = AsymmetricKeyEncryptor(
-            gateway['publicKey'])
-        encrypted_credentials_string = asymmetric_encryptor_service.encode_credentials(
-            serialized_credentials)
+        asymmetric_encryptor_service = AsymmetricKeyEncryptor(gateway['publicKey'])
+        encrypted_credentials_string = asymmetric_encryptor_service.encode_credentials(serialized_credentials)
 
+        # If on-premise gateway is used, return encrypted data
         return encrypted_credentials_string
 
     except KeyError as tx:

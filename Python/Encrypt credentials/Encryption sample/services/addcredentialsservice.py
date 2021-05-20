@@ -13,36 +13,35 @@ class AddCredentialsService:
 
     headers = None
 
-    def add_data_source(self, access_token, gateway_id, data_source_type, connection_details, data_source_name, cred_type, privacy_level, credentials_array, public_key):
+    def add_data_source(self, access_token, gateway, data_source_type, connection_details, data_source_name, cred_type, privacy_level, credentials_array):
         ''' Adds data source with encrypted credentials
 
         Args:
             access_token (str): Access token to call API
-            gateway_id (str): Gateway Id
+            gateway (Gateway): Gateway response
             data_source_type (str): Data source type (i.e. SQL)
             connection_details (str): Connection string for the data source
             data_source_name (str): Name of the data source
             cred_type (str): Type of the credentials (i.e. Basic, Windows, OAuth2)
             privacy_level (str): Privacy level
             credentials_array (dict): Credentials based on the user input of the credentials type
-            public_key (PublicKey): Public Key object with modulus and exponent as properties
 
         Returns:
             Response: Response from the API call
         '''
 
+        gateway_id = gateway['id']
+        public_key = gateway['publicKey']
+
         # Serialize credentials for encryption
-        serialized_credentials = Utils.serialize_credentials(
-            credentials_array, cred_type)
+        serialized_credentials = Utils.serialize_credentials(credentials_array, cred_type)
 
         # Encrypt the credentials using Asymmetric Key Encryption
         asymmetric_encryptor_service = AsymmetricKeyEncryptor(public_key)
-        encrypted_credentials_string = asymmetric_encryptor_service.encode_credentials(
-            serialized_credentials)
+        encrypted_credentials_string = asymmetric_encryptor_service.encode_credentials(serialized_credentials)
 
         # Credential Details class object for request body
-        credentials_details = CredentialsDetails(
-            cred_type, encrypted_credentials_string, privacy_level)
+        credentials_details = CredentialsDetails(cred_type, encrypted_credentials_string, 'Encrypted', privacy_level)
 
         # Add Data source class object for request body
         publish_data_source_request_body = PublishDatasourceToGatewayRequest(
@@ -62,14 +61,12 @@ class AddCredentialsService:
             Response: Response from the API call
         '''
 
-        self.headers = {'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + access_token}
+        self.headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + access_token}
 
         # Gateways - Create Datasource Power BI REST API
         # https://docs.microsoft.com/en-us/rest/api/power-bi/gateways/createdatasource
         endpoint_url = f'https://api.powerbi.com/v1.0/myorg/gateways/{gateway_id}/datasources'
 
-        api_response = requests.post(endpoint_url, data=json.dumps(
-            request_body.__dict__), headers=self.headers)
+        api_response = requests.post(endpoint_url, data=json.dumps(request_body.__dict__), headers=self.headers)
 
         return api_response

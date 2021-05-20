@@ -33,22 +33,18 @@ class AadService:
             if authenticate_mode.lower() == 'masteruser':
 
                 # Create a public client to authorize the app with the AAD app
-                clientapp = msal.PublicClientApplication(
-                    client_id, authority=authority)
+                clientapp = msal.PublicClientApplication(client_id, authority=authority)
 
                 # Make a client call if Access token is not available in cache
-                response = clientapp.acquire_token_by_username_password(
-                    username, password, scopes=scope)
+                response = clientapp.acquire_token_by_username_password(username, password, scopes=scope)
 
             # Service Principal auth is recommended by Microsoft to achieve App Owns Data Power BI embedding
             else:
                 authority = authority.replace('organizations', tenant_id)
-                clientapp = msal.ConfidentialClientApplication(
-                    client_id, client_credential=client_secret, authority=authority)
+                clientapp = msal.ConfidentialClientApplication(client_id, client_credential=client_secret, authority=authority)
 
                 # Make a client call if Access token is not available in cache
-                response = clientapp.acquire_token_for_client(
-                    scopes=scope)
+                response = clientapp.acquire_token_for_client(scopes=scope)
 
             return response['access_token']
 

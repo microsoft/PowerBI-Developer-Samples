@@ -20,8 +20,7 @@ class GetDatasourceService:
             Response: Response from the API call
         '''
 
-        self.headers = {'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + access_token}
+        self.headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + access_token}
 
         # https://docs.microsoft.com/en-us/rest/api/power-bi/datasets/getdatasourcesingroup
         endpoint_url = f'https://api.powerbi.com/v1.0/myorg/groups/{group_id}/datasets/{dataset_id}/datasources'
@@ -41,8 +40,7 @@ class GetDatasourceService:
             Response: Response from the API call
         '''
 
-        self.headers = {'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + access_token}
+        self.headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + access_token}
 
         endpoint_url = f'https://api.powerbi.com/v1.0/myorg/gateways/{gateway_id}'
 
