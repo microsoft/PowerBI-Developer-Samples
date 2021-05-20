@@ -7,16 +7,16 @@ namespace EncryptCredentials.Services
 {
 	using EncryptCredentials.Models;
 	using Microsoft.PowerBI.Api;
-    using Microsoft.PowerBI.Api.Extensions;
-    using Microsoft.PowerBI.Api.Models;
+	using Microsoft.PowerBI.Api.Extensions;
+	using Microsoft.PowerBI.Api.Models;
 	using Microsoft.PowerBI.Api.Models.Credentials;
 	using Microsoft.Rest;
 	using System;
 
-	public class PowerBIService 
+	public class PowerBIService
 	{
 		private readonly AadService aadService;
-		private readonly string urlPowerBiServiceApiRoot  = "https://api.powerbi.com";
+		private readonly string urlPowerBiServiceApiRoot = "https://api.powerbi.com";
 
 		public PowerBIService(AadService aadService)
 		{
@@ -30,7 +30,7 @@ namespace EncryptCredentials.Services
 		public PowerBIClient GetPowerBIClient()
 		{
 			var tokenCredentials = new TokenCredentials(aadService.GetAccessToken(), "Bearer");
-			return new PowerBIClient(new Uri(urlPowerBiServiceApiRoot ), tokenCredentials);
+			return new PowerBIClient(new Uri(urlPowerBiServiceApiRoot), tokenCredentials);
 		}
 
 		/// <summary>
@@ -52,15 +52,13 @@ namespace EncryptCredentials.Services
 		/// Get Gateway public key
 		/// </summary>
 		/// <param name="gatewayId">Gateway Id of corresponding Dataset</param>
-		/// <returns>Public key of corresponding gateway</returns>
-		public GatewayPublicKey GetGatewayPublicKey(Guid gatewayId)
+		/// <returns>Corresponding gateway</returns>
+		public Gateway GetGateway(Guid gatewayId)
 		{
 			PowerBIClient pbiClient = this.GetPowerBIClient();
 
-			// Get gateway info
-			var gateway = pbiClient.Gateways.GetGateway(gatewayId);
-
-			return gateway.PublicKey;
+			// Get gateway info and return
+			return pbiClient.Gateways.GetGateway(gatewayId);
 		}
 
 		/// <summary>
@@ -71,30 +69,30 @@ namespace EncryptCredentials.Services
 		/// <returns>Credentials for updating the datasource</returns>
 		public CredentialsBase GetCredentials(string credentialType, string[] credentialsArray)
 		{
-            CredentialsBase credentials;
+			CredentialsBase credentials;
 
-            // Capture credentials based on credential type selected by the user
-            switch(credentialType)
-            {
-                case Constants.KeyCredentials:
-                    credentials = new KeyCredentials(key: credentialsArray[0]);
-                    break;
-                case Constants.BasicCredentials:
-                    credentials = new BasicCredentials(username: credentialsArray[0], password: credentialsArray[1]);
-                    break;
-                case Constants.OAuth2Credentials:
-                    credentials = new OAuth2Credentials(accessToken: credentialsArray[0]);
-                    break;
-                case Constants.WindowsCredentials:
-                    credentials = new WindowsCredentials(username: credentialsArray[0], password: credentialsArray[1]);
-                    break;
-                default:
-                    Console.Error.WriteLine(Constants.InvalidCredType);
-                    throw new Exception(Constants.InvalidCredType);
-            }
+			// Capture credentials based on credential type selected by the user
+			switch (credentialType)
+			{
+				case Constants.KeyCredentials:
+					credentials = new KeyCredentials(key: credentialsArray[0]);
+					break;
+				case Constants.BasicCredentials:
+					credentials = new BasicCredentials(username: credentialsArray[0], password: credentialsArray[1]);
+					break;
+				case Constants.OAuth2Credentials:
+					credentials = new OAuth2Credentials(accessToken: credentialsArray[0]);
+					break;
+				case Constants.WindowsCredentials:
+					credentials = new WindowsCredentials(username: credentialsArray[0], password: credentialsArray[1]);
+					break;
+				default:
+					Console.Error.WriteLine(Constants.InvalidCredType);
+					throw new Exception(Constants.InvalidCredType);
+			}
 
-            return credentials;
-        }
+			return credentials;
+		}
 
 		/// <summary>
 		/// Get credential details
@@ -111,19 +109,27 @@ namespace EncryptCredentials.Services
 			// Capture credentials based on credential type selected by the user
 			var credentials = GetCredentials(credentialType, credentialsArray);
 
-			// Get Public Key
-			var publicKey = GetGatewayPublicKey(gatewayId);
+			// Get the Getway
+			var gateway = GetGateway(gatewayId);
 
-			// Create Asymmetric key Encryptor
-			var credentialsEncryptor = new AsymmetricKeyEncryptor(publicKey);
+			// Initialize credentialsEncryptor and encryptedConnection for Cloud gateway
+			var credentialsEncryptor = (AsymmetricKeyEncryptor)null;
+			var encryptedConnection = EncryptedConnection.NotEncrypted;
+
+			// Name is present in case of on-premises gateway
+			if (!string.IsNullOrWhiteSpace(gateway.Name))
+			{
+				// Update for On-premises gateway
+				encryptedConnection = EncryptedConnection.Encrypted;
+				credentialsEncryptor = new AsymmetricKeyEncryptor(gateway.PublicKey);
+			}
 
 			// Capture Credential Details
 			var credentialDetails = new CredentialDetails(
-				credentials,
-				privacyLevel: privacyLevel,
-				EncryptedConnection.Encrypted,
-				credentialsEncryptor
-			);
+					credentials,
+					privacyLevel: privacyLevel,
+					encryptedConnection,
+					credentialsEncryptor);
 
 			return credentialDetails;
 		}
@@ -147,7 +153,7 @@ namespace EncryptCredentials.Services
 		/// Add Datasource in corresponding Power BI Gateway
 		/// </summary>
 		/// <param name="gatewayId">Gateway Id of corresponding Dataset</param>
-		/// <param name="publishDatasourceToGatewayRequest">Request body for Add Datasourcce API</param>
+		/// <param name="publishDatasourceToGatewayRequest">Request body for Add Datasource API</param>
 		public GatewayDatasource AddDatasource(Guid gatewayId, PublishDatasourceToGatewayRequest publishDatasourceToGatewayRequest)
 		{
 			PowerBIClient pbiClient = this.GetPowerBIClient();

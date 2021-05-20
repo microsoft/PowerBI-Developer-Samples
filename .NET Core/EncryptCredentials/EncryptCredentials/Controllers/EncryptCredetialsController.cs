@@ -9,9 +9,9 @@ namespace EncryptCredentials.Controllers
 	using EncryptCredentials.Services;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.Extensions.Options;
-    using Microsoft.PowerBI.Api.Models;
-    using Microsoft.Rest;
-    using System;
+	using Microsoft.PowerBI.Api.Models;
+	using Microsoft.Rest;
+	using System;
 
 	public class EncryptCredentialsController : Controller
 	{
@@ -39,13 +39,13 @@ namespace EncryptCredentials.Controllers
 				return Ok(datasources);
 			}
 			catch (HttpOperationException ex)
-            {
-               	Console.Error.WriteLine(ex.Message + "\n\n" + ex.StackTrace);
-				
+			{
+				Console.Error.WriteLine(ex.Message + "\n\n" + ex.StackTrace);
+
 				// Set status code of the response
 				Response.StatusCode = (Int32)ex.Response.StatusCode;
 				return Content("Error " + Response.StatusCode + " " + ex.Message);
-            }
+			}
 			catch (Exception ex)
 			{
 				Console.Error.WriteLine(ex.Message + "\n\n" + ex.StackTrace);
@@ -70,20 +70,20 @@ namespace EncryptCredentials.Controllers
 				var dataSourceRequest = new UpdateDatasourceRequest {
 					CredentialDetails = credentialDetails
 				};
-				 
+
 				// Update gateway credentials
 				powerBIService.UpdateDatasource(updateDatasourceMap.GatewayId, updateDatasourceMap.DatasourceId, dataSourceRequest);
 
 				return Ok("Successfully updated data source credentials");
 			}
 			catch (HttpOperationException ex)
-            {
-               	Console.Error.WriteLine(ex.Message + "\n\n" + ex.StackTrace);
-				
+			{
+				Console.Error.WriteLine(ex.Message + "\n\n" + ex.StackTrace);
+
 				// Set status code of the response
 				Response.StatusCode = (Int32)ex.Response.StatusCode;
 				return Content("Error " + Response.StatusCode + " " + ex.Message);
-            }
+			}
 			catch (Exception ex)
 			{
 				Console.Error.WriteLine(ex.Message + "\n\n" + ex.StackTrace);
@@ -101,6 +101,16 @@ namespace EncryptCredentials.Controllers
 		{
 			try
 			{
+				// Check for cloud gateway
+				var gateway = powerBIService.GetGateway(addDatasourceMap.GatewayId);
+
+				// Name is null for cloud gateway
+				if (string.IsNullOrWhiteSpace(gateway.Name))
+				{
+					var reason = "Add data source is not supported for cloud gateway.";
+					return Content("Error: " + reason);
+				}
+
 				// Capture Credential Details
 				var credentialDetails = powerBIService.GetCredentialDetails(addDatasourceMap.GatewayId, addDatasourceMap.CredentialType, addDatasourceMap.Credentials, addDatasourceMap.PrivacyLevel);
 
@@ -118,13 +128,13 @@ namespace EncryptCredentials.Controllers
 				return Ok("Successfully added data source with ID: " + datasource.Id);
 			}
 			catch (HttpOperationException ex)
-            {
-               	Console.Error.WriteLine(ex.Message + "\n\n" + ex.StackTrace);
-				
+			{
+				Console.Error.WriteLine(ex.Message + "\n\n" + ex.StackTrace);
+
 				// Set status code of the response
 				Response.StatusCode = (Int32)ex.Response.StatusCode;
 				return Content("Error " + Response.StatusCode + " " + ex.Message);
-            }
+			}
 			catch (Exception ex)
 			{
 				Console.Error.WriteLine(ex.Message + "\n\n" + ex.StackTrace);
@@ -148,13 +158,13 @@ namespace EncryptCredentials.Controllers
 				return Ok(credentialDetails.Credentials);
 			}
 			catch (HttpOperationException ex)
-            {
-               	Console.Error.WriteLine(ex.Message + "\n\n" + ex.StackTrace);
-				
+			{
+				Console.Error.WriteLine(ex.Message + "\n\n" + ex.StackTrace);
+
 				// Set status code of the response
 				Response.StatusCode = (Int32)ex.Response.StatusCode;
 				return Content("Error " + Response.StatusCode + " " + ex.Message);
-            }
+			}
 			catch (Exception ex)
 			{
 				Console.Error.WriteLine(ex.Message + "\n\n" + ex.StackTrace);
