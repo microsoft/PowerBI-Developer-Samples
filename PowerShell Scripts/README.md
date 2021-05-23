@@ -21,6 +21,9 @@ This repo contains samples for calling the Power BI REST APIs using PowerShell. 
 | [copyWorkspace.ps1](copyWorkspace.ps1) | Duplicate a workpsace in the Power BI service   |
 | [Create-Workspace-and-Add-Workspace-Users.ps1](Create-Workspace-and-Add-Workspace-Users.ps1) | Create a new workspace and add user as contributor   |
 | [Create-Workspace.ps1](Create-Workspace.ps1) | Create a new workspace  |
+| [DeploymentPipelines-DeployAll.ps1](DeploymentPipelines-DeployAll.ps1) | Starts a Deploymnet of all contnet between two stages in the pipeline |
+| [DeploymentPipelines-SelectiveDeploy.ps1](DeploymentPipelines-SelectiveDeploy.ps1) | Starts a Deploymnet of specific contnet between two stages in the pipeline |
+| [DeploymentPipelines-WaitForDeployment.ps1](DeploymentPipelines-WaitForDeployment.ps1) | Waits for the deployment operation to be completed |
 | [Import-PBIX-File.ps1](Import-PBIX-File.ps1) | Import PBIX into a target workspace  |
 | [Login-User-Interactively.ps1](Login-User-Interactively.ps1) | Login user interactively as script runs |
 | [Login-User-Unattended.ps1](Login-User-Unattended.ps1) | Login user automatically using hard-coded user name and password |
