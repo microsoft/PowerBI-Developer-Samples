@@ -121,6 +121,9 @@ public class DataSourceController extends HttpServlet {
 
 			Gateway gateway = GetDatasourceData.getGateway(accessToken, request.gatewayId);
 
+			if (gateway.name == null) {
+				throw new Exception("Error: Add data source is not supported for cloud gateway.");
+			}
 			return AddCredentialsService.addDataSource(
 					accessToken, 
 					request.gatewayId, 
@@ -150,12 +153,19 @@ public class DataSourceController extends HttpServlet {
 
 			// Serialize credentials for encryption
 			String serializedCredentials = Utils.serializeCredentials(request.credentialsArray, request.credType);
+			String credentials = null;
 
-			// Encrypt the credentials Asymmetric Key Encryption
-			AsymmetricKeyEncryptorService credentialsEncryptor = new AsymmetricKeyEncryptorService(selectedGateway.publicKey);
-			String encryptedCredentialsString = credentialsEncryptor.encodeCredentials(serializedCredentials);
-			
-			return ResponseEntity.status(HttpStatus.OK).body(encryptedCredentialsString);
+			// On-premises gateway contains name property
+			if(selectedGateway.name != null) {
+				// Encrypt the credentials Asymmetric Key Encryption if on-premise gateway is used
+				AsymmetricKeyEncryptorService credentialsEncryptor = new AsymmetricKeyEncryptorService(selectedGateway.publicKey);
+				credentials = credentialsEncryptor.encodeCredentials(serializedCredentials);
+			} else {
+				// Return serialized data in case of cloud gateway			
+				credentials = serializedCredentials;	
+			}
+	
+			return ResponseEntity.status(HttpStatus.OK).body(credentials);
 		} catch (HttpClientErrorException hcex) {
 			return generateResponseForException(hcex);
 		} catch (Exception ex) {

@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.encryptcredentialsample.encryptcredential.models.CredentialDetails;
 import com.encryptcredentialsample.encryptcredential.models.CredentialDetailsRequestBody;
+import com.encryptcredentialsample.encryptcredential.models.Gateway;
 import com.encryptcredentialsample.encryptcredential.models.GatewayPublicKey;
 
 public class UpdateCredentialsService {
@@ -33,12 +34,26 @@ public class UpdateCredentialsService {
 		// Serialize credentials for encryption
 		String serializedCredentials = Utils.serializeCredentials(credentialsArray, credType);
 
-		// Encrypt the credentials Asymmetric Key Encryption
-		AsymmetricKeyEncryptorService credentialsEncryptor = new AsymmetricKeyEncryptorService(pubKey);
-		String encryptedCredentialsString = credentialsEncryptor.encodeCredentials(serializedCredentials);
+		String encryptedCredentialsString = null;
 
-		// Credential Details class object for request body
-		CredentialDetails credentialDetails = new CredentialDetails(credType, encryptedCredentialsString, privacyLevel);
+		Gateway gateway = GetDatasourceData.getGateway(accessToken, gatewayId);	
+		String encryptedConnection = null;
+		
+		// On-premises gateway contains name property
+        // Use on-premises gateway
+        if (gateway.name != null) {
+        	encryptedConnection = "Encrypted";
+    		// Encrypt the credentials Asymmetric Key Encryption
+    		AsymmetricKeyEncryptorService credentialsEncryptor = new AsymmetricKeyEncryptorService(pubKey);
+        	encryptedCredentialsString = credentialsEncryptor.encodeCredentials(serializedCredentials);
+        } else {
+			// Use cloud gateway
+        	encryptedConnection = "NotEncrypted";
+        	encryptedCredentialsString = serializedCredentials;	
+        }
+
+        // Credential Details class object for request body
+        CredentialDetails credentialDetails = new CredentialDetails(credType, encryptedCredentialsString, encryptedConnection, privacyLevel); 
 
 		// Converting CredentialDetails class object to json string
 		CredentialDetailsRequestBody requestBodyObj = new CredentialDetailsRequestBody(credentialDetails);
