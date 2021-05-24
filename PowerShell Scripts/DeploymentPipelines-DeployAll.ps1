@@ -25,18 +25,18 @@ $stageOrder = 0                     # The order of the source stage. Development
 Connect-PowerBIServiceAccount | Out-Null
 
 try { 
-    #Get pipelines
+    # Get pipelines
     $pipelines = (Invoke-PowerBIRestMethod -Url "pipelines"  -Method Get | ConvertFrom-Json).value
 
-    #Try to find the pipeline by display name
+    # Try to find the pipeline by display name
     $pipeline = $pipelines | Where-Object {$_.DisplayName -eq $pipelineName}
 
-    if(!$pipeline) {            
-        Write-Host "Pipeline with requested name was not found"
+    if(!$pipeline) {
+        Write-Host "A pipeline with the requested name was not found"
         return
-    }    
+    }
 
-    #construct the request url and body
+    # Construct the request url and body
     $url = "pipelines/{0}/DeployAll" -f $pipeline.Id
 
     $body = @{ 
@@ -51,9 +51,10 @@ try {
         }
     } | ConvertTo-Json
 
+    # Send the request
     $deployResult = Invoke-PowerBIRestMethod -Url $url  -Method Post -Body $body | ConvertFrom-Json
 
-    "Operation id: {0}" -f $deployResult.id
+    "Operation ID: {0}" -f $deployResult.id
 } catch {
     $errmsg = Resolve-PowerBIError -Last
     $errmsg.Message

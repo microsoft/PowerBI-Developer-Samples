@@ -28,19 +28,19 @@ $dashboardName = " FILL ME IN "     # The name of the dashboard to be deployed
 # Login to the Power BI service
 Connect-PowerBIServiceAccount | Out-Null
 
-try { 
-    #Get pipelines
+try {
+    # Get pipelines
     $pipelines = (Invoke-PowerBIRestMethod -Url "pipelines"  -Method Get | ConvertFrom-Json).value
 
-    #Try to find the pipeline by display name
+    # Try to find the pipeline by display name
     $pipeline = $pipelines | Where-Object {$_.DisplayName -eq $pipelineName}
 
-    if(!$pipeline) {            
-        Write-Host "Pipeline with requested name was not found"
+    if(!$pipeline) {
+        Write-Host "A pipeline with the requested name was not found"
         return
     }
 
-    #Get pipeline stage artifacts
+    # Get pipeline stage artifacts
     $artifactsUrl = "pipelines/{0}/stages/{1}/artifacts" -f $pipeline.Id,$stageOrder
     $artifacts = Invoke-PowerBIRestMethod -Url $artifactsUrl  -Method Get | ConvertFrom-Json
 
@@ -58,7 +58,7 @@ try {
         return
     }
 
-    #construct the request url and body
+    # Construct the request url and body
     $url = "pipelines/{0}/Deploy" -f $pipeline.Id
 
     $body = @{ 
@@ -86,9 +86,10 @@ try {
         }
     } | ConvertTo-Json
 
+    # Send the request
     $deployResult = Invoke-PowerBIRestMethod -Url $url  -Method Post -Body $body | ConvertFrom-Json
 
-    "Operation id: {0}" -f $deployResult.id
+    "Operation ID: {0}" -f $deployResult.id
 } catch {
     $errmsg = Resolve-PowerBIError -Last
     $errmsg.Message
