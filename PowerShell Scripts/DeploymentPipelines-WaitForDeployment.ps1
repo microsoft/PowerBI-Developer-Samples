@@ -16,7 +16,7 @@
 # =====================================================
 
 $pipelineName = " FILL ME IN "      # The name of the pipeline
-$operationId = " FILL ME IN "       # The operation id - can be optained from the output of deploy scripts
+$operationId = " FILL ME IN "       # The operation id - can be obtained from the output of deploy scripts
 
 # End Parameters =======================================
 
