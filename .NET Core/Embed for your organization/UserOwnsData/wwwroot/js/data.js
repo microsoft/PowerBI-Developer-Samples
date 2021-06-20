@@ -91,9 +91,10 @@ function populateSelectList(componentType, componentListEndpoint, componentConta
 
             // Populate select list
             for (let i = 0; i < sortedList.length; i++) {
+                // Show id in option if title property is empty
                 componentContainer.append(
                     $("<option />")
-                        .text(sortedList[i][componentDisplayName])
+                        .text(sortedList[i][componentDisplayName] || sortedList[i].id)
                         .val(sortedList[i].id)
                 );
             }

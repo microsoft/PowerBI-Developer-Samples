@@ -34,10 +34,9 @@ app.get('/getEmbedToken', async function (req, res) {
     // Validate whether all the required configurations are provided in config.json
     configCheckResult = utils.validateConfig();
     if (configCheckResult) {
-        return {
-            "status": 400,
+        return res.status(400).send({
             "error": configCheckResult
-        };
+        });
     }
     // Get the details like Embed URL, Access token and Expiry
     let result = await embedToken.getEmbedInfo();

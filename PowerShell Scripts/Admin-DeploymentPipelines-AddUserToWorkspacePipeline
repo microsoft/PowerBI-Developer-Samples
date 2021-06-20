@@ -1,0 +1,61 @@
+# This sample script calls the Power BI admin API to programmatically add admin to the pipeline that the workspace is assigned to.
+# this script requires user to be Power BI Service administrator or global tenant admin
+
+# For documentation, please see:
+# https://docs.microsoft.com/en-us/rest/api/power-bi/admin/pipelines-update-user-as-admin
+
+# Instructions:
+# 1. Install PowerShell (https://msdn.microsoft.com/en-us/powershell/scripting/setup/installing-windows-powershell) 
+#    and the Power BI PowerShell cmdlets (Install-Module MicrosoftPowerBIMgmt)
+#    https://docs.microsoft.com/en-us/powershell/power-bi/overview?view=powerbi-ps
+# 2. Run PowerShell as an administrator
+# 3. Fill in the parameters below
+# 4. Change PowerShell directory to where this script is saved
+# 5. > Admin-DeploymentPipelines-AddUserToWorkspacePipeline.ps1
+
+# Parameters - fill these in before running the script!
+# =====================================================
+
+$workspaceName = " FILL ME IN "      # The name of the workspace
+$userUpn = " FILL ME IN "            # The UPN of the user to be added to the pipeline
+
+# End Parameters =======================================
+
+# Login to the Power BI service
+Connect-PowerBIServiceAccount | Out-Null
+
+try { 
+    # Get workspace
+    $workspace = (Invoke-PowerBIRestMethod -Url "admin/Groups?`$top=100&`$filter=name eq '$workspaceName'" -Method Get | ConvertFrom-Json).Value
+
+    if(!$workspace) {
+        Write-Host "A workspace with the requested name was not found"
+        return
+    }
+
+    if($workspace.Length -gt 1){
+        Write-Host "workspace name match multiple instances"
+        return
+    }
+
+    if(!$workspace.pipelineId){
+        Write-Host "workspace isn't assigned to a pipeline"
+        return
+    }
+
+    # Construct the request url and body
+    $url = "admin/pipelines/{0}/users" -f $workspace.pipelineId
+
+    $body = @{ 
+        identifier = $userUpn
+        accessRight = "Admin"
+        principalType = "User"
+    } | ConvertTo-Json
+
+    # Send the request
+    Invoke-PowerBIRestMethod -Url $url  -Method Post -Body $body
+
+} catch {
+    $errmsg = Resolve-PowerBIError -Last
+    $errmsg.Message
+}
