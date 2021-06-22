@@ -115,7 +115,6 @@ class App extends React.Component<AppProps, AppState> {
 
             // Authenticate the user and generate the access token
             this.authenticate();
-
         }
     }
 
@@ -141,7 +140,6 @@ class App extends React.Component<AppProps, AppState> {
         const msalInstance: UserAgentApplication = new UserAgentApplication(msalConfig);
 
         function successCallback(response: AuthResponse): void {
-
             if (response.tokenType === "id_token") {
                 thisObj.authenticate();
 
@@ -149,6 +147,9 @@ class App extends React.Component<AppProps, AppState> {
 
                 accessToken = response.accessToken;
                 thisObj.setUsername(response.account.name);
+
+                // Refresh User Permissions
+                thisObj.tryRefreshUserPermissions();
                 thisObj.getembedUrl();
 
             } else {
@@ -158,7 +159,6 @@ class App extends React.Component<AppProps, AppState> {
         }
 
         function failCallBack(error: AuthError): void {
-
             thisObj.setState({ error: ["Redirect error: " + error] });
         }
 
@@ -192,6 +192,33 @@ class App extends React.Component<AppProps, AppState> {
             // user is not logged in or cached, you will need to log them in to acquire a token
             msalInstance.loginRedirect(loginRequest);
         }
+    }
+
+    // Power BI REST API call to refresh User Permissions in Power BI
+    // Refreshes user permissions and makes sure the user permissions are fully updated
+    // https://docs.microsoft.com/rest/api/power-bi/users/refreshuserpermissions
+    tryRefreshUserPermissions(): void {
+        fetch("https://api.powerbi.com/v1.0/myorg/RefreshUserPermissions", {
+            headers: {
+                "Authorization": "Bearer " + accessToken
+            },
+            method: "POST"
+        })
+        .then(function (response) {
+            if (response.ok) {
+                console.log("User permissions refreshed successfully.");
+            } else {
+                // Too many requests in one hour will cause the API to fail
+                if (response.status === 429) {
+                    console.error("Permissions refresh will be available in up to an hour.");
+                } else {
+                    console.error(response);
+                }
+            }
+        })
+        .catch(function (error) {
+            console.error("Failure in making API call." + error);
+        });
     }
 
     // Power BI REST API call to get the embed URL of the report

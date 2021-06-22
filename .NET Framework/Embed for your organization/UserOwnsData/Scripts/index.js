@@ -10,6 +10,11 @@ $(function() {
         globals.workspaceSelect.addAttr("disabled");
     }
 
+    // Power BI REST API call to refresh User Permissions in Power BI
+    // Refreshes user permissions and makes sure the user permissions are fully updated
+    // https://docs.microsoft.com/rest/api/power-bi/users/refreshuserpermissions
+    tryRefreshUserPermissions();
+
     // Initialize event handlers
     initializeEventHandlers();
 

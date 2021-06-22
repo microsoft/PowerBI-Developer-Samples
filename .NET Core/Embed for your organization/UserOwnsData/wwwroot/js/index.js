@@ -5,6 +5,11 @@
 
 $(function () {
 
+    // Power BI REST API call to refresh User Permissions in Power BI
+    // Refreshes user permissions and makes sure the user permissions are fully updated
+    // https://docs.microsoft.com/rest/api/power-bi/users/refreshuserpermissions
+    UserOwnsData.tryRefreshUserPermissions();
+
     // Initialize event handlers
     UserOwnsData.initializeEventHandlers();
 

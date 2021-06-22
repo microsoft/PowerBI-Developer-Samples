@@ -3,6 +3,32 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
+// Try to refresh user permissions after login
+UserOwnsData.tryRefreshUserPermissions = function () {
+    // API Endpoint to refresh user permissions
+    const permissionsRefreshEndpoint = `${UserOwnsData.powerBiApi}/RefreshUserPermissions`;
+
+    $.ajax({
+        type: "POST",
+        url: permissionsRefreshEndpoint,
+        headers: {
+            "Authorization": `Bearer ${loggedInUser.accessToken}`
+        },
+        contentType: "application/json; charset=utf-8",
+        success: function () {
+            console.log('Permissions refreshed successfully.');
+        },
+        error: function (err) {
+            // Too many requests in one hour will cause the API to fail
+            if (err.status === 429) {
+                console.error("Permissions refresh will be available in up to an hour.");
+            } else {
+                console.error(err.responseText);
+            }
+        }
+    });
+}
+
 // Reset report list
 UserOwnsData.resetReportList = function () {
     // Clear the dropdown list and add a default value
