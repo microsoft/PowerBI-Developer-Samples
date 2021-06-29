@@ -113,11 +113,12 @@ function populateSelectList(componentType, componentListEndpoint, componentConta
         contentType: "application/json; charset=utf-8",
         success: function(data) {
             // Sort dropdown list
-            let sortedList = data.value.sort((a, b) => (a[componentDisplayName].toLowerCase() > b[componentDisplayName].toLowerCase()) ? 1 : -1);
+            // Use ID if title property is undefined
+            let sortedList = data.value.sort((a, b) => ((a[componentDisplayName] || a.id).toLowerCase() > (b[componentDisplayName] || b.id).toLowerCase()) ? 1 : -1);
 
             // Populate select list
             for (let i = 0; i < sortedList.length; i++) {
-                // Show id in option if title property is empty
+                // Show ID in option if title property is empty
                 componentContainer.append(
                     $("<option />")
                         .text(sortedList[i][componentDisplayName] || sortedList[i].id)
