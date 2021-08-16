@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MsalGuard } from '@azure/msal-angular';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   {
@@ -11,9 +12,14 @@ const routes: Routes = [
     canActivate: [MsalGuard]
   },
   {
-    path: '',
-    component: HomeComponent
+    path: 'home',
+    component: HomeComponent,
+    canActivate: [MsalGuard]
   },
+  {
+    path: '',
+    component: LoginComponent
+  }
 ];
 
 const isIframe = window !== window.parent && !window.opener;

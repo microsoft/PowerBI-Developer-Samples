@@ -14,9 +14,6 @@ On the app Overview page of your registration, note the Application (client) ID 
 
 Register your Redirect URI value as http://localhost:4200/ and type as 'SPA'.
 
-APPLICATION-ID: ac2a0303-83c2-4698-a80f-270cd72c276c
-TENANT-ID: 7df1a654-9872-4775-b3e2-973c27aee9be
-
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

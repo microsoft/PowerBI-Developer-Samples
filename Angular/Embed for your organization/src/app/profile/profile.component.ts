@@ -1,14 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
-const GRAPH_ENDPOINT = 'https://graph.microsoft.com/v1.0/me';
-
-type ProfileType = {
-  givenName?: string,
-  surname?: string,
-  userPrincipalName?: string,
-  id?: string
-};
+//import { HttpClient } from '@angular/common/http';
+import { UserprofileService } from '../services/user-profile/userprofile.service';
 
 @Component({
   selector: 'app-profile',
@@ -16,20 +8,23 @@ type ProfileType = {
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  profile!: ProfileType;
+  public profile?: UserprofileService
 
   constructor(
-    private http: HttpClient
-  ) { }
+    profile: UserprofileService
+  ) {
+      this.profile = profile;
+   }
 
   ngOnInit() {
-    this.getProfile();
+//    this.getProfile();
   }
 
+  /*
   getProfile() {
     this.http.get(GRAPH_ENDPOINT)
       .subscribe(profile => {
         this.profile = profile;
       });
-  }
+  }*/
 }

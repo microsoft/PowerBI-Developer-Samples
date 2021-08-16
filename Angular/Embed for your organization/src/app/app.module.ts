@@ -14,6 +14,9 @@ import { ProfileComponent } from './profile/profile.component';
 
 import { MsalModule, MsalRedirectComponent, MsalGuard, MsalInterceptor } from '@azure/msal-angular'; // Import MsalInterceptor
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
+import { PowerBIEmbedModule } from 'powerbi-client-angular';
+import { POWER_BI_API} from './services/power-bi-api/power-bi-api.service';
+import { LoginComponent } from './login/login.component';
 
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
@@ -21,7 +24,8 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
   declarations: [
     AppComponent,
     HomeComponent,
-    ProfileComponent
+    ProfileComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -31,6 +35,7 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
     MatToolbarModule,
     MatListModule,
     HttpClientModule,
+    PowerBIEmbedModule,
     MsalModule.forRoot( new PublicClientApplication({
       auth: {
         clientId: 'ac2a0303-83c2-4698-a80f-270cd72c276c',
@@ -44,12 +49,13 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
     }), {
       interactionType: InteractionType.Popup,
       authRequest: {
-        scopes: ['user.read']
+        scopes: ['user.read', 'https://analysis.windows.net/powerbi/api/Workspace.Read.All']
         }
     }, {
-      interactionType: InteractionType.Popup, // MSAL Interceptor Configuration
+      interactionType: InteractionType.Redirect, // MSAL Interceptor Configuration
       protectedResourceMap: new Map([ 
-          ['https://graph.microsoft.com/v1.0/me', ['user.read']]
+          ['https://graph.microsoft.com/v1.0/me', ['user.read']],
+          [POWER_BI_API + "*", ['https://analysis.windows.net/powerbi/api/Workspace.Read.All']]
       ])
     })
   ],
