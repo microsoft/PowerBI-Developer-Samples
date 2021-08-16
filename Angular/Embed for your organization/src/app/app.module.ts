@@ -15,7 +15,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { MsalModule, MsalRedirectComponent, MsalGuard, MsalInterceptor } from '@azure/msal-angular'; // Import MsalInterceptor
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { PowerBIEmbedModule } from 'powerbi-client-angular';
-import { POWER_BI_API} from './services/power-bi-api/power-bi-api.service';
+import { POWER_BI_API } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
@@ -36,7 +36,7 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
     MatListModule,
     HttpClientModule,
     PowerBIEmbedModule,
-    MsalModule.forRoot( new PublicClientApplication({
+    MsalModule.forRoot(new PublicClientApplication({
       auth: {
         clientId: 'ac2a0303-83c2-4698-a80f-270cd72c276c',
         authority: 'https://login.microsoftonline.com/7df1a654-9872-4775-b3e2-973c27aee9be',
@@ -49,13 +49,15 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
     }), {
       interactionType: InteractionType.Popup,
       authRequest: {
-        scopes: ['user.read', 'https://analysis.windows.net/powerbi/api/Workspace.Read.All']
-        }
+        scopes: ['user.read', 'https://analysis.windows.net/powerbi/api/Workspace.Read.All',
+          'https://analysis.windows.net/powerbi/api/Dashboard.Read.All']
+      }
     }, {
       interactionType: InteractionType.Redirect, // MSAL Interceptor Configuration
-      protectedResourceMap: new Map([ 
-          ['https://graph.microsoft.com/v1.0/me', ['user.read']],
-          [POWER_BI_API + "*", ['https://analysis.windows.net/powerbi/api/Workspace.Read.All']]
+      protectedResourceMap: new Map([
+        ['https://graph.microsoft.com/v1.0/me', ['user.read']],
+        [POWER_BI_API + "*", ['https://analysis.windows.net/powerbi/api/Workspace.Read.All',
+          'https://analysis.windows.net/powerbi/api/Dashboard.Read.All']]
       ])
     })
   ],

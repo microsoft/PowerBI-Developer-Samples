@@ -12,18 +12,17 @@
                 <label>Choose embed type</label><br>
 
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="report" name="embedType" value="report"
-                        checked>
+                    <input type="radio" class="custom-control-input" id="report" [checked]="embedType == 'report'" (change)="embedTypeChanged('report')">
                     <label class="custom-control-label" for="report">Report</label>
                 </div>
 
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="dashboard" name="embedType" value="dashboard">
+                    <input type="radio" class="custom-control-input" id="dashboard" [checked]="embedType == 'dashboard'" (change)="embedTypeChanged('dashboard')">
                     <label class="custom-control-label" for="dashboard">Dashboard</label>
                 </div>
 
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" class="custom-control-input" id="tile" name="embedType" value="tile">
+                    <input type="radio" class="custom-control-input" id="tile" [checked]="embedType == 'tile'" (change)="embedTypeChanged('tile')">
                     <label class="custom-control-label" for="tile">Tile</label>
                 </div>
             </div>
@@ -36,12 +35,12 @@
                     <select id="workspace-select" class="select-list col-lg-10 col-md-12"
                     (change)="selectedWorkspaceChanged($event)">
                         <option id="workspace-default-option" value="" disabled selected>Choose workspace</option>
-                        <option *ngFor="let g of powerbiapi.groups" [value]="g.id">{{g.name}}</option>
+                        <option *ngFor="let g of groups" [value]="g.id">{{g.name}}</option>
                     </select>
                 </div>
 
                 <!-- Show select list for report(s) -->
-                <div id="report-div" class="row col-lg-4 col-md-12">
+                <div id="report-div" class="row col-lg-4 col-md-12" [hidden]="embedType !== 'report'">
                     <label for="report-select">Choose report</label><br>
                     <select id="report-select" class="select-list col-lg-10 col-md-12" disabled>
                         <option value="" disabled selected>Choose report</option>
@@ -49,17 +48,18 @@
                 </div>
 
                 <!-- Show select list for dashboard(s) -->
-                <div id="dashboard-div" class="row col-lg-4 col-md-12" hidden>
+                <div id="dashboard-div" class="row col-lg-4 col-md-12"  [hidden]="embedType !== 'dashboard'">
                     <label for="dashboard-select">Choose dashboard</label><br>
-                    <select id="dashboard-select" class="select-list col-lg-10 col-md-12" disabled>
+                    <select id="dashboard-select" class="select-list col-lg-10 col-md-12">
                         <option value="" disabled selected>Choose dashboard</option>
+                        <option *ngFor="let d of dashboards" [value]="d.id">{{d.displayName}}</option>
                     </select>
                 </div>
 
                 <!-- Show select list for tile(s) -->
-                <div id="tile-div" class="row col-lg-4 col-md-12" hidden>
+                <div id="tile-div" class="row col-lg-4 col-md-12" [hidden]="embedType !== 'tile'">
                     <label for="tile-select">Choose tile</label><br>
-                    <select id="tile-select" class="select-list col-lg-10 col-md-12" disabled>
+                    <select id="tile-select" class="select-list col-lg-10 col-md-12">
                         <option value="" disabled selected>Choose tile</option>
                     </select>
                 </div>
