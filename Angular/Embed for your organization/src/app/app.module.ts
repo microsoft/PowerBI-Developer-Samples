@@ -21,6 +21,7 @@ import { LoginComponent } from './login/login.component';
 
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,14 +52,16 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
       interactionType: InteractionType.Popup,
       authRequest: {
         scopes: ['user.read', 'https://analysis.windows.net/powerbi/api/Workspace.Read.All',
-          'https://analysis.windows.net/powerbi/api/Dashboard.Read.All']
+          'https://analysis.windows.net/powerbi/api/Dashboard.Read.All',
+          'https://analysis.windows.net/powerbi/api/Report.Read.All']
       }
     }, {
-      interactionType: InteractionType.Redirect, // MSAL Interceptor Configuration
+      interactionType: InteractionType.Popup, // MSAL Interceptor Configuration
       protectedResourceMap: new Map([
         ['https://graph.microsoft.com/v1.0/me', ['user.read']],
         [POWER_BI_API + "*", ['https://analysis.windows.net/powerbi/api/Workspace.Read.All',
-          'https://analysis.windows.net/powerbi/api/Dashboard.Read.All']]
+          'https://analysis.windows.net/powerbi/api/Dashboard.Read.All',
+          'https://analysis.windows.net/powerbi/api/Report.Read.All']]
       ])
     })
   ],

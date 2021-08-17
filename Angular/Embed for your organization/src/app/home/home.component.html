@@ -39,15 +39,17 @@
                     <select id="workspace-select" class="select-list col-lg-10 col-md-12"
                         (change)="selectedWorkspaceChanged($event)">
                         <option id="workspace-default-option" value="" disabled selected>Choose workspace</option>
-                        <option *ngFor="let g of groups" [value]="g.id">{{g.name}}</option>
+                        <option *ngFor="let g of workspaces | keyvalue" [value]="g.key">{{g.value.name}}</option>
                     </select>
                 </div>
 
                 <!-- Show select list for report(s) -->
                 <div id="report-div" class="row col-lg-4 col-md-12" [hidden]="embedType !== 'report'">
                     <label for="report-select">Choose report</label><br>
-                    <select id="report-select" class="select-list col-lg-10 col-md-12" disabled>
+                    <select id="report-select" class="select-list col-lg-10 col-md-12"
+                    (change)="selectedReportChanged($event)">
                         <option value="" disabled selected>Choose report</option>
+                        <option *ngFor="let r of reports | keyvalue" [value]="r.key">{{r.value.name}}</option>
                     </select>
                 </div>
 
@@ -58,7 +60,7 @@
                     <select id="dashboard-select" class="select-list col-lg-10 col-md-12"
                         (change)="selectedDashboardChanged($event)">
                         <option value="" disabled selected>Choose dashboard</option>
-                        <option *ngFor="let d of dashboards" [value]="d.id">{{d.displayName}}</option>
+                        <option *ngFor="let d of dashboards | keyvalue" [value]="d.key">{{d.value.displayName}}</option>
                     </select>
                 </div>
 
@@ -68,13 +70,13 @@
                     <select id="tile-select" class="select-list col-lg-10 col-md-12"
                         (change)="selectedTileChanged($event)">
                         <option value="" disabled selected>Choose tile</option>
-                        <option *ngFor="let t of tiles" [value]="t.id">{{t.title}}</option>
+                        <option *ngFor="let t of tiles | keyvalue" [value]="t.key">{{t.value.title}}</option>
                     </select>
                 </div>
             </div>
         </div>
         <div class="button-container col-lg-1 col-md-12">
-            <button class="embed-button" disabled>Embed</button>
+            <button class="embed-button" (click)="doEmbedPowerBiItem()" [disabled]="!embedEnabled">Embed</button>
         </div>
     </div>
 
