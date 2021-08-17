@@ -18,6 +18,7 @@ import { PowerBIEmbedModule } from 'powerbi-client-angular';
 import { POWER_BI_API } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 
+
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
 @NgModule({
