@@ -38,7 +38,7 @@
                     <label for="workspace-select">Choose workspace</label><br>
                     <select id="workspace-select" class="select-list col-lg-10 col-md-12"
                         (change)="selectedWorkspaceChanged($event)">
-                        <option id="workspace-default-option" value="" disabled selected>Choose workspace</option>
+                        <option value="" disabled [selected]="selectedWorkspace.id===''">Choose workspace</option>
                         <option *ngFor="let g of workspaces | keyvalue" [value]="g.key">{{g.value.name}}</option>
                     </select>
                 </div>
@@ -48,7 +48,7 @@
                     <label for="report-select">Choose report</label><br>
                     <select id="report-select" class="select-list col-lg-10 col-md-12"
                     (change)="selectedReportChanged($event)">
-                        <option value="" disabled selected>Choose report</option>
+                        <option value="" disabled [selected]="selectedReport.id===''">Choose report</option>
                         <option *ngFor="let r of reports | keyvalue" [value]="r.key">{{r.value.name}}</option>
                     </select>
                 </div>
@@ -59,7 +59,7 @@
                     <label for="dashboard-select">Choose dashboard</label><br>
                     <select id="dashboard-select" class="select-list col-lg-10 col-md-12"
                         (change)="selectedDashboardChanged($event)">
-                        <option value="" disabled selected>Choose dashboard</option>
+                        <option value="" disabled [selected]="selectedDashboard.id===''">Choose dashboard</option>
                         <option *ngFor="let d of dashboards | keyvalue" [value]="d.key">{{d.value.displayName}}</option>
                     </select>
                 </div>
@@ -69,7 +69,7 @@
                     <label for="tile-select">Choose tile</label><br>
                     <select id="tile-select" class="select-list col-lg-10 col-md-12"
                         (change)="selectedTileChanged($event)">
-                        <option value="" disabled selected>Choose tile</option>
+                        <option value="" disabled [selected]="selectedTile.id===''">Choose tile</option>
                         <option *ngFor="let t of tiles | keyvalue" [value]="t.key">{{t.value.title}}</option>
                     </select>
                 </div>

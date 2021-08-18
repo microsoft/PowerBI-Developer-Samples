@@ -213,7 +213,7 @@ export class HomeComponent implements OnInit {
    */
   selectedDashboardChanged(event: any) {
     this.selectedDashboard = this.dashboards[event.target.value];
-    console.log("Changed the dashboard into: " + this.selectedDashboard.name);
+    console.log("Changed the dashboard into: " + this.selectedDashboard.displayName);
     this.loadTiles();
     this.updateEmbedEnable();
   }
@@ -264,7 +264,6 @@ export class HomeComponent implements OnInit {
   updateEmbedEnable() {
     switch(this.embedType) {
       case EmbedType.DASHBOARD: {
-        console.log(this.selectedWorkspace, this.selectedDashboard)
         this.embedEnabled = this.selectedWorkspace.id.length > 0 && this.selectedDashboard.id.length > 0
         break;
       }
