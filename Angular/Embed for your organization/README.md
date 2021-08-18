@@ -9,29 +9,30 @@ can then be used to visualize Power BI dashboards, reports or tiles.
 
 ## Requirements
 1. [Node.js](https://nodejs.dev/learn/how-to-install-nodejs)
-2. ANGULAR CLI should be installed through ``npm install @angular/cli``.
-3. Deployment of all Node.js packages refereenced in package.json: ``npm install``
-
+2. ANGULAR CLI should be installed through ``npm install -g @angular/cli``.
+3. Deployment of all Node.js packages referenced in package.json: from the folder containing this README.md file, execute ``npm install``.
 
 ## Register your application
 Follow the instructions to register a [single-page application](https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-spa-app-registration) in the Azure portal:
-- On the app Overview page of your registration, note the **Application (client) ID** value for later use. The ID needs to be configured in this application to allow authentication.
-- As application type, select 'SPA'.
-- As **Redirect URI** value enter the URL when you will be hosting this application (e.g. https://powerbiapp.mycompany.com). For local development using ``ng serve``, the value should be http://localhost:4200/.
+- Enter a name.
+- Select the "supported account type".
+- Under "redirect URI" select "Single-page application (SPA)". As **Redirect URI** value enter the URL when you will be hosting this application:
+  - For local development using ``ng serve``, the value should be http://localhost:4200/.
+  - When hosting on e.g. AZURE App Services, enter the URL of the application (https://<APP-NAME>.azurewebsites.net or a custom domain name assigned to the app).
+- After registering the application, note the **Application (Client) ID**  and **Directory (Tenant) ID** values on the "Overview" blade for later use.
+- Select the "API Permissions" blade and add permission for the "Power BI Service" (Delegated permissions). Enable all required permissions.
 
-Note the AZURE AD tenant ID, since it needs to be configured in this application.
 
 ## Authentication configuration
-The configuration in the file **app.module.ts** must be updated with the ID's obatained the previous step as well as the redirect URL:
+The configuration in the file **app.module.ts** must be updated with the ID's obtained from the previous step:
 ```typescript
 MsalModule.forRoot(new PublicClientApplication({
       auth: {
         clientId: '<APPLICATION ID>',
-        authority: 'https://login.microsoftonline.com/<AZURE AD TENANT ID>',
-        redirectUri: '<APPLICATION REDIRECT URL>',
+        authority: 'https://login.microsoftonline.com/<AZURE AD TENANT ID>'
       },
 ```
 
 
 ## Build the application
-Execute ``ng build --prod`` to build the application.  The build artifacts will be stored in the `dist/` directory. This folder can be deployed on the hosting infrastructure.
+Execute ``ng build --prod`` to build the application.  The build artifacts will be stored in the `dist/UserOwnsData` directory. This folder can be deployed on the hosting infrastructure.
