@@ -139,12 +139,12 @@ export class HomeComponent implements OnInit {
    * This function is called when the component is initialized to load all workspaces.
    */
   loadWorkspaces() {
+    this.resetWorkspaces();
+    this.resetDashboards();
+    this.resetReports();
+    this.resetTiles();
     this.http.get<any>(`${POWER_BI_API}/groups`)
       .subscribe(groups => {
-        this.resetWorkspaces();
-        this.resetDashboards();
-        this.resetReports();
-        this.resetTiles();
         for (let gr of groups.value) {
           this.workspaces[gr.id] = gr;
         }
@@ -155,10 +155,10 @@ export class HomeComponent implements OnInit {
    * This function loads all dashboards for the currently selected workspace.
    */
   loadDashboards() {
+    this.resetDashboards();
+    this.resetTiles();
     this.http.get<any>(`${POWER_BI_API}/groups/${this.selectedWorkspace.id}/dashboards`)
       .subscribe(dashboards => {
-        this.resetDashboards();
-        this.resetTiles();
         for (let db of dashboards.value) {
           this.dashboards[db.id] = db;
         }
@@ -169,9 +169,9 @@ export class HomeComponent implements OnInit {
    * This function loads all reports.
    */
   loadReports() {
+    this.resetReports();
     this.http.get<any>(`${POWER_BI_API}/groups/${this.selectedWorkspace.id}/reports`)
       .subscribe(reports => {
-        this.resetReports();
         for (let rp of reports.value) {
           this.reports[rp.id] = rp;
         }
@@ -182,9 +182,9 @@ export class HomeComponent implements OnInit {
    * This function loads all tiles for the currently selected dashboard.
    */
   loadTiles() {
+    this.resetTiles();
     this.http.get<any>(`${POWER_BI_API}/groups/${this.selectedWorkspace.id}/dashboards/${this.selectedDashboard.id}/tiles`)
       .subscribe(tiles => {
-        this.resetTiles();
         for (let tl of tiles.value) {
           this.tiles[tl.id] = tl;
         }
@@ -246,7 +246,6 @@ export class HomeComponent implements OnInit {
    embedTypeChanged(embed_type: string) {
     try {
       this.embedType = embed_type as EmbedType;
-      this.loadWorkspaces();
       this.updateEmbedEnable();
     } catch {
       return;
@@ -265,6 +264,7 @@ export class HomeComponent implements OnInit {
   updateEmbedEnable() {
     switch(this.embedType) {
       case EmbedType.DASHBOARD: {
+        console.log(this.selectedWorkspace, this.selectedDashboard)
         this.embedEnabled = this.selectedWorkspace.id.length > 0 && this.selectedDashboard.id.length > 0
         break;
       }
