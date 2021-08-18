@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { UserprofileService } from '../services/user-profile/userprofile.service';
 import { HttpClient } from '@angular/common/http';
-import { models, IReportEmbedConfiguration, ITileEmbedConfiguration } from 'powerbi-client'
+import { models, IReportEmbedConfiguration, IEmbedConfiguration, ITileEmbedConfiguration, service, factories } from 'powerbi-client'
 
 /**
  * This is the base URL for the POWER BI API. All API calls use this as prefix.
@@ -61,6 +61,11 @@ class TileType {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
+  @ViewChild('container') container!: ElementRef;
+
+  powerbi!: service.Service;
+
   selectedWorkspace: WorkspaceType = new WorkspaceType();
   selectedDashboard: DashboardType = new DashboardType();
   selectedReport: ReportType = new ReportType();
@@ -102,6 +107,8 @@ export class HomeComponent implements OnInit {
    * query the workspaces from Power BI.
    */
   ngOnInit(): void {
+    // Enables the PowerBI client (allowing the embedding of reports)
+    this.powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
     // Trigger the user-profile service to load the profile information using MS Graph. 
     this.profile.loadProfile();
     // Load the workspaces for the user that is currently logged on.
@@ -147,7 +154,7 @@ export class HomeComponent implements OnInit {
    * This function loads all dashboards for the currently selected workspace.
    */
   loadDashboards() {
-    this.http.get<any>(`POWER_BI_APIgroups/${this.selectedWorkspace.id}/dashboards`)
+    this.http.get<any>(`${POWER_BI_API}groups/${this.selectedWorkspace.id}/dashboards`)
       .subscribe(dashboards => {
         this.resetDashboards();
         this.resetTiles();
@@ -161,11 +168,11 @@ export class HomeComponent implements OnInit {
    * This function loads all reports.
    */
   loadReports() {
-    this.http.get<any>(`${POWER_BI_API}reports`)
+    this.http.get<any>(`${POWER_BI_API}groups/${this.selectedWorkspace.id}/reports`)
       .subscribe(reports => {
         this.resetReports();
         for (let rp of reports.value) {
-          this.tiles[rp.id] = rp;
+          this.reports[rp.id] = rp;
         }
       });
   }
@@ -265,6 +272,47 @@ export class HomeComponent implements OnInit {
    * displays it.
    */
   doEmbedPowerBiItem(){
+    this.authService.acquireTokenSilent({ scopes: ['https://analysis.windows.net/powerbi/api/.default'] }).subscribe(result => {
+      let config: IEmbedConfiguration | undefined;
+      switch(this.embedType) {
+        case EmbedType.DASHBOARD: {
+          config = {
+            type: 'dashboard',
+            accessToken: result.accessToken,
+            embedUrl: this.selectedDashboard.embedUrl,
+            id: this.selectedDashboard.id,
+            tokenType: models.TokenType.Aad,
+          }
+          break;
+        }
+        case EmbedType.REPORT: {
+          config = {
+            type: 'report',
+            accessToken: result.accessToken,
+            embedUrl: this.selectedReport.embedUrl,
+            id: this.selectedReport.id,
+            tokenType: models.TokenType.Aad,
+          }
+          break;
+        }
+        case EmbedType.TILE: {
+          config = {
+            type: 'tile',
+            accessToken: result.accessToken,
+            embedUrl: this.selectedTile.embedUrl,
+            id: this.selectedTile.id,
+            dashboardId: this.selectedDashboard.id,
+            tokenType: models.TokenType.Aad,
+          }
+          break;
+        }
+        default: {
+          return
+        }
+      }
 
+      this.powerbi.reset(this.container.nativeElement);
+      this.powerbi.embed(this.container.nativeElement, config)
+    });
   }
 }
