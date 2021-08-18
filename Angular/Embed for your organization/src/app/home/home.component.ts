@@ -7,7 +7,7 @@ import { models, IReportEmbedConfiguration, IEmbedConfiguration, ITileEmbedConfi
 /**
  * This is the base URL for the POWER BI API. All API calls use this as prefix.
  */
-export const POWER_BI_API = "https://api.powerbi.com/v1.0/myorg/";
+export const POWER_BI_API = "https://api.powerbi.com/v1.0/myorg";
 
 
 /**
@@ -139,7 +139,7 @@ export class HomeComponent implements OnInit {
    * This function is called when the component is initialized to load all workspaces.
    */
   loadWorkspaces() {
-    this.http.get<any>(`${POWER_BI_API}groups`)
+    this.http.get<any>(`${POWER_BI_API}/groups`)
       .subscribe(groups => {
         this.resetWorkspaces();
         this.resetDashboards();
@@ -155,7 +155,7 @@ export class HomeComponent implements OnInit {
    * This function loads all dashboards for the currently selected workspace.
    */
   loadDashboards() {
-    this.http.get<any>(`${POWER_BI_API}groups/${this.selectedWorkspace.id}/dashboards`)
+    this.http.get<any>(`${POWER_BI_API}/groups/${this.selectedWorkspace.id}/dashboards`)
       .subscribe(dashboards => {
         this.resetDashboards();
         this.resetTiles();
@@ -169,7 +169,7 @@ export class HomeComponent implements OnInit {
    * This function loads all reports.
    */
   loadReports() {
-    this.http.get<any>(`${POWER_BI_API}groups/${this.selectedWorkspace.id}/reports`)
+    this.http.get<any>(`${POWER_BI_API}/groups/${this.selectedWorkspace.id}/reports`)
       .subscribe(reports => {
         this.resetReports();
         for (let rp of reports.value) {
@@ -182,7 +182,7 @@ export class HomeComponent implements OnInit {
    * This function loads all tiles for the currently selected dashboard.
    */
   loadTiles() {
-    this.http.get<any>(`${POWER_BI_API}groups/${this.selectedWorkspace.id}/dashboards/${this.selectedDashboard.id}/tiles`)
+    this.http.get<any>(`${POWER_BI_API}/groups/${this.selectedWorkspace.id}/dashboards/${this.selectedDashboard.id}/tiles`)
       .subscribe(tiles => {
         this.resetTiles();
         for (let tl of tiles.value) {
