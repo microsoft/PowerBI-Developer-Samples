@@ -10,7 +10,6 @@ import { MatListModule } from '@angular/material/list';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { ProfileComponent } from './profile/profile.component';
 
 import { MsalModule, MsalRedirectComponent, MsalGuard, MsalInterceptor } from '@azure/msal-angular'; // Import MsalInterceptor
 import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
@@ -26,7 +25,6 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
   declarations: [
     AppComponent,
     HomeComponent,
-    ProfileComponent,
     LoginComponent
   ],
   imports: [
@@ -42,7 +40,7 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
       auth: {
         clientId: 'ac2a0303-83c2-4698-a80f-270cd72c276c',
         authority: 'https://login.microsoftonline.com/7df1a654-9872-4775-b3e2-973c27aee9be',
-        redirectUri: 'http://localhost:4200',
+        //redirectUri: 'http://localhost:4200',
       },
       cache: {
         cacheLocation: 'localStorage',
