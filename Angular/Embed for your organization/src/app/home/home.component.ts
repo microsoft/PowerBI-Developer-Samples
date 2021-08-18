@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
   selectedTile: TileType = new TileType();
 
   embedType: EmbedType = EmbedType.REPORT;
-  embedEnabled: boolean = true;
+  embedEnabled: boolean = false;
 
   workspaces: { [id: string]: WorkspaceType } = {};
   dashboards: { [id: string]: DashboardType } = {};
@@ -116,8 +116,8 @@ export class HomeComponent implements OnInit {
   }
 
   resetWorkspaces() {
-    this.selectedWorkspace = new WorkspaceType();
     this.workspaces = {};
+    this.selectedWorkspace = new WorkspaceType();
   }
 
   resetDashboards() {
@@ -143,6 +143,7 @@ export class HomeComponent implements OnInit {
       .subscribe(groups => {
         this.resetWorkspaces();
         this.resetDashboards();
+        this.resetReports();
         this.resetTiles();
         for (let gr of groups.value) {
           this.workspaces[gr.id] = gr;
@@ -201,6 +202,7 @@ export class HomeComponent implements OnInit {
     console.log("Changed the workspace into: " + this.selectedWorkspace.name);
     this.loadDashboards();
     this.loadReports();
+    this.updateEmbedEnable();
   }
 
   /**
@@ -213,6 +215,7 @@ export class HomeComponent implements OnInit {
     this.selectedDashboard = this.dashboards[event.target.value];
     console.log("Changed the dashboard into: " + this.selectedDashboard.name);
     this.loadTiles();
+    this.updateEmbedEnable();
   }
 
   /**
@@ -222,6 +225,7 @@ export class HomeComponent implements OnInit {
    */
    selectedReportChanged(event: any) {
     this.selectedReport = this.reports[event.target.value];
+    this.updateEmbedEnable();
   }
 
   /**
@@ -231,6 +235,7 @@ export class HomeComponent implements OnInit {
    */
    selectedTileChanged(event: any) {
     this.selectedTile = this.tiles[event.target.value];
+    this.updateEmbedEnable();
   }
 
   /**
@@ -241,6 +246,8 @@ export class HomeComponent implements OnInit {
    embedTypeChanged(embed_type: string) {
     try {
       this.embedType = embed_type as EmbedType;
+      this.loadWorkspaces();
+      this.updateEmbedEnable();
     } catch {
       return;
     }
@@ -258,9 +265,17 @@ export class HomeComponent implements OnInit {
   updateEmbedEnable() {
     switch(this.embedType) {
       case EmbedType.DASHBOARD: {
-          this.embedEnabled = (this.selectedDashboard.id == '')
-          break;
-          }
+        this.embedEnabled = this.selectedWorkspace.id.length > 0 && this.selectedDashboard.id.length > 0
+        break;
+      }
+      case EmbedType.REPORT: {
+        this.embedEnabled = this.selectedWorkspace.id.length > 0 && this.selectedReport.id.length > 0
+        break;
+      }
+      case EmbedType.TILE: {
+        this.embedEnabled = this.selectedWorkspace.id.length > 0 && this.selectedDashboard.id.length > 0 && this.selectedTile.id.length > 0
+        break;
+      }
       default: {
         this.embedEnabled = false;
       }
@@ -307,7 +322,7 @@ export class HomeComponent implements OnInit {
           break;
         }
         default: {
-          return
+          console.log('Nothing to render')
         }
       }
 
