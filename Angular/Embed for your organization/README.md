@@ -36,3 +36,11 @@ MsalModule.forRoot(new PublicClientApplication({
 
 ## Build the application
 Execute ``ng build --prod`` to build the application.  The build artifacts will be stored in the `dist/UserOwnsData` directory. This folder can be deployed on the hosting infrastructure.
+
+
+## Application source structure
+The application leverages the ANGULAR framework. The application as such is implemented in the home component (selecting workspaces, reports, ... as well as visualizing these). Securing the application and authentication with AZURE AD is handled through the Microsoft MSAL libary. Microsoft provides an ANGULAR library to integrate the MSAL functionality into the framework. The ``app.module.ts`` file configures the ``MsalGuard`` to protect access to the home component. ``MsalInterceptor`` is used to automatically insert an access-token into API calls made using ANGULAR's ``HttpClient``. If no token is available, an authentication popup will be displayed. Tokens get renewed automatically by the MSAL library. 
+
+When embedding a report, the access-token needs to be included in the request to the Power BI Embedded endpoint. The code uses the MSAL ``AcquireTokenSilent`` method to obtain the token (with scope: https://analysis.windows.net/powerbi/api/.default). This access token is then added into the configuration structure passed to the ``powerbi.embed`` function to load and render the report.
+
+The user-profile is queried from AZURE AD by the "user-profile service" over the MS Graph API.
