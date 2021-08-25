@@ -1,6 +1,7 @@
 ---
 topic: sample
 languages:
+  - angular
   - csharp
   - js
   - python
@@ -18,7 +19,7 @@ products:
 
 [![Build Status](https://powerbi.visualstudio.com/Embedded/_apis/build/status/Devolper-Samples-Azure%20Web%20App%20for%20ASP.NET-CI?branchName=master)](https://powerbi.visualstudio.com/Embedded/_build/latest?definitionId=2824&branchName=master)
 
-This repository contains Power BI Embedded solutions in 5 different frameworks to suit different scenarios as per requirements.
+This repository contains Power BI Embedded solutions in 6 different frameworks to suit different scenarios as per requirements.
 In addition, it has samples for calling the Power BI REST APIs using PowerShell.
 
 
@@ -30,6 +31,7 @@ Available Power BI Embedded solutions:
     * Java
     * Node JS
   * Embed for your organization - aka User Owns Data
+    * ANGULAR
     * .NET Framework
     * .NET Core
     * React TS
