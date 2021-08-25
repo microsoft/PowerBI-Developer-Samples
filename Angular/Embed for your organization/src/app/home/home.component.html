@@ -1,0 +1,104 @@
+<div class="outer-div">
+    <header class="row">
+        <div class="heading col-lg-6 col-md-6">Power BI Embedded Sample</div>
+        <div class="user-info col-lg-6 col-md-6">Welcome <strong><a
+                    (click)="logout()">{{profile?.profile?.givenName}}</a></strong>
+        </div>
+    </header>
+    <div class="row config-container">
+        <div id="text-container" class="row col-lg-11 col-md-12">
+
+            <!-- Show radio buttons for Embed types -->
+            <div class="col-lg-4 col-md-12">
+                <label>Choose embed type</label><br>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="report" [checked]="embedType == 'report'"
+                        (change)="embedTypeChanged('report')">
+                    <label class="custom-control-label" for="report">Report</label>
+                </div>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="dashboard" [checked]="embedType == 'dashboard'"
+                        (change)="embedTypeChanged('dashboard')">
+                    <label class="custom-control-label" for="dashboard">Dashboard</label>
+                </div>
+
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="tile" [checked]="embedType == 'tile'"
+                        (change)="embedTypeChanged('tile')">
+                    <label class="custom-control-label" for="tile">Tile</label>
+                </div>
+            </div>
+
+            <div class="row col-lg-8 col-md-12">
+
+                <!-- Show select list for workspace(s) -->
+                <div class="row col-lg-4 col-md-12">
+                    <label for="workspace-select">Choose workspace</label><br>
+                    <select id="workspace-select" class="select-list col-lg-10 col-md-12"
+                        (change)="selectedWorkspaceChanged($event)">
+                        <option value="" disabled [selected]="selectedWorkspace.id===''">Choose workspace</option>
+                        <option *ngFor="let g of workspaces | keyvalue" [value]="g.key">{{g.value.name}}</option>
+                    </select>
+                </div>
+
+                <!-- Show select list for report(s) -->
+                <div id="report-div" class="row col-lg-4 col-md-12" [hidden]="embedType !== 'report'">
+                    <label for="report-select">Choose report</label><br>
+                    <select id="report-select" class="select-list col-lg-10 col-md-12"
+                    (change)="selectedReportChanged($event)">
+                        <option value="" disabled [selected]="selectedReport.id===''">Choose report</option>
+                        <option *ngFor="let r of reports | keyvalue" [value]="r.key">{{r.value.name}}</option>
+                    </select>
+                </div>
+
+                <!-- Show select list for dashboard(s) -->
+                <div id="dashboard-div" class="row col-lg-4 col-md-12"
+                    [hidden]="(embedType !== 'dashboard') && (embedType !== 'tile')">
+                    <label for="dashboard-select">Choose dashboard</label><br>
+                    <select id="dashboard-select" class="select-list col-lg-10 col-md-12"
+                        (change)="selectedDashboardChanged($event)">
+                        <option value="" disabled [selected]="selectedDashboard.id===''">Choose dashboard</option>
+                        <option *ngFor="let d of dashboards | keyvalue" [value]="d.key">{{d.value.displayName}}</option>
+                    </select>
+                </div>
+
+                <!-- Show select list for tile(s) -->
+                <div id="tile-div" class="row col-lg-4 col-md-12" [hidden]="embedType !== 'tile'">
+                    <label for="tile-select">Choose tile</label><br>
+                    <select id="tile-select" class="select-list col-lg-10 col-md-12"
+                        (change)="selectedTileChanged($event)">
+                        <option value="" disabled [selected]="selectedTile.id===''">Choose tile</option>
+                        <option *ngFor="let t of tiles | keyvalue" [value]="t.key">{{t.value.title}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="button-container col-lg-1 col-md-12">
+            <button class="embed-button" (click)="doEmbedPowerBiItem()" [disabled]="!embedEnabled">Embed</button>
+        </div>
+    </div>
+
+    <!-- Show errors to the user -->
+    <div id="error-container">
+    </div>
+
+    <!-- Placeholder div when Power BI report is not embedded -->
+    <div class="report-wrapper col-lg-12 col-md-12 mt-12" hidden>
+        <img src="/assets/img/spinner.svg" id="report-spinner" class="spinner col-lg-12 col-md-12" alt="loader">
+        <div id="report-container" class="report-container col-lg-12 col-md-12 mt-12"></div>
+        <div class="report-display-text col-lg-12 col-md-12">Select workspace and report</div>
+    </div>
+
+    <!-- Placeholder div when Power BI dashboard is not embedded -->
+    <div class="dashboard-wrapper col-lg-12 col-md-12 mt-12" hidden>
+        <img src="/assets/img/spinner.svg" id="dashboard-spinner" class="spinner col-lg-12 col-md-12" alt="loader">
+        <div id="dashboard-container" class="dashboard-container col-lg-12 col-md-12 mt-12"></div>
+        <div class="dashboard-display-text col-lg-12 col-md-12">Select workspace and dashboard</div>
+    </div>
+
+    <!-- Placeholder div when Power BI tile is not embedded -->
+    <div #container class="col-lg-12 col-md-12 mt-12" style="height: 600px;">
+
+</div>
