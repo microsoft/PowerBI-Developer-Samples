@@ -18,7 +18,7 @@ class AadService:
             if app.config['AUTHENTICATION_MODE'].lower() == 'masteruser':
 
                 # Create a public client to authorize the app with the AAD app
-                clientapp = msal.PublicClientApplication(app.config['CLIENT_ID'], authority=app.config['AUTHORITY'])
+                clientapp = msal.PublicClientApplication(app.config['CLIENT_ID'], authority=app.config['AUTHORITY_URL'])
                 accounts = clientapp.get_accounts(username=app.config['POWER_BI_USER'])
 
                 if accounts:
@@ -31,7 +31,7 @@ class AadService:
 
             # Service Principal auth is the recommended by Microsoft to achieve App Owns Data Power BI embedding
             elif app.config['AUTHENTICATION_MODE'].lower() == 'serviceprincipal':
-                authority = app.config['AUTHORITY'].replace('organizations', app.config['TENANT_ID'])
+                authority = app.config['AUTHORITY_URL'].replace('organizations', app.config['TENANT_ID'])
                 clientapp = msal.ConfidentialClientApplication(app.config['CLIENT_ID'], client_credential=app.config['CLIENT_SECRET'], authority=authority)
 
                 # Make a client call if Access token is not available in cache
