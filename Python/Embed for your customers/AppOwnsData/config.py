@@ -25,7 +25,7 @@ class BaseConfig(object):
     SCOPE = ['https://analysis.windows.net/powerbi/api/.default']
     
     # URL used for initiating authorization request
-    AUTHORITY = 'https://login.microsoftonline.com/organizations'
+    AUTHORITY_URL = 'https://login.microsoftonline.com/organizations'
     
     # Master user email address. Required only for MasterUser authentication mode.
     POWER_BI_USER = ''
