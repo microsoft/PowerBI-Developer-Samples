@@ -6,6 +6,7 @@ from utils import Utils
 from flask import Flask, render_template, send_from_directory
 import json
 import os
+from models.identity import Identity
 
 # Initialize the Flask app
 app = Flask(__name__)
@@ -27,8 +28,15 @@ def get_embed_info():
     if config_result is not None:
         return json.dumps({'errorMsg': config_result}), 500
 
+    # For Row-level security [https://docs.microsoft.com/en-us/power-bi/developer/embedded/embedded-row-level-security]
+    # identity = Identity()
+    # identity.username = 'Andrew Ma'
+    # identity.roles = ['Manager']
+    # identities = [identity]
+    identities = None
+
     try:
-        embed_info = PbiEmbedService().get_embed_params_for_single_report(app.config['WORKSPACE_ID'], app.config['REPORT_ID'])
+        embed_info = PbiEmbedService().get_embed_params_for_single_report(app.config['WORKSPACE_ID'], app.config['REPORT_ID'], identities=identities)
         return embed_info
     except Exception as ex:
         return json.dumps({'errorMsg': str(ex)}), 500
