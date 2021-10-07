@@ -3,6 +3,32 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
+// Try to refresh user permissions after login
+UserOwnsData.tryRefreshUserPermissions = function () {
+    // API Endpoint to refresh user permissions
+    const permissionsRefreshEndpoint = `${UserOwnsData.powerBiApi}/RefreshUserPermissions`;
+
+    $.ajax({
+        type: "POST",
+        url: permissionsRefreshEndpoint,
+        headers: {
+            "Authorization": `Bearer ${loggedInUser.accessToken}`
+        },
+        contentType: "application/json; charset=utf-8",
+        success: function () {
+            console.log('Permissions refreshed successfully.');
+        },
+        error: function (err) {
+            // Too many requests in one hour will cause the API to fail
+            if (err.status === 429) {
+                console.error("Permissions refresh will be available in up to an hour.");
+            } else {
+                console.error(err.responseText);
+            }
+        }
+    });
+}
+
 // Reset report list
 UserOwnsData.resetReportList = function () {
     // Clear the dropdown list and add a default value
@@ -87,11 +113,12 @@ function populateSelectList(componentType, componentListEndpoint, componentConta
         contentType: "application/json; charset=utf-8",
         success: function(data) {
             // Sort dropdown list
-            let sortedList = data.value.sort((a, b) => (a[componentDisplayName].toLowerCase() > b[componentDisplayName].toLowerCase()) ? 1 : -1);
+            // Use ID if title property is undefined
+            let sortedList = data.value.sort((a, b) => ((a[componentDisplayName] || a.id).toLowerCase() > (b[componentDisplayName] || b.id).toLowerCase()) ? 1 : -1);
 
             // Populate select list
             for (let i = 0; i < sortedList.length; i++) {
-                // Show id in option if title property is empty
+                // Show ID in option if title property is empty
                 componentContainer.append(
                     $("<option />")
                         .text(sortedList[i][componentDisplayName] || sortedList[i].id)

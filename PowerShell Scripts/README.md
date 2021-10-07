@@ -21,8 +21,10 @@ This repo contains samples for calling the Power BI REST APIs using PowerShell. 
 | [copyWorkspace.ps1](copyWorkspace.ps1) | Duplicate a workpsace in the Power BI service   |
 | [Create-Workspace-and-Add-Workspace-Users.ps1](Create-Workspace-and-Add-Workspace-Users.ps1) | Create a new workspace and add user as contributor   |
 | [Create-Workspace.ps1](Create-Workspace.ps1) | Create a new workspace  |
-| [DeploymentPipelines-DeployAll.ps1](DeploymentPipelines-DeployAll.ps1) | Starts a Deploymnet of all contnet between two stages in the pipeline |
-| [DeploymentPipelines-SelectiveDeploy.ps1](DeploymentPipelines-SelectiveDeploy.ps1) | Starts a Deploymnet of specific contnet between two stages in the pipeline |
+| [DeploymentPipelines-AddUserToPipeline.ps1](DeploymentPipelines-AddUserToPipeline.ps1) | Add a user as an admin to a deployment pipeline |
+| [DeploymentPipelines-DeployAll.ps1](DeploymentPipelines-DeployAll.ps1) | Starts a deployment of all contnet between two stages in the pipeline |
+| [DeploymentPipelines-E2ESampleFromPipelineCreationToDeployment.ps1](DeploymentPipelines-E2ESampleFromPipelineCreationToDeployment.ps1) | End to end sample - create a pipeline, assign a workspace to Production and backward deploy to Test and Development |
+| [DeploymentPipelines-SelectiveDeploy.ps1](DeploymentPipelines-SelectiveDeploy.ps1) | Starts a deployment of specific contnet between two stages in the pipeline |
 | [DeploymentPipelines-WaitForDeployment.ps1](DeploymentPipelines-WaitForDeployment.ps1) | Waits for the deployment operation to be completed |
 | [Import-PBIX-File.ps1](Import-PBIX-File.ps1) | Import PBIX into a target workspace  |
 | [Login-User-Interactively.ps1](Login-User-Interactively.ps1) | Login user interactively as script runs |
