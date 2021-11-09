@@ -32,7 +32,7 @@ Available Power BI Embedded solutions:
   * Embed for your organization - aka User Owns Data
     * .NET Framework
     * .NET Core
-    * React TS
+    * React JS
 
 
 > **Note:**
