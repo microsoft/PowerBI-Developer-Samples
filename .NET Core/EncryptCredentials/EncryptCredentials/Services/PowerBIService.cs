@@ -16,7 +16,7 @@ namespace EncryptCredentials.Services
 	public class PowerBIService
 	{
 		private readonly AadService aadService;
-		private readonly string urlPowerBiServiceApiRoot = "https://api.powerbi.com";
+		private readonly string powerBiApiUrl = "https://api.powerbi.com";
 
 		public PowerBIService(AadService aadService)
 		{
@@ -30,7 +30,7 @@ namespace EncryptCredentials.Services
 		public PowerBIClient GetPowerBIClient()
 		{
 			var tokenCredentials = new TokenCredentials(aadService.GetAccessToken(), "Bearer");
-			return new PowerBIClient(new Uri(urlPowerBiServiceApiRoot), tokenCredentials);
+			return new PowerBIClient(new Uri(powerBiApiUrl), tokenCredentials);
 		}
 
 		/// <summary>

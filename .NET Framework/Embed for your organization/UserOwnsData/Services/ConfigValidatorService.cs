@@ -33,17 +33,17 @@ namespace UserOwnsData.Services
 			{
 				message = "Redirect Uri is not set in Web.config file";
 			}
-			else if (string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["authorityUri"]))
+			else if (string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["authorityUrl"]))
 			{
-				message = "Authority Uri is not set in Web.config file";
+				message = "Authority Url is not set in Web.config file";
 			}
 			else if (string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["powerBiApiUrl"]))
 			{
 				message = "Power BI Api Url is not set in Web.config file";
 			}
-			else if (string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["powerBiPermissionApi"]))
+			else if (string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["scopeBase"]))
 			{
-				message = "Power BI Permission Api is not set in Web.config file";
+				message = "Scope base is not set in Web.config file";
 			}
 
 			return message;

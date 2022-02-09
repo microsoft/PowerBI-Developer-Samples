@@ -13,7 +13,7 @@ const getAccessToken = async function () {
     // Create a config variable that store credentials from config.json
     let config = require(__dirname + "/../config/config.json");
 
-    let authorityUrl = config.authorityUri;
+    let authorityUrl = config.authorityUrl;
 
     // Check for the MasterUser Authentication
     if (config.authenticationMode.toLowerCase() === "masteruser") {
@@ -21,7 +21,7 @@ const getAccessToken = async function () {
 
         return new Promise(
             (resolve, reject) => {
-                context.acquireTokenWithUsernamePassword(config.scope, config.pbiUsername, config.pbiPassword, config.clientId, function (err, tokenResponse) {
+                context.acquireTokenWithUsernamePassword(config.scopeBase, config.pbiUsername, config.pbiPassword, config.clientId, function (err, tokenResponse) {
 
                     // Function returns error object in tokenResponse
                     // Invalid Username will return empty tokenResponse, thus err is used
@@ -40,7 +40,7 @@ const getAccessToken = async function () {
 
         return new Promise(
             (resolve, reject) => {
-                context.acquireTokenWithClientCredentials(config.scope, config.clientId, config.clientSecret, function (err, tokenResponse) {
+                context.acquireTokenWithClientCredentials(config.scopeBase, config.clientId, config.clientSecret, function (err, tokenResponse) {
 
                     // Function returns error object in tokenResponse
                     // Invalid Username will return empty tokenResponse, thus err is used

@@ -134,7 +134,7 @@ class App extends React.Component<AppProps, AppState> {
         };
 
         const loginRequest = {
-            scopes: config.scopes
+            scopes: config.scopeBase
         };
 
         const msalInstance: UserAgentApplication = new UserAgentApplication(msalConfig);

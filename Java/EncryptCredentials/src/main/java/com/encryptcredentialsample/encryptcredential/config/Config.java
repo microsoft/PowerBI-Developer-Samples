@@ -35,7 +35,7 @@ public abstract class Config {
 
 	// DO NOT CHANGE
 	public static final String authorityUrl = "https://login.microsoftonline.com/";
-	public static final String scopeUrl = "https://analysis.windows.net/powerbi/api/.default";
+	public static final String scopeBase = "https://analysis.windows.net/powerbi/api/.default";
 
 	private Config() {
 		// Private Constructor will prevent the instantiation of this class directly

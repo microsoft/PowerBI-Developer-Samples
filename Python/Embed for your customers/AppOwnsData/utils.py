@@ -31,8 +31,8 @@ class Utils:
         elif app.config['AUTHENTICATION_MODE'].lower() == 'serviceprincipal':
             if app.config['CLIENT_SECRET'] == '':
                 return 'Client secret is not provided in config.py file'
-        elif app.config['SCOPE'] == '':
-            return 'Scope is not provided in the config.py file'
+        elif app.config['SCOPE_BASE'] == '':
+            return 'Scope base is not provided in the config.py file'
         elif app.config['AUTHORITY_URL'] == '':
             return 'Authority URL is not provided in the config.py file'
         

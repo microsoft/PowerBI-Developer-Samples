@@ -34,7 +34,7 @@ namespace UserOwnsData.Controllers
         }
 
         // Redirects to login page to request increment consent
-        [AuthorizeForScopes(Scopes = new string[] { PowerBiScopes.ReadDashboard, PowerBiScopes.ReadReport, PowerBiScopes.ReadWorkspace })]
+        [AuthorizeForScopes(ScopeBase = new string[] { PowerBiScopes.ReadDashboard, PowerBiScopes.ReadReport, PowerBiScopes.ReadWorkspace })]
         public async Task<IActionResult> Embed()
         {
             // Generate token for the signed in user

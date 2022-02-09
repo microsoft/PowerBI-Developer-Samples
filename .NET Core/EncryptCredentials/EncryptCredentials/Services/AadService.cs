@@ -31,12 +31,12 @@ namespace EncryptCredentials.Services
 			if (azureAd.Value.AuthenticationMode.Equals("masteruser", StringComparison.InvariantCultureIgnoreCase))
 			{
 				// Create a public client to authorize the app with the AAD app
-				IPublicClientApplication clientApp = PublicClientApplicationBuilder.Create(azureAd.Value.ClientId).WithAuthority(azureAd.Value.AuthorityUri).Build();
+				IPublicClientApplication clientApp = PublicClientApplicationBuilder.Create(azureAd.Value.ClientId).WithAuthority(azureAd.Value.AuthorityUrl).Build();
 				var userAccounts = clientApp.GetAccountsAsync().Result;
 				try
 				{
 					// Retrieve Access token from cache if available
-					authenticationResult = clientApp.AcquireTokenSilent(azureAd.Value.Scope, userAccounts.FirstOrDefault()).ExecuteAsync().Result;
+					authenticationResult = clientApp.AcquireTokenSilent(azureAd.Value.ScopeBase, userAccounts.FirstOrDefault()).ExecuteAsync().Result;
 				}
 				catch (MsalUiRequiredException)
 				{
@@ -45,7 +45,7 @@ namespace EncryptCredentials.Services
 					{
 						password.AppendChar(key);
 					}
-					authenticationResult = clientApp.AcquireTokenByUsernamePassword(azureAd.Value.Scope, azureAd.Value.PbiUsername, password).ExecuteAsync().Result;
+					authenticationResult = clientApp.AcquireTokenByUsernamePassword(azureAd.Value.ScopeBase, azureAd.Value.PbiUsername, password).ExecuteAsync().Result;
 				}
 			}
 
@@ -53,7 +53,7 @@ namespace EncryptCredentials.Services
 			else
 			{
 				// For app only authentication, we need the specific tenant id in the authority url
-				var tenantSpecificUrl = azureAd.Value.AuthorityUri.Replace("organizations", azureAd.Value.TenantId);
+				var tenantSpecificUrl = azureAd.Value.AuthorityUrl.Replace("organizations", azureAd.Value.TenantId);
 
 				// Create a confidential client to authorize the app with the AAD app
 				IConfidentialClientApplication clientApp = ConfidentialClientApplicationBuilder
@@ -62,7 +62,7 @@ namespace EncryptCredentials.Services
 																				.WithAuthority(tenantSpecificUrl)
 																				.Build();
 				// Make a client call if Access token is not available in cache
-				authenticationResult = clientApp.AcquireTokenForClient(azureAd.Value.Scope).ExecuteAsync().Result;
+				authenticationResult = clientApp.AcquireTokenForClient(azureAd.Value.ScopeBase).ExecuteAsync().Result;
 			}
 
 			return authenticationResult.AccessToken;

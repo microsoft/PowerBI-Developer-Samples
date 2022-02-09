@@ -18,12 +18,12 @@ namespace AppOwnsData.Services
 
     public static class EmbedService
     {
-        private static readonly string urlPowerBiServiceApiRoot = ConfigurationManager.AppSettings["urlPowerBiServiceApiRoot"];
+        private static readonly string powerBiApiUrl = ConfigurationManager.AppSettings["powerBiApiUrl"];
 
         public static async Task<PowerBIClient> GetPowerBiClient()
         {
             var tokenCredentials = new TokenCredentials(await AadService.GetAccessToken(), "Bearer");
-            return new PowerBIClient(new Uri(urlPowerBiServiceApiRoot), tokenCredentials);
+            return new PowerBIClient(new Uri(powerBiApiUrl), tokenCredentials);
         }
 
         /// <summary>

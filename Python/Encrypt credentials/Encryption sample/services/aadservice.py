@@ -25,8 +25,8 @@ class AadService:
         username = app.config['POWER_BI_USER']
         password = app.config['POWER_BI_PASS']
         client_secret = app.config['CLIENT_SECRET']
-        scope = app.config['SCOPE']
-        authority = app.config['AUTHORITY']
+        scope = app.config['SCOPE_BASE']
+        authority = app.config['AUTHORITY_URL']
         response = None
 
         try:

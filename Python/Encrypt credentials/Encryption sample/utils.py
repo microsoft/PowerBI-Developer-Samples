@@ -27,8 +27,8 @@ class Utils:
         username = app.config['POWER_BI_USER']
         password = app.config['POWER_BI_PASS']
         client_secret = app.config['CLIENT_SECRET']
-        scope = app.config['SCOPE']
-        authority = app.config['AUTHORITY']
+        scope = app.config['SCOPE_BASE']
+        authority = app.config['AUTHORITY_URL']
         
         if authenticate_mode == '':
             return 'Please specify one of the two authentication modes in config.py file'
@@ -46,7 +46,7 @@ class Utils:
         if authenticate_mode.lower() == 'serviceprincipal' and client_secret == '':
             return 'Client secret is not provided in config.py file'
         if scope == '':
-            return 'Scope is not provided in config.py file'
+            return 'Scope base is not provided in config.py file'
         if authority == '':
             return 'Authority URL is not provided in config.py file'
 
