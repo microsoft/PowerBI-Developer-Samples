@@ -35,6 +35,7 @@ public abstract class Config {
 
 	// DO NOT CHANGE
 	public static final String authorityUrl = "https://login.microsoftonline.com/";
+	public static final String powerBiApiUrl = "https://api.powerbi.com/";
 	public static final String scopeBase = "https://analysis.windows.net/powerbi/api/.default";
 
 	private Config() {

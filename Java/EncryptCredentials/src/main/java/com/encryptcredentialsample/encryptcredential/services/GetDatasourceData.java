@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import com.embedsample.appownsdata.config.Config;
 import com.encryptcredentialsample.encryptcredential.models.Gateway;
 import com.encryptcredentialsample.encryptcredential.models.GetDatasourcesResponse;
 
@@ -21,7 +22,7 @@ public class GetDatasourceData {
 	public static Gateway getGateway(String accessToken, String getwayId) {
 
 		// REST API URL to get data sources
-		String endPointUrl = "https://api.powerbi.com/v1.0/myorg/gateways/" + getwayId;
+		String endPointUrl = Config.powerBiApiUrl + "v1.0/myorg/gateways/" + getwayId;
 
 		// Request header
 		HttpHeaders reqHeader = new HttpHeaders();
@@ -49,7 +50,7 @@ public class GetDatasourceData {
 		HttpEntity<String> reqEntity = new HttpEntity<>(reqHeader);
 
 		// https://docs.microsoft.com/en-us/rest/api/power-bi/datasets/getdatasourcesingroup
-		String endPointUrl = "https://api.powerbi.com/v1.0/myorg/groups/" + groupId + "/datasets/" + datasetId + "/datasources";
+		String endPointUrl = Config.powerBiApiUrl + "v1.0/myorg/groups/" + groupId + "/datasets/" + datasetId + "/datasources";
 
 		// Rest API get datasources's details
 		RestTemplate getDatasourceRestTemplate = new RestTemplate();
