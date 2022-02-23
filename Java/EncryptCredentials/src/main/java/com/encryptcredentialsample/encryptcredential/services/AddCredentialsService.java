@@ -13,7 +13,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import com.embedsample.appownsdata.config.Config;
 import com.encryptcredentialsample.encryptcredential.models.CredentialDetails;
 import com.encryptcredentialsample.encryptcredential.models.GatewayPublicKey;
 import com.encryptcredentialsample.encryptcredential.models.PublishDatasourceToGatewayRequest;
@@ -50,7 +49,7 @@ public class AddCredentialsService {
 	public static ResponseEntity<String> makeAddDataSourcePostRequest(String gatewayId, PublishDatasourceToGatewayRequest requestBody, String accessToken) throws ClientProtocolException, IOException {
 		// Gateways - Create Datasource Power BI REST API
 		// https://docs.microsoft.com/en-us/rest/api/power-bi/gateways/createdatasource
-		String endPointUrl = Config.powerBiApiUrl + "v1.0/myorg/gateways/" + gatewayId + "/datasources";
+		String endPointUrl = "https://api.powerbi.com/v1.0/myorg/gateways/" + gatewayId + "/datasources";
 		
 		// Request header
 		HttpHeaders reqHeader = Utils.generateAuthorizationHeaders(accessToken);

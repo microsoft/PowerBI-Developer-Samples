@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
-import com.embedsample.appownsdata.config.Config;
 import com.encryptcredentialsample.encryptcredential.models.CredentialDetails;
 import com.encryptcredentialsample.encryptcredential.models.CredentialDetailsRequestBody;
 import com.encryptcredentialsample.encryptcredential.models.Gateway;
@@ -71,7 +70,7 @@ public class UpdateCredentialsService {
 		
 		// Gateways - Update Datasource Power BI REST API
 		// https://docs.microsoft.com/en-us/rest/api/power-bi/gateways/updatedatasource
-		String endPointUrl =Config.powerBiApiUrl + "v1.0/myorg/gateways/" + gatewayId + "/datasources/" + datasourceId;
+		String endPointUrl = "https://api.powerbi.com/v1.0/myorg/gateways/" + gatewayId + "/datasources/" + datasourceId;
 
 		// Request header
 		HttpHeaders reqHeader = Utils.generateAuthorizationHeaders(accessToken);
