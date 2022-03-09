@@ -110,7 +110,18 @@ namespace EncryptCredentials.Services
 			var credentials = GetCredentials(credentialType, credentialsArray);
 
 			// Get the Getway
-			var gateway = GetGateway(gatewayId);
+			Gateway gateway = new Gateway(gatewayId);
+			try
+            {
+				gateway = GetGateway(gatewayId);
+            }
+			catch (HttpOperationException e)
+			{
+				if (e.Response.ReasonPhrase != "Not Found")
+                {
+					throw;
+                }
+			}
 
 			// Initialize credentialsEncryptor and encryptedConnection for Cloud gateway
 			var credentialsEncryptor = (AsymmetricKeyEncryptor)null;
