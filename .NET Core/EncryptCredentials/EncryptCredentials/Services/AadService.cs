@@ -67,5 +67,9 @@ namespace EncryptCredentials.Services
 
 			return authenticationResult.AccessToken;
 		}
+
+		public string GetPowerBiApiUrl() {
+			return azureAd.Value.PowerBiApiUrl;
+		}
 	}
 }

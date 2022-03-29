@@ -2,6 +2,7 @@
 # Licensed under the MIT license.
 
 import requests
+from flask import current_app as app
 from flask import json
 from models.credentialsdetails import CredentialsDetails
 from models.publishdatasourcetogatewayrequest import PublishDatasourceToGatewayRequest
@@ -65,7 +66,7 @@ class AddCredentialsService:
 
         # Gateways - Create Datasource Power BI REST API
         # https://docs.microsoft.com/en-us/rest/api/power-bi/gateways/createdatasource
-        endpoint_url = f'https://api.powerbi.com/v1.0/myorg/gateways/{gateway_id}/datasources'
+        endpoint_url = f'{app.config["POWER_BI_API_URL"]}v1.0/myorg/gateways/{gateway_id}/datasources'
 
         api_response = requests.post(endpoint_url, data=json.dumps(request_body.__dict__), headers=self.headers)
 

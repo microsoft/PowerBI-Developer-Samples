@@ -10,3 +10,6 @@ class BaseConfig(object):
 
     # URL used for initiating authorization request
     AUTHORITY_URL = 'https://login.microsoftonline.com/organizations'
+
+    # End point URL for Power BI API
+    POWER_BI_API_URL = 'https://api.powerbigov.us/'

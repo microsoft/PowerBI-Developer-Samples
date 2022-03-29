@@ -2,6 +2,7 @@
 # Licensed under the MIT license.
 
 import requests
+from flask import current_app as app
 from flask import json
 from models.credentialsdetails import CredentialsDetails
 from models.credentialsdetailsrequest import CredentialsDetailsRequest
@@ -72,7 +73,7 @@ class UpdateCredentialsService:
 
         # Gateways - Update Datasource Power BI REST API
         # https://docs.microsoft.com/en-us/rest/api/power-bi/gateways/updatedatasource
-        endpoint_url = f'https://api.powerbi.com/v1.0/myorg/gateways/{gateway_id}/datasources/{datasource_id}'
+        endpoint_url = f'{app.config["POWER_BI_API_URL"]}v1.0/myorg/gateways/{gateway_id}/datasources/{datasource_id}'
 
         api_response = requests.patch(endpoint_url, data=json.dumps(credentials_details_req.__dict__), headers=self.headers)
 

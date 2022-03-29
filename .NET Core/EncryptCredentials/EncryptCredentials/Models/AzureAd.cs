@@ -19,6 +19,9 @@ namespace EncryptCredentials.Models
 		// Id of the Azure tenant in which AAD app is hosted. Required only for Service Principal authentication mode.
 		public string TenantId { get; set; }
 
+		// End point URL for REST API
+		public string PowerBiApiUrl { get; set; }
+
 		// ScopeBase of AAD app. Use the below configuration to use all the permissions provided in the AAD app through Azure portal.
 		public string[] ScopeBase { get; set; }
 
