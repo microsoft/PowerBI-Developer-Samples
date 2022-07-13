@@ -20,7 +20,7 @@
 $TenantID = <TenanIDHere>
 $Secret = <AppSecretHere>
 $Password = ConvertTo-SecureString $Secret -AsPlainText -Force
-$AppID = <AppSecretHere>
+$AppID = <AppIDHere>
 $credential = New-Object PSCredential $AppID, $Password
 $gatewayId = <GWIDHere>
 $CreateDatasourceApi = "https://api.powerbi.com/v1.0/myorg/gateways/$gatewayID/datasources"
