@@ -1,0 +1,49 @@
+########################################################################
+# Script created by Jerry Tang (jiat)
+# Updated by Cesar Almeida (cealmeid)
+# 13/07/2022
+#
+# **Notes**
+# Make sure you have the PowerBIMgmt module installed
+# Install-Module -Name MicrosoftPowerBIMgmt
+# https://docs.microsoft.com/en-us/powershell/power-bi/overview?view=powerbi-ps
+#
+# You can encrypt your credentials using this script:
+# https://github.com/microsoft/PowerBI-Developer-Samples/tree/master/.NET%20Core/EncryptCredentials
+# 
+# You can check the required elements for the API from here:
+# https://docs.microsoft.com/en-us/rest/api/power-bi/gateways/create-datasource
+#
+########################################################################
+
+# Variables
+$TenantID = <TenanIDHere>
+$Secret = <AppSecretHere>
+$Password = ConvertTo-SecureString $Secret -AsPlainText -Force
+$AppID = <AppSecretHere>
+$credential = New-Object PSCredential $AppID, $Password
+$gatewayId = <GWIDHere>
+$CreateDatasourceApi = "https://api.powerbi.com/v1.0/myorg/gateways/$gatewayID/datasources"
+
+# create HTTP request body
+$Body = @{
+    "datasourceName"= ""
+    "datasourceType"= ""
+    "connectionDetails"= '{"<Check the api documentation for more examples>"}'
+    "credentialDetails" = @{
+      "credentials" = "<This needs to be a 344 character long string generated from the 'EncryptCredentials' script referred in the notes section of this script>"
+      "credentialType" = "<Check the credential types in the documentation in the notes section of this script>"
+      "encryptedConnection" =  ""
+      "encryptionAlgorithm" = ""
+      "privacyLevel" = ""
+    }
+  }
+
+# Connect to PBI using SPN
+  Connect-PowerBIServiceAccount -Tenant $TenantID -ServicePrincipal -Credential $credential
+
+# Convert body contents to JSON
+$BodyJson = ConvertTo-Json -InputObject $Body 
+
+# Execute request to create datasource
+Invoke-PowerBIRestMethod -Method Post -Url $CreateDatasourceApi -Body $BodyJson 
