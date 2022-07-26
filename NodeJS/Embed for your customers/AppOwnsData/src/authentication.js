@@ -7,6 +7,7 @@ const getAccessToken = async function () {
 
     // Use ADAL.js for authentication
     let adal = require("adal-node");
+    let msal = require("@azure/msal-node");
 
     let AuthenticationContext = adal.AuthenticationContext;
 
@@ -35,22 +36,27 @@ const getAccessToken = async function () {
 
         // Service Principal auth is the recommended by Microsoft to achieve App Owns Data Power BI embedding
     } else if (config.authenticationMode.toLowerCase() === "serviceprincipal") {
-        authorityUrl = authorityUrl.replace("common", config.tenantId);
-        let context = new AuthenticationContext(authorityUrl);
+        let authorityUri = `${config.authorityUriServicePrincipal}` + `${config.tenantId}`
 
-        return new Promise(
-            (resolve, reject) => {
-                context.acquireTokenWithClientCredentials(config.scope, config.clientId, config.clientSecret, function (err, tokenResponse) {
-
-                    // Function returns error object in tokenResponse
-                    // Invalid Username will return empty tokenResponse, thus err is used
-                    if (err) {
-                        reject(tokenResponse == null ? err : tokenResponse);
-                    }
-                    resolve(tokenResponse);
-                })
+        // Initialize MSAL
+        const msalConfig = {
+            auth: {
+                clientId: `${config.clientId}`,
+                authority: `${authorityUri}`,
+                clientSecret: `${config.clientSecret}`,
             }
-        );
+        };
+
+        const cca = new msal.ConfidentialClientApplication(msalConfig);
+
+        // Requesting tokens
+        const tokenRequest = {
+            scopes: ['https://analysis.windows.net/powerbi/api/.default'],
+        };
+
+        // async function tokenResponse() { 
+        let response = await cca.acquireTokenByClientCredential(tokenRequest);
+        return response;
     }
 }
 
