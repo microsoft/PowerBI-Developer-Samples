@@ -1,7 +1,7 @@
 {
     "authenticationMode": "MasterUser",
-    "authorityUrl": "https://login.microsoftonline.com/common/v2.0",
-    "scopeBase": "https://analysis.windows.net/powerbi/api",
+    "authorityUrl": "https://login.microsoftonline.com/",
+    "scopeBase": "https://analysis.windows.net/powerbi/api/.default",
     "powerBiApiUrl": "https://api.powerbi.com/",
     "clientId": "",
     "workspaceId": "",
