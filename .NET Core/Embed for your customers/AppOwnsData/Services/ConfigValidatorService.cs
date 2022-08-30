@@ -26,7 +26,7 @@ namespace AppOwnsData.Services
             {
                 message = "Authentication mode is not set in appsettings.json file";
             }
-            else if (string.IsNullOrWhiteSpace(azureAd.Value.AuthorityUri))
+            else if (string.IsNullOrWhiteSpace(azureAd.Value.AuthorityUrl))
             {
                 message = "Authority is not set in appsettings.json file";
             }
@@ -38,9 +38,9 @@ namespace AppOwnsData.Services
             {
                 message = "Tenant Id is not set in appsettings.json file";
             }
-            else if (azureAd.Value.Scope is null || azureAd.Value.Scope.Length == 0)
+            else if (azureAd.Value.ScopeBase is null || azureAd.Value.ScopeBase.Length == 0)
             {
-                message = "Scope is not set in appsettings.json file";
+                message = "Scope base is not set in appsettings.json file";
             }
             else if (string.IsNullOrWhiteSpace(powerBI.Value.WorkspaceId))
             {

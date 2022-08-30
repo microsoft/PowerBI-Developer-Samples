@@ -59,6 +59,10 @@ def update_datasource():
 
         request_data = request.json['data']
         gateway_id = request_data['gatewayId']
+        gateway = {
+            'id': gateway_id,
+            'publicKey': None,
+        }
 
         # Validate the credentials data by the user
         data_validation_service = DataValidationService()
@@ -68,9 +72,10 @@ def update_datasource():
         gateway_api_response = data_source_service.get_gateway(access_token, gateway_id)
 
         if not gateway_api_response.ok:
-            return json.dumps({'errorMsg' : str(f'Error {gateway_api_response.status_code} {gateway_api_response.reason}\nRequest Id:\t{gateway_api_response.headers.get("RequestId")}')}), gateway_api_response.status_code
-
-        gateway = gateway_api_response.json()
+            if not gateway_api_response.reason == "Not Found":
+                return json.dumps({'errorMsg' : str(f'Error {gateway_api_response.status_code} {gateway_api_response.reason}\nRequest Id:\t{gateway_api_response.headers.get("RequestId")}')}), gateway_api_response.status_code
+        else:
+            gateway = gateway_api_response.json()
 
         # Send fetched data to update credentials
         update_creds_service = UpdateCredentialsService()

@@ -15,7 +15,7 @@ namespace AppOwnsData.Services
     public class AadService
     {
         private static readonly string m_authorityUrl = ConfigurationManager.AppSettings["authorityUrl"];
-        private static readonly string[] m_scope = ConfigurationManager.AppSettings["scope"].Split(';');
+        private static readonly string[] m_scope = ConfigurationManager.AppSettings["scopeBase"].Split(';');
 
         /// <summary>
         /// Get Access token

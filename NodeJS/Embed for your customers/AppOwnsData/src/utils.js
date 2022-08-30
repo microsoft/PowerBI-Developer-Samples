@@ -49,8 +49,8 @@ function validateConfig() {
         return "WorkspaceId must be a Guid object. Please select a workspace you own and fill its Id in config.json.";
     }
 
-    if (!config.authorityUri) {
-        return "AuthorityUri is empty. Please fill valid AuthorityUri in config.json.";
+    if (!config.authorityUrl) {
+        return "AuthorityUrl is empty. Please fill valid AuthorityUrl in config.json.";
     }
 
     if (config.authenticationMode.toLowerCase() === "masteruser") {

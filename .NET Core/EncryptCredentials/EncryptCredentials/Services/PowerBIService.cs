@@ -16,7 +16,6 @@ namespace EncryptCredentials.Services
 	public class PowerBIService
 	{
 		private readonly AadService aadService;
-		private readonly string urlPowerBiServiceApiRoot = "https://api.powerbi.com";
 
 		public PowerBIService(AadService aadService)
 		{
@@ -30,7 +29,7 @@ namespace EncryptCredentials.Services
 		public PowerBIClient GetPowerBIClient()
 		{
 			var tokenCredentials = new TokenCredentials(aadService.GetAccessToken(), "Bearer");
-			return new PowerBIClient(new Uri(urlPowerBiServiceApiRoot), tokenCredentials);
+			return new PowerBIClient(new Uri(aadService.GetPowerBiApiUrl()), tokenCredentials);
 		}
 
 		/// <summary>
@@ -110,7 +109,18 @@ namespace EncryptCredentials.Services
 			var credentials = GetCredentials(credentialType, credentialsArray);
 
 			// Get the Getway
-			var gateway = GetGateway(gatewayId);
+			Gateway gateway = new Gateway(gatewayId);
+			try
+            {
+				gateway = GetGateway(gatewayId);
+            }
+			catch (HttpOperationException e)
+			{
+				if (e.Response.ReasonPhrase != "Not Found")
+                {
+					throw;
+                }
+			}
 
 			// Initialize credentialsEncryptor and encryptedConnection for Cloud gateway
 			var credentialsEncryptor = (AsymmetricKeyEncryptor)null;

@@ -17,7 +17,7 @@ namespace AppOwnsData.Services
     public class PbiEmbedService
     {
         private readonly AadService aadService;
-        private readonly string urlPowerBiServiceApiRoot  = "https://api.powerbi.com";
+        private readonly string powerBiApiUrl  = "https://api.powerbi.com";
 
         public PbiEmbedService(AadService aadService)
         {
@@ -31,7 +31,7 @@ namespace AppOwnsData.Services
         public PowerBIClient GetPowerBIClient()
         {
             var tokenCredentials = new TokenCredentials(aadService.GetAccessToken(), "Bearer");
-            return new PowerBIClient(new Uri(urlPowerBiServiceApiRoot ), tokenCredentials);
+            return new PowerBIClient(new Uri(powerBiApiUrl ), tokenCredentials);
         }
 
         /// <summary>

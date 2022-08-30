@@ -3,8 +3,9 @@
 // Licensed under the MIT license.
 // ----------------------------------------------------------------------------
 
+import { AuthenticationResult, InteractionType, EventMessage, EventType, AuthError } from "@azure/msal-browser";
+import { MsalContext } from "@azure/msal-react";
 import React from "react";
-import { UserAgentApplication, AuthError, AuthResponse } from "msal";
 import { service, factories, models, IEmbedConfiguration } from "powerbi-client";
 import "./App.css";
 import * as config from "./Config";
@@ -22,6 +23,7 @@ interface AppProps { };
 interface AppState { accessToken: string; embedUrl: string; error: string[] };
 
 class App extends React.Component<AppProps, AppState> {
+    static contextType = MsalContext;
 
     constructor(props: AppProps) {
         super(props);
@@ -103,19 +105,22 @@ class App extends React.Component<AppProps, AppState> {
 
     // React function
     componentDidMount(): void {
-
         if (reportRef !== null) {
             reportContainer = reportRef["current"];
         }
 
         // User input - null check
         if (config.workspaceId === "" || config.reportId === "") {
-            this.setState({ error: ["Please assign values to workspace Id and report Id in Config.ts file"] })
-        } else {
-
-            // Authenticate the user and generate the access token
-            this.authenticate();
+            this.setState({ error: ["Please assign values to workspace Id and report Id in Config.ts file"] });
+            return;
         }
+
+        this.authenticate();
+    }
+
+    // React function
+    componentDidUpdate(): void {
+        this.authenticate();
     }
 
     // React function
@@ -125,72 +130,58 @@ class App extends React.Component<AppProps, AppState> {
 
     // Authenticating to get the access token
     authenticate(): void {
-        const thisObj = this;
+        const msalInstance = this.context.instance;
+        const msalAccounts = this.context.accounts;
+        const msalInProgress = this.context.inProgress;
+        const isAuthenticated = this.context.accounts.length > 0;
 
-        const msalConfig = {
-            auth: {
-                clientId: config.clientId
+        if (this.state.error.length > 0) {
+            return;
+        }
+
+        const eventCallback = msalInstance.addEventCallback((message: EventMessage) => {
+            if (message.eventType === EventType.LOGIN_SUCCESS && !accessToken) {
+                const payload = message.payload as AuthenticationResult;
+                const name: string = payload.account?.name ? payload.account?.name: "";
+
+                accessToken = payload.accessToken;
+                this.setUsername(name);
+                this.tryRefreshUserPermissions();
             }
-        };
+        });
 
         const loginRequest = {
-            scopes: config.scopes
+            scopes: config.scopeBase,
+            account: msalAccounts[0]
         };
 
-        const msalInstance: UserAgentApplication = new UserAgentApplication(msalConfig);
-
-        function successCallback(response: AuthResponse): void {
-            if (response.tokenType === "id_token") {
-                thisObj.authenticate();
-
-            } else if (response.tokenType === "access_token") {
-
-                accessToken = response.accessToken;
-                thisObj.setUsername(response.account.name);
-
-                // Refresh User Permissions
-                thisObj.tryRefreshUserPermissions();
-                thisObj.getembedUrl();
-
-            } else {
-
-                thisObj.setState({ error: [("Token type is: " + response.tokenType)] });
-            }
+        if (!isAuthenticated && msalInProgress === InteractionType.None) {
+            msalInstance.loginRedirect(loginRequest);
         }
-
-        function failCallBack(error: AuthError): void {
-            thisObj.setState({ error: ["Redirect error: " + error] });
+        else if (isAuthenticated && accessToken && !embedUrl) {
+            this.getembedUrl();
+            msalInstance.removeEventCallback(eventCallback);
         }
-
-        msalInstance.handleRedirectCallback(successCallback, failCallBack);
-
-        // check if there is a cached user
-        if (msalInstance.getAccount()) {
+        else if (isAuthenticated && !accessToken && !embedUrl && msalInProgress === InteractionType.None) {
+            this.setUsername(msalAccounts[0].name);
 
             // get access token silently from cached id-token
-            msalInstance.acquireTokenSilent(loginRequest)
-                .then((response: AuthResponse) => {
-
-                    // get access token from response: response.accessToken
-                    accessToken = response.accessToken;
-                    this.setUsername(response.account.name);
-                    this.getembedUrl();
-                })
-                .catch((err: AuthError) => {
-
-                    // refresh access token silently from cached id-token
-                    // makes the call to handleredirectcallback
-                    if (err.name === "InteractionRequiredAuthError") {
-                        msalInstance.acquireTokenRedirect(loginRequest);
-                    }
-                    else {
-                        thisObj.setState({ error: [err.toString()] })
-                    }
-                });
-        } else {
-
-            // user is not logged in or cached, you will need to log them in to acquire a token
-            msalInstance.loginRedirect(loginRequest);
+            msalInstance.acquireTokenSilent(loginRequest).then((response: AuthenticationResult) => {
+                accessToken = response.accessToken;
+                this.getembedUrl();
+            }).catch((error: AuthError) => {
+                // Refresh access token silently from cached id-token
+                // Makes the call to handleredirectcallback
+                if (error.errorCode === "consent_required" || error.errorCode === "interaction_required" || error.errorCode === "login_required") {
+                    msalInstance.acquireTokenRedirect(loginRequest);
+                }
+                else if (error.errorCode === '429') {
+                    this.setState({ error: ["Our Service Token Server (STS) is overloaded, please try again in sometime"] });
+                }
+                else {
+                    this.setState({ error: ["There was some problem fetching the access token" + error.toString()] });
+                }
+            });
         }
     }
 
@@ -198,7 +189,7 @@ class App extends React.Component<AppProps, AppState> {
     // Refreshes user permissions and makes sure the user permissions are fully updated
     // https://docs.microsoft.com/rest/api/power-bi/users/refreshuserpermissions
     tryRefreshUserPermissions(): void {
-        fetch("https://api.powerbi.com/v1.0/myorg/RefreshUserPermissions", {
+        fetch(config.powerBiApiUrl + "v1.0/myorg/RefreshUserPermissions", {
             headers: {
                 "Authorization": "Bearer " + accessToken
             },
@@ -225,7 +216,7 @@ class App extends React.Component<AppProps, AppState> {
     getembedUrl(): void {
         const thisObj: this = this;
 
-        fetch("https://api.powerbi.com/v1.0/myorg/groups/" + config.workspaceId + "/reports/" + config.reportId, {
+        fetch(config.powerBiApiUrl + "v1.0/myorg/groups/" + config.workspaceId + "/reports/" + config.reportId, {
             headers: {
                 "Authorization": "Bearer " + accessToken
             },

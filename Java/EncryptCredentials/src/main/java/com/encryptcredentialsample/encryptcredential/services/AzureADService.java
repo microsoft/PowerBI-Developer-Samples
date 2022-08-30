@@ -73,7 +73,7 @@ public final class AzureADService {
 				.authority(Config.authorityUrl + tenantId).build();
 
 		ClientCredentialParameters clientCreds = ClientCredentialParameters
-				.builder(Collections.singleton(Config.scopeUrl)).build();
+				.builder(Collections.singleton(Config.scopeBase)).build();
 
 		// Acquire new AAD token
 		IAuthenticationResult result = app.acquireToken(clientCreds).get();
@@ -109,7 +109,7 @@ public final class AzureADService {
 				.build();
 
 		UserNamePasswordParameters userCreds = UserNamePasswordParameters
-				.builder(Collections.singleton(Config.scopeUrl), username, password.toCharArray()).build();
+				.builder(Collections.singleton(Config.scopeBase), username, password.toCharArray()).build();
 
 		// Acquire new AAD token
 		IAuthenticationResult result = app.acquireToken(userCreds).get();

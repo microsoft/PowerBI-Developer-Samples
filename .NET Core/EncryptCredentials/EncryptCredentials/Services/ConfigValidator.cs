@@ -26,7 +26,7 @@ namespace EncryptCredentials.Services
 			{	
 				message = $"Authentication mode is incorrect or {Constants.InvalidAppSetting}";
 			}
-			else if (string.IsNullOrWhiteSpace(azureAd.Value.AuthorityUri))
+			else if (string.IsNullOrWhiteSpace(azureAd.Value.AuthorityUrl))
 			{
 				message = $"Authority {Constants.InvalidAppSetting}";
 			}
@@ -38,9 +38,9 @@ namespace EncryptCredentials.Services
 			{
 				message = $"Tenant Id {Constants.InvalidAppSetting}";
 			}
-			else if (azureAd.Value.Scope is null || azureAd.Value.Scope.Length == 0)
+			else if (azureAd.Value.ScopeBase is null || azureAd.Value.ScopeBase.Length == 0)
 			{
-				message = $"Scope {Constants.InvalidAppSetting}";
+				message = $"Scope base {Constants.InvalidAppSetting}";
 			}
 			else if (isAuthModeMasterUser && string.IsNullOrWhiteSpace(azureAd.Value.PbiUsername))
 			{

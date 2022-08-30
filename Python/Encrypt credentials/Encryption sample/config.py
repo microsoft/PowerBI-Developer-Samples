@@ -15,11 +15,14 @@ class BaseConfig(object):
     # Client Secret (App Secret) of the AAD app. Required only for ServicePrincipal authentication mode.
     CLIENT_SECRET = ''
 
-    # Scope of AAD app. Use the below configuration to use all the permissions provided in the AAD app through Azure portal.
-    SCOPE = ['https://analysis.windows.net/powerbi/api/.default']
+    # Scope Base of AAD app. Use the below configuration to use all the permissions provided in the AAD app through Azure portal.
+    SCOPE_BASE = ['https://analysis.windows.net/powerbi/api/.default']
 
     # URL used for initiating authorization request
-    AUTHORITY = 'https://login.microsoftonline.com/organizations'
+    AUTHORITY_URL = 'https://login.microsoftonline.com/organizations'
+
+    # End point URL for Power BI API
+    POWER_BI_API_URL = 'https://api.powerbi.com/'
 
     # Master user email address. Required only for MasterUser authentication mode.
     POWER_BI_USER = ''

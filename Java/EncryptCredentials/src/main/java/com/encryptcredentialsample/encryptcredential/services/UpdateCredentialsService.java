@@ -12,12 +12,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.encryptcredentialsample.encryptcredential.config.Config;
 import com.encryptcredentialsample.encryptcredential.models.CredentialDetails;
 import com.encryptcredentialsample.encryptcredential.models.CredentialDetailsRequestBody;
 import com.encryptcredentialsample.encryptcredential.models.Gateway;
-import com.encryptcredentialsample.encryptcredential.models.GatewayPublicKey;
 
 public class UpdateCredentialsService {
 
@@ -27,7 +28,6 @@ public class UpdateCredentialsService {
 			String credType,
 			String privacyLevel, 
 			String[] credentialsArray, 
-			GatewayPublicKey pubKey, 
 			String gatewayId, 
 			String datasourceId) throws Exception {
 
@@ -35,16 +35,24 @@ public class UpdateCredentialsService {
 		String serializedCredentials = Utils.serializeCredentials(credentialsArray, credType);
 
 		String encryptedCredentialsString = null;
-
-		Gateway gateway = GetDatasourceData.getGateway(accessToken, gatewayId);	
 		String encryptedConnection = null;
+
+		Gateway gateway = new Gateway();
+		try {
+			gateway = GetDatasourceData.getGateway(accessToken, gatewayId);
+		}
+		catch (HttpClientErrorException e) {
+			if (!e.getStatusText().toString().equals("Not Found")) {
+				throw e;
+			}
+		}
 		
 		// On-premises gateway contains name property
         // Use on-premises gateway
         if (gateway.name != null) {
         	encryptedConnection = "Encrypted";
     		// Encrypt the credentials Asymmetric Key Encryption
-    		AsymmetricKeyEncryptorService credentialsEncryptor = new AsymmetricKeyEncryptorService(pubKey);
+    		AsymmetricKeyEncryptorService credentialsEncryptor = new AsymmetricKeyEncryptorService(gateway.publicKey);
         	encryptedCredentialsString = credentialsEncryptor.encodeCredentials(serializedCredentials);
         } else {
 			// Use cloud gateway
@@ -70,7 +78,7 @@ public class UpdateCredentialsService {
 		
 		// Gateways - Update Datasource Power BI REST API
 		// https://docs.microsoft.com/en-us/rest/api/power-bi/gateways/updatedatasource
-		String endPointUrl = "https://api.powerbi.com/v1.0/myorg/gateways/" + gatewayId + "/datasources/" + datasourceId;
+		String endPointUrl = Config.powerBiApiUrl + "v1.0/myorg/gateways/" + gatewayId + "/datasources/" + datasourceId;
 
 		// Request header
 		HttpHeaders reqHeader = Utils.generateAuthorizationHeaders(accessToken);

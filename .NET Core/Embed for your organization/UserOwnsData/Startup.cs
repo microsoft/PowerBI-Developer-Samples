@@ -5,7 +5,6 @@
 
 namespace UserOwnsData
 {
-    using UserOwnsData.Service;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -21,6 +20,7 @@ namespace UserOwnsData
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Configuration["AzureAd:Instance"] = Configuration["AzureAd:AuthorityUrl"];
         }
 
         public IConfiguration Configuration { get; }

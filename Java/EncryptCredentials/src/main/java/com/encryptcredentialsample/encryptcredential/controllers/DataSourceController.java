@@ -94,14 +94,11 @@ public class DataSourceController extends HttpServlet {
 			// Get access token and Update Datasource Credentials
 			String accessToken = AzureADService.getAccessToken();
 
-			Gateway gateway = GetDatasourceData.getGateway(accessToken, request.gatewayId);
-
 			return UpdateCredentialsService.updateDatasource(
 					accessToken, 
 					request.credType, 
 					request.privacyLevel, 
 					request.credentialsArray, 
-					gateway.publicKey, 
 					request.gatewayId, 
 					request.datasourceId);
 		} catch (HttpClientErrorException hcex) {
