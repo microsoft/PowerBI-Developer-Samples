@@ -70,7 +70,7 @@ public class AzureADService {
 					.build();
 		
 		ClientCredentialParameters clientCreds = ClientCredentialParameters.builder(
-				Collections.singleton(Config.scopeUrl))
+				Collections.singleton(Config.scopeBase))
 				.build();
 		
 		// Acquire new AAD token
@@ -103,7 +103,7 @@ public class AzureADService {
 				.build();
 		
 		UserNamePasswordParameters userCreds = UserNamePasswordParameters.builder(
-				Collections.singleton(Config.scopeUrl),
+				Collections.singleton(Config.scopeBase),
 				username,
 				password.toCharArray()).build();
 		

@@ -19,7 +19,7 @@ namespace UserOwnsData.Services.Security
 
 	public class OwinOpenIdConnect
 	{
-		private static readonly string tenantCommonAuthority = ConfigurationManager.AppSettings["authorityUri"];
+		private static readonly string tenantCommonAuthority = ConfigurationManager.AppSettings["authorityUrl"];
 		private static readonly string clientId = ConfigurationManager.AppSettings["clientId"];
 		private static readonly string clientSecret = ConfigurationManager.AppSettings["clientSecret"];
 		private static readonly string redirectUri = ConfigurationManager.AppSettings["redirectUri"];

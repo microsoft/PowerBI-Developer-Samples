@@ -4,53 +4,43 @@
 // ----------------------------------------------------------------------------
 
 const getAccessToken = async function () {
-
-    // Use ADAL.js for authentication
-    let adal = require("adal-node");
-
-    let AuthenticationContext = adal.AuthenticationContext;
-
     // Create a config variable that store credentials from config.json
-    let config = require(__dirname + "/../config/config.json");
+    const config = require(__dirname + "/../config/config.json");
 
-    let authorityUrl = config.authorityUri;
+    // Use MSAL.js for authentication
+    const msal = require("@azure/msal-node");
+
+    const msalConfig = {
+        auth: {
+            clientId: config.clientId,
+            authority: `${config.authorityUrl}${config.tenantId}`,
+        }
+    };
 
     // Check for the MasterUser Authentication
     if (config.authenticationMode.toLowerCase() === "masteruser") {
-        let context = new AuthenticationContext(authorityUrl);
+        const clientApplication = new msal.PublicClientApplication(msalConfig);
 
-        return new Promise(
-            (resolve, reject) => {
-                context.acquireTokenWithUsernamePassword(config.scope, config.pbiUsername, config.pbiPassword, config.clientId, function (err, tokenResponse) {
+        const usernamePasswordRequest = {
+            scopes: [config.scopeBase],
+            username: config.pbiUsername,
+            password: config.pbiPassword
+        };
 
-                    // Function returns error object in tokenResponse
-                    // Invalid Username will return empty tokenResponse, thus err is used
-                    if (err) {
-                        reject(tokenResponse == null ? err : tokenResponse);
-                    }
-                    resolve(tokenResponse);
-                })
-            }
-        );
+        return clientApplication.acquireTokenByUsernamePassword(usernamePasswordRequest);
 
-        // Service Principal auth is the recommended by Microsoft to achieve App Owns Data Power BI embedding
-    } else if (config.authenticationMode.toLowerCase() === "serviceprincipal") {
-        authorityUrl = authorityUrl.replace("common", config.tenantId);
-        let context = new AuthenticationContext(authorityUrl);
+    };
 
-        return new Promise(
-            (resolve, reject) => {
-                context.acquireTokenWithClientCredentials(config.scope, config.clientId, config.clientSecret, function (err, tokenResponse) {
+    // Service Principal auth is the recommended by Microsoft to achieve App Owns Data Power BI embedding
+    if (config.authenticationMode.toLowerCase() === "serviceprincipal") {
+        msalConfig.auth.clientSecret =  config.clientSecret
+        const clientApplication = new msal.ConfidentialClientApplication(msalConfig);
 
-                    // Function returns error object in tokenResponse
-                    // Invalid Username will return empty tokenResponse, thus err is used
-                    if (err) {
-                        reject(tokenResponse == null ? err : tokenResponse);
-                    }
-                    resolve(tokenResponse);
-                })
-            }
-        );
+        const clientCredentialRequest = {
+            scopes: [config.scopeBase],
+        };
+
+        return clientApplication.acquireTokenByClientCredential(clientCredentialRequest);
     }
 }
 

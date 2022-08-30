@@ -22,7 +22,7 @@ This repository contains Power BI Embedded solutions in 5 different frameworks t
 In addition, it has samples for calling the Power BI REST APIs using PowerShell.
 
 
-Available Power BI Embedded solutions:
+**Available solutions for embedding Power BI content:**
   * Embed for your customers - aka App Owns Data
     * .NET Framework
     * .NET Core
@@ -33,6 +33,11 @@ Available Power BI Embedded solutions:
     * .NET Framework
     * .NET Core
     * React TS
+
+Solutions for encrypting credentials and updating data sources are available in the following frameworks:
+  * .NET Core
+  * Python
+  * Node JS
 
 
 > **Note:**

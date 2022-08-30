@@ -9,12 +9,12 @@ namespace UserOwnsData.Services.Security
 
 	public class PowerBIPermissionScopes
 	{
-		private static readonly string powerBiPermissionApi = ConfigurationManager.AppSettings["powerBiPermissionApi"];
+		private static readonly string scopeBase = ConfigurationManager.AppSettings["scopeBase"];
 
 		public static readonly string[] ReadUserWorkspaces = new string[] {
-			powerBiPermissionApi + "Workspace.Read.All",
-			powerBiPermissionApi + "Report.Read.All",
-			powerBiPermissionApi + "Dashboard.Read.All"
+			scopeBase + "Workspace.Read.All",
+			scopeBase + "Report.Read.All",
+			scopeBase + "Dashboard.Read.All"
 		};
 	}
 }

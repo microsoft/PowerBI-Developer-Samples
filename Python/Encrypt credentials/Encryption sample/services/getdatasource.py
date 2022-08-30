@@ -2,7 +2,7 @@
 # Licensed under the MIT license.
 
 import requests
-
+from flask import current_app as app
 
 class GetDatasourceService:
 
@@ -23,7 +23,7 @@ class GetDatasourceService:
         self.headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + access_token}
 
         # https://docs.microsoft.com/en-us/rest/api/power-bi/datasets/getdatasourcesingroup
-        endpoint_url = f'https://api.powerbi.com/v1.0/myorg/groups/{group_id}/datasets/{dataset_id}/datasources'
+        endpoint_url = f'{app.config["POWER_BI_API_URL"]}v1.0/myorg/groups/{group_id}/datasets/{dataset_id}/datasources'
 
         api_response = requests.get(endpoint_url, headers=self.headers)
 
@@ -42,7 +42,7 @@ class GetDatasourceService:
 
         self.headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + access_token}
 
-        endpoint_url = f'https://api.powerbi.com/v1.0/myorg/gateways/{gateway_id}'
+        endpoint_url = f'{app.config["POWER_BI_API_URL"]}v1.0/myorg/gateways/{gateway_id}'
 
         api_response = requests.get(endpoint_url, headers=self.headers)
 

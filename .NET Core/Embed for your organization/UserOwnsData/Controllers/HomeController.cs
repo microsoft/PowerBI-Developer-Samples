@@ -5,9 +5,9 @@
 
 namespace UserOwnsData.Controllers
 {
-    using UserOwnsData.Service;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Identity.Web;
     using Microsoft.Graph;
     using System.Threading.Tasks;
@@ -20,11 +20,15 @@ namespace UserOwnsData.Controllers
 
         private readonly ITokenAcquisition m_tokenAcquisition;
 
+        public IConfiguration Configuration { get; }
+
         public HomeController(ITokenAcquisition tokenAcquisition,
-                              GraphServiceClient graphServiceClient)
+                              GraphServiceClient graphServiceClient,
+                              IConfiguration configuration)
         {
             this.m_tokenAcquisition = tokenAcquisition;
             this.m_graphServiceClient = graphServiceClient;
+            Configuration = configuration;
         }
 
         [AllowAnonymous]
@@ -34,11 +38,11 @@ namespace UserOwnsData.Controllers
         }
 
         // Redirects to login page to request increment consent
-        [AuthorizeForScopes(Scopes = new string[] { PowerBiScopes.ReadDashboard, PowerBiScopes.ReadReport, PowerBiScopes.ReadWorkspace })]
+        [AuthorizeForScopes(ScopeKeySection = "AzureAd:Scopes")]
         public async Task<IActionResult> Embed()
         {
             // Generate token for the signed in user
-            var accessToken = await m_tokenAcquisition.GetAccessTokenForUserAsync(new string[] { PowerBiScopes.ReadDashboard, PowerBiScopes.ReadReport, PowerBiScopes.ReadWorkspace });
+            var accessToken = await m_tokenAcquisition.GetAccessTokenForUserAsync(Configuration["AzureAd:Scopes:0"].Split(" "));
 
             // Get username of logged in user
             var userInfo = await m_graphServiceClient.Me.Request().GetAsync();
