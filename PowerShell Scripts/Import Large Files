@@ -1,0 +1,63 @@
+########################################################################
+# Script created by Cesar Almeida and Jerry Tang
+# 31/08/2022
+#
+# **Notes**
+# Make sure you have the PowerBIMgmt module installed
+# Install-Module -Name MicrosoftPowerBIMgmt
+#
+# REST API: Imports - Post Import In Group https://learn.microsoft.com/en-us/rest/api/power-bi/imports/post-import-in-group
+# To import large Power BI .pbix files that are between 1 GB and 10 GB in size, see Create Temporary Upload Location In Group. This is only supported for Premium capacity workspaces.
+#
+# REST API: Imports - Create Temporary Upload Location In Group https://learn.microsoft.com/en-us/rest/api/power-bi/imports/create-temporary-upload-location-in-group
+# Creates a temporary blob storage upload location for importing large Power BI .pbix files that are between 1 GB and 10 GB in size.
+# To import large Power BI .pbix files:
+#   1. Create a temporary upload location using this API call.
+#   2. Upload the Power BI .pbix files using the shared access signature URL from the API call response.
+#   3. Call Post Import In Group, specifying the shared access signature URL in the fileUrl parameter of the request body.
+# 
+# Get started with AzCopy: https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10
+# Download and install azcopy
+# https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10
+########################################################################
+
+# Variables
+$TenantID = ""
+$Secret = ""
+$AppID = ""
+$Password = ConvertTo-SecureString $Secret -AsPlainText -Force
+$Credential = New-Object PSCredential $AppID, $Password
+$GroupId = ""
+$TempLocation = 'https://api.powerbi.com/v1.0/myorg/groups/$GroupId/imports/createTemporaryUploadLocation'
+$File = ""
+$DisplayName = (Get-Item $File).Name
+$Import = "https://api.powerbi.com/v1.0/myorg/groups/$GroupId/imports?datasetDisplayName=$DisplayName&nameConflict=Ignore&skipReport=false&overrideReportLabel=true&overrideModelLabel=true"
+$AzCopyPath = "AzCopy.exe file path"
+
+# Connect to PBI using SPN
+Connect-PowerBIServiceAccount -Tenant $TenantID -ServicePrincipal -Credential $Credential
+
+# Get the access Token
+$Token = Get-PowerBIAccessToken
+
+# 1. Create a temporary upload location using this API call.
+# Shared access signature creation
+$URI = Invoke-RestMethod -Uri $TempLocation -Method Post -Headers $Token
+
+#The target URL with SAS Token
+$Up = $URI.url
+
+# 2. Upload the Power BI .pbix files using the shared access signature URL from the API call response.
+#Upload File...
+& $AzCopyPath copy "$File" "$Up" --recursive=true --check-length=false
+
+$BodyPost = @{
+    "fileUrl" = "$Up"
+}
+
+# Convert body contents to JSON
+$BodyJson = ConvertTo-Json -InputObject $BodyPost
+
+# 3. Call Post Import In Group, specifying the shared access signature URL in the fileUrl parameter of the request body.
+# Execute request to import the dataset
+Invoke-PowerBIRestMethod -Method Post -Url $Import -Body $BodyJson
