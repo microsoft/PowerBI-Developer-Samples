@@ -24,11 +24,13 @@ $AppPassword = ConvertTo-SecureString $Secret -AsPlainText -Force
 $Credential = New-Object PSCredential $AppID, $AppPassword
 $TenantID = ""
 
-# Sign in with Service Principal credentials
+# Acquire token for Service Principal
 Connect-PowerBIServiceAccount -Tenant $TenantID -ServicePrincipal -Credential $Credential
 
-# username = SQL user in case of basic credentials, or windows user in case of windows credentials
-# for SQL datasources, please be mindfull you will need to add the domain as in DOMAIN\user
+# In this case we are using an example to create a datasource for an On-Prem SQL database using "Windows credentials"
+# The username here is the windows username, so this is why it needs to contain the domain.
+# Be mindful of the permission levels the user has on the database
+# The password is written here in plain text for convenience, in production, we recommend that you use KeyVault and store the password securely there.
 $username = ""
 # password = SQL user password in case of basic credentials, or windows user password in case of windows credentials
 $password = ''
@@ -36,7 +38,8 @@ $password = ''
 $gw = Invoke-PowerBIRestMethod `
                 -Url "https://api.powerbi.com/v1.0/myorg/gateways/$GatewayId" `
                 -Method GET ` | ConvertFrom-Json                
-# On-Prem Gateway exponent which you can get using https://learn.microsoft.com/en-us/rest/api/power-bi/gateways/get-gateway API
+
+# On-Prem Gateway exponent
 $gatewayExponent = $gw.publicKey.exponent
 
 # On-Prem Gateway modulus which you can get using https://learn.microsoft.com/en-us/rest/api/power-bi/gateways/get-gateway API
