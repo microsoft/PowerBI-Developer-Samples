@@ -7,10 +7,8 @@
 # Install-Module -Name MicrosoftPowerBIMgmt
 #
 # REST API: Reports - Export Report In Group https://learn.microsoft.com/en-us/rest/api/power-bi/reports/export-report-in-group
-# If the file is large so the export takes long time to complete, and as a result we reach the timeout (can happened not just in try-it). 
-# As a result the preferefClientRouting is required as a workaround to skip the timeout limitation.
-#"Try it" button on REST API page is only for quick test to help you understand how to use this specific REST API. For real usage in Production environment, we shouldn't use the Try-it feature, and instead use a real development project (for example C# SDK or Powershell script).
-#"Try it" is not a good way to test Export Report for large file. We could use this Powershell script. 
+# If the file is large so the export takes long time to complete, then we might reach the timeout (can happen not just in Try-It). 
+# As a result the preferefClientRouting is required as a workaround to skip the timeout limitation (see https://learn.microsoft.com/en-us/power-bi/developer/embedded/troubleshoot-rest-api#fix-timeout-exceptions-when-using-import-and-export-apis), or use this PowerShell script.
 ########################################################################
 
 # Connect to Power BI
