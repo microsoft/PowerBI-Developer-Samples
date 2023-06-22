@@ -28,19 +28,20 @@ $DatasourceId = " "
 $UpdateDatasourceUrl = "https://api.powerbi.com/v1.0/myorg/gateways/$GatewayId/datasources/$DatasourceId"
 $GetGatewayUrl = "https://api.powerbi.com/v1.0/myorg/gateways/$GatewayId"
 
-## Datasource credentials
+## Datasource details
+##SQL/Windows
 # username = SQL user in case of basic credentials, or windows user in case of windows credentials
 $username = " "
-
 # password = SQL user password in case of basic credentials, or windows user password in case of windows credentials
 $password = ' '
+#endregion
 
+#region Aditional authentication methods
 # Oauth token for the required principal with audience that matches the datasource type
 #$oauth2Token = ""
 
 # Storage account key in case of storage account or blob
 #$AccountKey = ""
-
 #endregion
 
 # Sign in with Service Principal credentials
@@ -55,10 +56,13 @@ $gatewayModulus = $GatewayPublicKey.modulus
 # Encrypt basic credentials using EncryptGatewayCredentials script
 Import-Module $EncryptCredentialsScriptPath
 
-#$encryptedCredentials = EncryptBasicCredentials -Username $username -PasswordAsString $password -GatewayExponent $gatewayExponent -GatewayModulus $gatewayModulus
- $encryptedCredentials = EncryptWindowsCredentials -Username $username -PasswordAsString $password -GatewayExponent $gatewayExponent -GatewayModulus $gatewayModulus
+$encryptedCredentials = EncryptBasicCredentials -Username $username -PasswordAsString $password -GatewayExponent $gatewayExponent -GatewayModulus $gatewayModulus
+
+#region Aditional Encryption Methods
+# $encryptedCredentials = EncryptWindowsCredentials -Username $username -PasswordAsString $password -GatewayExponent $gatewayExponent -GatewayModulus $gatewayModulus
 # $encryptedCredentials = EncryptAnonymousCredentials -GatewayExponent $gatewayExponent -GatewayModulus $gatewayModulus
 # $encryptedCredentials = EncryptOauthCredentials -OauthToken $oauth2Token -GatewayExponent $gatewayExponent -GatewayModulus $gatewayModulus
 # $encryptedCredentials = EncryptKeyCredentials -Key $AccountKey -GatewayExponent $gatewayExponent -GatewayModulus $gatewayModulus
+#endregion
 
 Invoke-PowerBIRestMethod -Url $UpdateDatasourceUrl -Method Patch -Body $encryptedCredentials
