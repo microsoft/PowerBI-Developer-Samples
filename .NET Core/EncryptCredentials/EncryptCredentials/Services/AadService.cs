@@ -57,10 +57,11 @@ namespace EncryptCredentials.Services
 
 				// Create a confidential client to authorize the app with the AAD app
 				IConfidentialClientApplication clientApp = ConfidentialClientApplicationBuilder
-																				.Create(azureAd.Value.ClientId)
-																				.WithClientSecret(azureAd.Value.ClientSecret)
-																				.WithAuthority(tenantSpecificUrl)
-																				.Build();
+						.Create(azureAd.Value.ClientId)
+						.WithClientSecret(azureAd.Value.ClientSecret)
+						.WithAuthority(tenantSpecificUrl)
+						.Build();
+				
 				// Make a client call if Access token is not available in cache
 				authenticationResult = clientApp.AcquireTokenForClient(azureAd.Value.ScopeBase).ExecuteAsync().Result;
 			}
