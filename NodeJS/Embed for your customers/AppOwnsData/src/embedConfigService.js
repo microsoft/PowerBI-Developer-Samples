@@ -31,7 +31,8 @@ async function getEmbedInfo() {
     } catch (err) {
         return {
             'status': err.status,
-            'error': `Error while retrieving report embed details\r\n${err.statusText}\r\nRequestId: \n${err.headers.get('requestid')}`
+            'error': `Error while retrieving report embed details\r\n${err.status} - ${err.statusText}\r\nRequestId: \n${err.headers.get('requestid')}`,
+            'body': await err.text()
         }
     }
 }

@@ -73,10 +73,14 @@ $.ajax({
         errorContainer.show();
 
         // Get the error message from err object
-        let errMsg = JSON.parse(err.responseText)['error'];
+        let responseText = JSON.parse(err.responseText)
+        let errMsg = responseText['error'];
 
         // Split the message with \r\n delimiter to get the errors from the error message
         let errorLines = errMsg.split("\r\n");
+
+        // Append error response body to errorLines
+        errorLines.push(`Data: ${responseText['body']}`)
 
         // Create error header
         let errHeader = document.createElement("p");
