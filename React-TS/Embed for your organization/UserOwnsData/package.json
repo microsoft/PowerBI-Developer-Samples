@@ -11,7 +11,7 @@
     "react": "^16.13.0",
     "react-app-polyfill": "^1.0.6",
     "react-dom": "^16.13.0",
-    "react-scripts": "3.4.4",
+    "react-scripts": "5.0.1",
     "typescript": "^3.7.5"
   },
   "scripts": {
@@ -37,8 +37,8 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
-    "eslint": "^6.8.0",
-    "eslint-plugin-react": "^7.19.0",
+    "eslint": "^8.43.0",
+    "eslint-plugin-react": "^7.32.2",
     "object-path": ">=0.11.5"
   }
 }
