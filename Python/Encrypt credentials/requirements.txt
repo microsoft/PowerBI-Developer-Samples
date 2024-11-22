@@ -1,4 +1,4 @@
 cryptography==3.4.6
-Flask==2.1.2
+Flask==2.3.2
 msal==1.9.0
 requests==2.25.1
