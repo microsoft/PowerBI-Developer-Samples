@@ -64,20 +64,20 @@ class Utils:
         serialized_credentials = ''
 
         if cred_type == cred_types['KEY']:
-            serialized_credentials = '{\'credentialData\':[{\'name\':\'key\',\'value\':\'' + credentials_arr[0] + '\'}]}'
+            serialized_credentials = '{\'credentialData\':[{\'name\':\'key\',\'value\':\'' + credentials_arr[0].encode('unicode_escape').decode() + '\'}]}'
 
         elif cred_type == cred_types['WINDOWS']:
             serialized_credentials = '{\'credentialData\':[{\'name\':\'username\',\'value\':\'' + \
-                credentials_arr[0] + '\'},{\'name\':\'password\',\'value\':\'' + \
-                credentials_arr[1] + '\'}]}'
+                credentials_arr[0].encode('unicode_escape').decode() + '\'},{\'name\':\'password\',\'value\':\'' + \
+                credentials_arr[1].encode('unicode_escape').decode() + '\'}]}'
 
         elif cred_type == cred_types['OAUTH2']:
-            serialized_credentials = '{\'credentialData\':[{\'name\':\'accessToken\',\'value\':\'' + credentials_arr[0] + '\'}]}'
+            serialized_credentials = '{\'credentialData\':[{\'name\':\'accessToken\',\'value\':\'' + credentials_arr[0].encode('unicode_escape').decode() + '\'}]}'
 
         elif cred_type == cred_types['BASIC']:
             serialized_credentials = '{\'credentialData\':[{\'name\':\'username\',\'value\':\'' + \
-                credentials_arr[0] + '\'},{\'name\':\'password\',\'value\':\'' + \
-                credentials_arr[1] + '\'}]}'
+                credentials_arr[0].encode('unicode_escape').decode() + '\'},{\'name\':\'password\',\'value\':\'' + \
+                credentials_arr[1].encode('unicode_escape').decode() + '\'}]}'
 
         else:
             raise Exception('Invalid credentials type')

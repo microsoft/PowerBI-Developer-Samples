@@ -47,6 +47,7 @@ Solutions for encrypting credentials and updating data sources are available in 
 [Power BI Developer documentation](https://docs.microsoft.com/en-us/power-bi/developer/)
 
 ## Support
+
 - **Feature Requests:** Submit your ideas and suggestions to the [Fabric Ideas Portal](https://ideas.fabric.microsoft.com/), where you can also vote on ideas from other developers.
 - **Bug Reports and Technical Assistance:** Visit the [Fabric Developer Community Forum](https://community.fabric.microsoft.com/t5/Developer/bd-p/Developer). Our team and community experts are ready to assist you.
 - **Additional Support:** Contact your account manager or reach out to the [Fabric Support Team](https://support.fabric.microsoft.com/en-us/support/).
