@@ -11,6 +11,9 @@ namespace AppOwnsData.Controllers
     using Microsoft.Extensions.Options;
     using System;
     using System.Text.Json;
+    using Microsoft.Rest;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class EmbedInfoController : Controller
     {
@@ -30,7 +33,7 @@ namespace AppOwnsData.Controllers
         /// </summary>
         /// <returns>JSON containing parameters for embedding</returns>
         [HttpGet]
-        public string GetEmbedInfo()
+        public async Task<string> GetEmbedInfoAsync()
         {
             try
             {
@@ -42,8 +45,14 @@ namespace AppOwnsData.Controllers
                     return configValidationResult;
                 }
 
-                EmbedParams embedParams = pbiEmbedService.GetEmbedParams(new Guid(powerBI.Value.WorkspaceId), new Guid(powerBI.Value.ReportId));
+                EmbedParams embedParams = await pbiEmbedService.GetEmbedParams(new Guid(powerBI.Value.WorkspaceId), new Guid(powerBI.Value.ReportId));
                 return JsonSerializer.Serialize<EmbedParams>(embedParams);
+            }
+            catch (HttpOperationException exc)
+            {
+                HttpContext.Response.StatusCode = (int)exc.Response.StatusCode;
+                var message = string.Format("Status: {0} ({1})\r\nResponse: {2}\r\nRequestId: {3}", exc.Response.StatusCode, (int)exc.Response.StatusCode, exc.Response.Content, exc.Response.Headers["RequestId"].FirstOrDefault());
+                return message;
             }
             catch (Exception ex)
             {

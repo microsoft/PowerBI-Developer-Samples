@@ -11,6 +11,7 @@ namespace AppOwnsData.Services
     using System;
     using System.Linq;
     using System.Security;
+    using System.Threading.Tasks;
 
     public class AadService
     {
@@ -25,18 +26,19 @@ namespace AppOwnsData.Services
         /// Generates and returns Access token
         /// </summary>
         /// <returns>AAD token</returns>
-        public string GetAccessToken()
+        public async Task<string> GetAccessToken()
         {
             AuthenticationResult authenticationResult = null;
             if (azureAd.Value.AuthenticationMode.Equals("masteruser", StringComparison.InvariantCultureIgnoreCase))
             {
                 // Create a public client to authorize the app with the AAD app
                 IPublicClientApplication clientApp = PublicClientApplicationBuilder.Create(azureAd.Value.ClientId).WithAuthority(azureAd.Value.AuthorityUrl).Build();
-                var userAccounts = clientApp.GetAccountsAsync().Result;
+                var userAccounts = await clientApp.GetAccountsAsync();
+
                 try
                 {
                     // Retrieve Access token from cache if available
-                    authenticationResult = clientApp.AcquireTokenSilent(azureAd.Value.ScopeBase, userAccounts.FirstOrDefault()).ExecuteAsync().Result;
+                    authenticationResult =  await clientApp.AcquireTokenSilent(azureAd.Value.ScopeBase, userAccounts.FirstOrDefault()).ExecuteAsync();
                 }
                 catch (MsalUiRequiredException)
                 {
@@ -45,7 +47,7 @@ namespace AppOwnsData.Services
                     {
                         password.AppendChar(key);
                     }
-                    authenticationResult = clientApp.AcquireTokenByUsernamePassword(azureAd.Value.ScopeBase, azureAd.Value.PbiUsername, password).ExecuteAsync().Result;
+                    authenticationResult = await clientApp.AcquireTokenByUsernamePassword(azureAd.Value.ScopeBase, azureAd.Value.PbiUsername, password).ExecuteAsync();
                 }
             }
 
@@ -62,7 +64,7 @@ namespace AppOwnsData.Services
                                                                                 .WithAuthority(tenantSpecificUrl)
                                                                                 .Build();
                 // Make a client call if Access token is not available in cache
-                authenticationResult = clientApp.AcquireTokenForClient(azureAd.Value.ScopeBase).ExecuteAsync().Result;
+                authenticationResult = await clientApp.AcquireTokenForClient(azureAd.Value.ScopeBase).ExecuteAsync();
             }
 
             return authenticationResult.AccessToken;

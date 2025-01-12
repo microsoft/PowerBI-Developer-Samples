@@ -29,9 +29,11 @@ async function getEmbedInfo() {
             'status': 200
         };
     } catch (err) {
+        const errorBody = JSON.stringify(await err.json());
+
         return {
             'status': err.status,
-            'error': `Error while retrieving report embed details\r\n${err.statusText}\r\nRequestId: \n${err.headers.get('requestid')}`
+            'error': `Error while retrieving report embed details\r\nStatus: ${err.status + ' ' + err.statusText}\r\nResponse: ${errorBody}\r\nRequestId: \n${err.headers.get('requestid')}`
         }
     }
 }
