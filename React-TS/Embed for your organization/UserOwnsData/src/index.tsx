@@ -26,7 +26,7 @@ function generateMsalConfig() {
     const msalConfig = {
         auth: {
             clientId: config.clientId,
-            authority: config.authorityUrl,
+            authority: `${config.authorityUrl}${config.tenantId}`,
             redirectUri: "http://localhost:3000",
         },
         cache: {
