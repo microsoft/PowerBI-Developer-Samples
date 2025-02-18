@@ -9,7 +9,7 @@
 // Refer https://aka.ms/PowerBIPermissions for complete list of Power BI scopes
 
 // URL used for initiating authorization request
-export const authorityUrl: string = "https://login.microsoftonline.com/common/";
+export const authorityUrl: string = "https://login.microsoftonline.com/";
 
 // End point URL for Power BI API
 export const powerBiApiUrl: string = "https://api.powerbi.com/";
@@ -25,3 +25,6 @@ export const workspaceId: string = "";
 
 // Id of the report to be embedded
 export const reportId: string = "";
+
+// Directory (tenant) ID of the AAD app
+export const tenantId: string = "";

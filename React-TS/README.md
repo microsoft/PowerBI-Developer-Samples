@@ -8,7 +8,7 @@
 
 ## Embed a Power BI report
 
-1. Register an Azure AD app using the [Power BI embedding setup tool](https://app.powerbi.com/embedsetup). For more information see [Register an Azure AD application to use with Power BI](https://docs.microsoft.com/power-bi/developer/embedded/register-app).
+1. Register an Azure AD app following the instructions [here](https://go.microsoft.com/fwlink/?linkid=2134543#register-your-app).
 
 2. Verify that your Azure AD app have the **Read all reports** permissions.
 
@@ -32,6 +32,7 @@ To embed a report the following details must be specified within Config.ts:
     | clientId     | Id of the AAD application registered as a Server-side app                   |
     | workspaceId  | Id of the Power BI workspace where the report is hosted                     |
     | reportId     | Id of the report to be embedded                                             |
+    | tenantId     | Directory (tenant) ID of the AAD application                                |
 
 3. Open terminal and install required dependencies by executing the following command:<br>
    `npm install`

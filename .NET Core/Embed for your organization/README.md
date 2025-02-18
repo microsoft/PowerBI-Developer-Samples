@@ -12,7 +12,7 @@
 
 ### Set up a Power BI app
 
-1. Register an Azure AD app using the [Power BI embedding setup tool](https://app.powerbi.com/embedsetup). For more information see [Register an Azure AD application to use with Power BI](https://docs.microsoft.com/power-bi/developer/embedded/register-app).
+1. Register an Azure AD app following the instructions [here](https://go.microsoft.com/fwlink/?linkid=2134543#register-your-app).
 
 2. Verify that your Azure AD app have the **Read all datasets** and **Read all reports** permissions.
 
