@@ -15,7 +15,7 @@ const powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory,
 let accessToken = "";
 let embedUrl = "";
 let reportContainer: HTMLElement;
-let reportRef: React.Ref<HTMLDivElement>;
+let reportRef: React.RefObject<HTMLDivElement>;
 let loading: JSX.Element;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -106,7 +106,7 @@ class App extends React.Component<AppProps, AppState> {
     // React function
     componentDidMount(): void {
         if (reportRef !== null) {
-            reportContainer = reportRef["current"];
+            reportContainer = reportRef.current!;
         }
 
         // User input - null check
