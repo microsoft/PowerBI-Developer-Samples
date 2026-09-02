@@ -7,10 +7,12 @@ namespace EncryptCredentials.Controllers
 {
 	using EncryptCredentials.Models;
 	using EncryptCredentials.Services;
+	using Microsoft.AspNetCore.Authorization;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.Extensions.Options;
 	using System;
 
+	[Authorize(Policy = Startup.DatasourceAdministratorPolicy)]
 	public class HomeController : Controller
 	{
 		private readonly IOptions<AzureAd> azureAd;

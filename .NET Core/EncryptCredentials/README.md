@@ -2,16 +2,23 @@
 
 ## Requirements
 
-1. [.NET Core 3.1](https://aka.ms/netcore31) SDK or higher.
+1. [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0) SDK or higher.
 
-2. IDE/code editor. We recommend using Visual Studio Code or Visual Studio 2019 (or a later version).
-<br>
-> **Note:** Visual Studio version >=16.5 is required to use .NET Core SDK 3.1.
+2. IDE/code editor. We recommend using Visual Studio Code or Visual Studio 2022 (version 17.8 or later).
 
 
-### Set up a Power BI app
+### Set up the applications
 
 Follow the steps on [aka.ms/EmbedForCustomer](https://aka.ms/embedforcustomer)
+
+Create a separate Microsoft Entra app registration for users who operate this sample:
+
+1. Add a web redirect URI for `https://localhost:5001/signin-oidc`.
+2. Define an app role with the value `PowerBI.DatasourceAdmin` and allow users or groups as members.
+3. Assign only the users or groups that are allowed to manage Power BI datasource credentials to that role.
+4. Create a client secret and configure the tenant ID, client ID, and secret in the `OperatorAzureAd` section. Prefer environment variables, user secrets, or a secret store instead of writing the secret to `appsettings.json`.
+
+The operator app registration authenticates and authorizes incoming users. Keep it separate from the privileged Power BI identity configured in the `AzureAd` section.
 
 ### Run the application on localhost
 

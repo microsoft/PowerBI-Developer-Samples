@@ -19,6 +19,12 @@ $(function () {
     // Freezing the contents for endpoint objects
     Object.freeze(Endpoints);
 
+    $.ajaxSetup({
+        headers: {
+            "RequestVerificationToken": $("input[name='__RequestVerificationToken']").val()
+        }
+    });
+
     // Cache constants
     const ENABLED = "btn-primary";
     const DISABLED = "btn-secondary";
