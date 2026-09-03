@@ -5,24 +5,27 @@
 
 namespace EncryptCredentials.Tests
 {
-    using EncryptCredentials.Controllers;
+    using EncryptCredentials.Models;
+    using EncryptCredentials.Services;
     using Microsoft.AspNetCore.Authentication;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Testing;
     using Microsoft.AspNetCore.TestHost;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
+    using Microsoft.PowerBI.Api.Models;
+    using Microsoft.PowerBI.Api.Models.Credentials;
+    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Security.Claims;
     using System.Text.Encodings.Web;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -88,17 +91,79 @@ namespace EncryptCredentials.Tests
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        [Fact]
-        public void DatasourceControllerRequiresAdministratorPolicy()
+        [Theory]
+        [MemberData(nameof(PrivilegedEndpoints))]
+        public async Task AdministratorCanAccessPrivilegedEndpoints(HttpMethod method, string path)
         {
-            var authorize = typeof(EncryptCredentialsController)
-                .GetCustomAttributes(typeof(AuthorizeAttribute), true)
-                .Cast<AuthorizeAttribute>()
-                .Single();
+            using var client = factory.CreateClient();
+            using var homeRequest = CreateAdministratorRequest(HttpMethod.Get, "/");
+            using var homeResponse = await client.SendAsync(homeRequest);
+            var home = await homeResponse.Content.ReadAsStringAsync();
+            var antiforgeryToken = Regex.Match(
+                home,
+                "name=\"__RequestVerificationToken\" type=\"hidden\" value=\"([^\"]+)\"")
+                .Groups[1]
+                .Value;
 
-            Assert.Equal(Startup.DatasourceAdministratorPolicy, authorize.Policy);
-            Assert.NotEmpty(typeof(EncryptCredentialsController)
-                .GetCustomAttributes(typeof(AutoValidateAntiforgeryTokenAttribute), true));
+            Assert.True(
+                homeResponse.IsSuccessStatusCode,
+                $"Expected the home page to succeed but received {homeResponse.StatusCode}: {home}");
+            Assert.NotEmpty(antiforgeryToken);
+
+            using var request = CreateAdministratorRequest(method, GetSuccessfulRequestPath(path));
+            request.Headers.Add("RequestVerificationToken", antiforgeryToken);
+            if (method == HttpMethod.Post)
+            {
+                request.Content = CreateSuccessfulRequestContent(path);
+            }
+
+            using var response = await client.SendAsync(request);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        private static HttpRequestMessage CreateAdministratorRequest(HttpMethod method, string path)
+        {
+            var request = new HttpRequestMessage(method, path);
+            request.Headers.Authorization = new AuthenticationHeaderValue(
+                TestAuthenticationHandler.SchemeName,
+                Startup.DatasourceAdministratorRole);
+            return request;
+        }
+
+        private static string GetSuccessfulRequestPath(string path)
+        {
+            if (path.EndsWith("getdatasourcesingroup", StringComparison.Ordinal))
+            {
+                return path + "?GroupId=00000000-0000-0000-0000-000000000001"
+                    + "&DatasetId=00000000-0000-0000-0000-000000000002";
+            }
+
+            return path;
+        }
+
+        private static FormUrlEncodedContent CreateSuccessfulRequestContent(string path)
+        {
+            var values = new Dictionary<string, string>
+            {
+                ["GatewayId"] = "00000000-0000-0000-0000-000000000003",
+                ["CredentialType"] = Constants.KeyCredentials,
+                ["Credentials"] = "test-key",
+                ["PrivacyLevel"] = "None"
+            };
+
+            if (path.EndsWith("updatedatasource", StringComparison.Ordinal))
+            {
+                values["DatasourceId"] = "00000000-0000-0000-0000-000000000004";
+            }
+            else if (path.EndsWith("adddatasource", StringComparison.Ordinal))
+            {
+                values["DatasourceType"] = "Sql";
+                values["DatasourceName"] = "Test datasource";
+                values["ConnectionDetails"] = "{\"server\":\"test\",\"database\":\"test\"}";
+            }
+
+            return new FormUrlEncodedContent(values);
         }
     }
 
@@ -132,7 +197,14 @@ namespace EncryptCredentials.Tests
                     ["OperatorAzureAd:TenantId"] = "00000000-0000-0000-0000-000000000000",
                     ["OperatorAzureAd:ClientId"] = "00000000-0000-0000-0000-000000000000",
                     ["OperatorAzureAd:ClientSecret"] = "test-secret",
-                    ["OperatorAzureAd:CallbackPath"] = "/signin-oidc"
+                    ["OperatorAzureAd:CallbackPath"] = "/signin-oidc",
+                    ["AzureAd:AuthenticationMode"] = Constants.ServicePrincipal,
+                    ["AzureAd:AuthorityUrl"] = "https://login.microsoftonline.com/organizations/",
+                    ["AzureAd:ClientId"] = "00000000-0000-0000-0000-000000000000",
+                    ["AzureAd:TenantId"] = "00000000-0000-0000-0000-000000000000",
+                    ["AzureAd:PowerBiApiUrl"] = "https://api.powerbi.com/",
+                    ["AzureAd:ScopeBase:0"] = "https://analysis.windows.net/powerbi/api/.default",
+                    ["AzureAd:ClientSecret"] = "test-secret"
                 });
             });
 
@@ -147,7 +219,54 @@ namespace EncryptCredentials.Tests
                 }).AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(
                     TestAuthenticationHandler.SchemeName,
                     options => { });
+
+                services.RemoveAll<PowerBIService>();
+                services.AddScoped<PowerBIService, TestPowerBIService>();
             });
+        }
+    }
+
+    public class TestPowerBIService : PowerBIService
+    {
+        public TestPowerBIService()
+            : base(null)
+        {
+        }
+
+        public override Datasources GetDatasourcesInGroup(Guid groupId, Guid datasetId)
+        {
+            return new Datasources();
+        }
+
+        public override Gateway GetGateway(Guid gatewayId)
+        {
+            return new Gateway(gatewayId) { Name = "Test gateway" };
+        }
+
+        public override CredentialDetails GetCredentialDetails(
+            Guid gatewayId,
+            string credentialType,
+            string[] credentialsArray,
+            string privacyLevel)
+        {
+            return new CredentialDetails(
+                new KeyCredentials("test-key"),
+                privacyLevel,
+                EncryptedConnection.NotEncrypted);
+        }
+
+        public override void UpdateDatasource(
+            Guid gatewayId,
+            Guid datasourceId,
+            UpdateDatasourceRequest dataSourceRequest)
+        {
+        }
+
+        public override GatewayDatasource AddDatasource(
+            Guid gatewayId,
+            PublishDatasourceToGatewayRequest publishDatasourceToGatewayRequest)
+        {
+            return new GatewayDatasource();
         }
     }
 

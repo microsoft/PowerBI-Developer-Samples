@@ -38,7 +38,7 @@ namespace EncryptCredentials.Services
 		/// <param name="groupId">Power BI group Id</param>
 		/// <param name="datasetId">Power BI dataset Id in corresponding Workspace</param>
 		/// <returns>Datasources present in corresponding Power BI Workspace</returns>
-		public Datasources GetDatasourcesInGroup(Guid groupId, Guid datasetId)
+		public virtual Datasources GetDatasourcesInGroup(Guid groupId, Guid datasetId)
 		{
 
 			PowerBIClient pbiClient = this.GetPowerBIClient();
@@ -52,7 +52,7 @@ namespace EncryptCredentials.Services
 		/// </summary>
 		/// <param name="gatewayId">Gateway Id of corresponding Dataset</param>
 		/// <returns>Corresponding gateway</returns>
-		public Gateway GetGateway(Guid gatewayId)
+		public virtual Gateway GetGateway(Guid gatewayId)
 		{
 			PowerBIClient pbiClient = this.GetPowerBIClient();
 
@@ -102,7 +102,7 @@ namespace EncryptCredentials.Services
 		/// <param name="credentialsArray">Credentials entered by the user</param>
 		/// <param name="privacyLevel">Privacy level selected by the user</param>
 		/// <returns>Credentials details updating the datasource</returns>
-		public CredentialDetails GetCredentialDetails(Guid gatewayId, string credentialType, string[] credentialsArray, string privacyLevel)
+		public virtual CredentialDetails GetCredentialDetails(Guid gatewayId, string credentialType, string[] credentialsArray, string privacyLevel)
 		{
 
 			// Capture credentials based on credential type selected by the user
@@ -150,7 +150,7 @@ namespace EncryptCredentials.Services
 		/// <param name="gatewayId">Gateway Id of corresponding dataset</param>
 		/// <param name="datasourceId">Datasource Id of corresponding gateway</param>
 		/// <param name="dataSourceRequest">Request body for Update Datasource API</param>
-		public void UpdateDatasource(Guid gatewayId, Guid datasourceId, UpdateDatasourceRequest dataSourceRequest)
+		public virtual void UpdateDatasource(Guid gatewayId, Guid datasourceId, UpdateDatasourceRequest dataSourceRequest)
 		{
 
 			PowerBIClient pbiClient = this.GetPowerBIClient();
@@ -164,7 +164,7 @@ namespace EncryptCredentials.Services
 		/// </summary>
 		/// <param name="gatewayId">Gateway Id of corresponding Dataset</param>
 		/// <param name="publishDatasourceToGatewayRequest">Request body for Add Datasource API</param>
-		public GatewayDatasource AddDatasource(Guid gatewayId, PublishDatasourceToGatewayRequest publishDatasourceToGatewayRequest)
+		public virtual GatewayDatasource AddDatasource(Guid gatewayId, PublishDatasourceToGatewayRequest publishDatasourceToGatewayRequest)
 		{
 			PowerBIClient pbiClient = this.GetPowerBIClient();
 
