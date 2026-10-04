@@ -7,12 +7,15 @@ namespace EncryptCredentials.Controllers
 {
 	using EncryptCredentials.Models;
 	using EncryptCredentials.Services;
+	using Microsoft.AspNetCore.Authorization;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.Extensions.Options;
 	using Microsoft.PowerBI.Api.Models;
 	using Microsoft.Rest;
 	using System;
 
+	[Authorize(Policy = Startup.DatasourceAdministratorPolicy)]
+	[AutoValidateAntiforgeryToken]
 	public class EncryptCredentialsController : Controller
 	{
 		private readonly PowerBIService powerBIService;
