@@ -9,13 +9,13 @@ namespace EncryptCredentials.Models
 
 	public class EncryptCredentialsMap
 	{
-        // Gateway Id of corresponding dataset
+        	// Gateway Id of corresponding dataset
 		public Guid GatewayId { get; set; }
 
-        // Type of credential
+        	// Type of credential
 		public string CredentialType { get; set; }
 
-        // Credentials provided by user
+        	// Credentials provided by user
 		public string[] Credentials {get; set;}
 
 		// Set default Privacy Level to None for encrypting credentials feature
