@@ -47,4 +47,4 @@ For Azure Resource Management (ARM) based scripts, refer [Azure-Samples/powerbi-
 
 To run the scripts in this repo, please install [PowerShell](https://aka.ms/install-powershell) and the [Azure Resource Manager PowerShell cmdlets](https://www.powershellgallery.com/packages/AzureRM/).
 
-
+The [credential encryption helper](EncryptGatewayCredentials.ps1) installs its pinned dependencies from `https://www.nuget.org/api/v2` into its own script directory, not the caller's working directory. Keep that directory and its dependencies protected from modification by untrusted users. Initial installation requires write access to that directory and network access to NuGet.org; package installation or assembly loading errors stop initialization.
