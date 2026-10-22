@@ -41,6 +41,8 @@ public class GetDatasourceData {
 
 	// Get Datasources In Group Power BI REST API
 	public static GetDatasourcesResponse getDatasourcesInGroup(String accessToken, String datasetId, String groupId) {
+		Utils.validateGuid(datasetId, "datasetId");
+		Utils.validateGuid(groupId, "groupId");
 
 		// Request header
 		HttpHeaders reqHeader = new HttpHeaders();

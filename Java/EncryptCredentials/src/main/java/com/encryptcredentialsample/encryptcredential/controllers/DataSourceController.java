@@ -72,14 +72,18 @@ public class DataSourceController extends HttpServlet {
 	@ResponseBody
 	public ResponseEntity<?> getDataSourcesInGroup(HttpServletRequest request) {
 		try {
+			String datasetId = request.getParameter("datasetId");
+			String groupId = request.getParameter("groupId");
+			Utils.validateGuid(datasetId, "datasetId");
+			Utils.validateGuid(groupId, "groupId");
+
 			// Get access token
 			String accessToken = AzureADService.getAccessToken();
 
-			String datasetId = request.getParameter("datasetId");
-			String groupId = request.getParameter("groupId");
-
 			GetDatasourcesResponse datasources = GetDatasourceData.getDatasourcesInGroup(accessToken, datasetId, groupId);
 			return ResponseEntity.ok(datasources);
+		} catch (InvalidIdentifierException ex) {
+			return generateResponseForInvalidIdentifier(ex);
 		} catch (HttpClientErrorException hcex) {
 			return generateResponseForException(hcex);
 		} catch (Exception ex) {
