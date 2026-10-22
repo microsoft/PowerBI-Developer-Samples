@@ -16,7 +16,7 @@ public class Utils {
 
 	public static void validateGuid(String value, String parameterName) {
 		if (value == null || !GUID_PATTERN.matcher(value).matches()) {
-			throw new InvalidIdentifierException(parameterName + " must be a GUID in 8-4-4-4-12 hexadecimal format.");
+			throw new InvalidIdentifierException(parameterName + " must be a GUID");
 		}
 	}
 
