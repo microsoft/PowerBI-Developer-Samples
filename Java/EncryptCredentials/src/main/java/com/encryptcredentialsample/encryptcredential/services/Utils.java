@@ -6,10 +6,20 @@
 package com.encryptcredentialsample.encryptcredential.services;
 
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 import org.springframework.http.HttpHeaders;
 
 public class Utils {
+	private static final Pattern GUID_PATTERN = Pattern.compile(
+			"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
+
+	public static void validateGuid(String value, String parameterName) {
+		if (value == null || !GUID_PATTERN.matcher(value).matches()) {
+			throw new InvalidIdentifierException(parameterName + " must be a GUID in 8-4-4-4-12 hexadecimal format.");
+		}
+	}
+
 	public static String serializeCredentials(String[] credentialsArray, String credType) throws Exception {
 		String serializedCredentials;
 		

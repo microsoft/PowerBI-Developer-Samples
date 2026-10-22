@@ -30,6 +30,8 @@ public class UpdateCredentialsService {
 			String[] credentialsArray, 
 			String gatewayId, 
 			String datasourceId) throws Exception {
+		Utils.validateGuid(gatewayId, "gatewayId");
+		Utils.validateGuid(datasourceId, "datasourceId");
 
 		// Serialize credentials for encryption
 		String serializedCredentials = Utils.serializeCredentials(credentialsArray, credType);
@@ -75,6 +77,8 @@ public class UpdateCredentialsService {
 			String gatewayId, 
 			String datasourceId, 
 			String accessToken) throws ClientProtocolException, IOException {
+		Utils.validateGuid(gatewayId, "gatewayId");
+		Utils.validateGuid(datasourceId, "datasourceId");
 		
 		// Gateways - Update Datasource Power BI REST API
 		// https://docs.microsoft.com/en-us/rest/api/power-bi/gateways/updatedatasource

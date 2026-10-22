@@ -38,6 +38,7 @@ import com.encryptcredentialsample.encryptcredential.services.AddCredentialsServ
 import com.encryptcredentialsample.encryptcredential.services.AsymmetricKeyEncryptorService;
 import com.encryptcredentialsample.encryptcredential.services.AzureADService;
 import com.encryptcredentialsample.encryptcredential.services.GetDatasourceData;
+import com.encryptcredentialsample.encryptcredential.services.InvalidIdentifierException;
 import com.encryptcredentialsample.encryptcredential.services.UpdateCredentialsService;
 import com.encryptcredentialsample.encryptcredential.services.Utils;
 
@@ -91,6 +92,9 @@ public class DataSourceController extends HttpServlet {
 	@RequestMapping(method = RequestMethod.POST, value = "/updatedatasource")
 	public ResponseEntity<?> updateDataController(@RequestBody UpdateDatasourceCredentialsRequest request) throws Exception {
 		try {
+			Utils.validateGuid(request.gatewayId, "gatewayId");
+			Utils.validateGuid(request.datasourceId, "datasourceId");
+
 			// Get access token and Update Datasource Credentials
 			String accessToken = AzureADService.getAccessToken();
 
@@ -101,6 +105,8 @@ public class DataSourceController extends HttpServlet {
 					request.credentialsArray, 
 					request.gatewayId, 
 					request.datasourceId);
+		} catch (InvalidIdentifierException ex) {
+			return generateResponseForInvalidIdentifier(ex);
 		} catch (HttpClientErrorException hcex) {
 			return generateResponseForException(hcex);
 		} catch (Exception ex) {
@@ -113,6 +119,8 @@ public class DataSourceController extends HttpServlet {
 	@RequestMapping(method = RequestMethod.POST, value = "/adddatasource")
 	public ResponseEntity<?> addDataSourceController(@RequestBody AddDatasourceRequest request, HttpServletResponse response) throws Exception {
 		try {
+			Utils.validateGuid(request.gatewayId, "gatewayId");
+
 			// Get access token and add data source
 			String accessToken = AzureADService.getAccessToken();
 
@@ -131,6 +139,8 @@ public class DataSourceController extends HttpServlet {
 					request.privacyLevel, 
 					request.credentialsArray, 
 					gateway.publicKey);
+		} catch (InvalidIdentifierException ex) {
+			return generateResponseForInvalidIdentifier(ex);
 		} catch (HttpClientErrorException hcex) {
 			return generateResponseForException(hcex);
 		} catch (Exception ex) {
@@ -143,6 +153,8 @@ public class DataSourceController extends HttpServlet {
 	@RequestMapping(method = RequestMethod.POST, value = "/encrypt")
 	public ResponseEntity<String> encryptCredentialsController(@RequestBody UpdateDatasourceCredentialsRequest request) throws Exception {
 		try {
+			Utils.validateGuid(request.gatewayId, "gatewayId");
+
 			// Get access token and Update Datasource Credentials
 			String accessToken = AzureADService.getAccessToken();
 
@@ -163,6 +175,8 @@ public class DataSourceController extends HttpServlet {
 			}
 	
 			return ResponseEntity.status(HttpStatus.OK).body(credentials);
+		} catch (InvalidIdentifierException ex) {
+			return generateResponseForInvalidIdentifier(ex);
 		} catch (HttpClientErrorException hcex) {
 			return generateResponseForException(hcex);
 		} catch (Exception ex) {
@@ -172,6 +186,11 @@ public class DataSourceController extends HttpServlet {
 		}
 	}
 	
+	private ResponseEntity<String> generateResponseForInvalidIdentifier(InvalidIdentifierException ex) {
+		logger.error(ex.getMessage());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	}
+
 	public ResponseEntity<String> generateResponseForException(HttpClientErrorException ex) {
 		// Build the error message
 		StringBuilder errMsgStringBuilder = new StringBuilder("Error ");

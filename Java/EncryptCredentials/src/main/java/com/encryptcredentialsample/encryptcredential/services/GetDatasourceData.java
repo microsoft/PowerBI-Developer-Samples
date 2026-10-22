@@ -20,6 +20,7 @@ import com.encryptcredentialsample.encryptcredential.models.GetDatasourcesRespon
 public class GetDatasourceData {
 
 	public static Gateway getGateway(String accessToken, String gatewayId) {
+		Utils.validateGuid(gatewayId, "gatewayId");
 
 		// REST API URL to get data sources
 		String endPointUrl = Config.powerBiApiUrl + "v1.0/myorg/gateways/" + gatewayId;
