@@ -10,23 +10,23 @@
 # After this, you will only need to run the "CreateDatasource" script as it will load this in memory
 # 
 # We would recommend to save this script in a folder that is not synchronized online as it may cause some runtime issues
-# Keep the script folder trusted: dependencies are installed here from NuGet.org and loaded from here, never from the caller's working directory.
+# Keep the script folder trusted: dependencies are installed and loaded here, never from the caller's working directory.
 ########################################################################
 
 #region Initialize Packages
     # Install the Power BI package into the script directory if it's not already installed
     if (!(Test-Path -LiteralPath (Join-Path $PSScriptRoot "Microsoft.PowerBI.Api.3.18.1") -PathType Container -ErrorAction Stop)) {
-        Install-Package -Name Microsoft.PowerBi.Api -ProviderName NuGet -Source "https://www.nuget.org/api/v2" -Scope CurrentUser -RequiredVersion 3.18.1 -SkipDependencies -Destination $PSScriptRoot -Force -ErrorAction Stop
+        Install-Package -Name Microsoft.PowerBi.Api -ProviderName NuGet -Scope CurrentUser -RequiredVersion 3.18.1 -SkipDependencies -Destination $PSScriptRoot -Force -ErrorAction Stop
     }
 
     # Install the Client Runtime package, a dependency of the Power BI package
     if (!(Test-Path -LiteralPath (Join-Path $PSScriptRoot "Microsoft.Rest.ClientRuntime.2.3.22") -PathType Container -ErrorAction Stop)) {
-        Install-Package -Name Microsoft.Rest.ClientRuntime -ProviderName NuGet -Source "https://www.nuget.org/api/v2" -Scope CurrentUser -RequiredVersion 2.3.22 -SkipDependencies -Destination $PSScriptRoot -Force -ErrorAction Stop
+        Install-Package -Name Microsoft.Rest.ClientRuntime -ProviderName NuGet -Scope CurrentUser -RequiredVersion 2.3.22 -SkipDependencies -Destination $PSScriptRoot -Force -ErrorAction Stop
     }
 
     # Install the Newtonsoft package, another dependency of the Power BI package
     if (!(Test-Path -LiteralPath (Join-Path $PSScriptRoot "Newtonsoft.Json.11.0.2") -PathType Container -ErrorAction Stop)) {
-        Install-Package -Name Newtonsoft.Json -ProviderName NuGet -Source "https://www.nuget.org/api/v2" -Scope CurrentUser -RequiredVersion 11.0.2 -SkipDependencies -Destination $PSScriptRoot -Force -ErrorAction Stop
+        Install-Package -Name Newtonsoft.Json -ProviderName NuGet -Scope CurrentUser -RequiredVersion 11.0.2 -SkipDependencies -Destination $PSScriptRoot -Force -ErrorAction Stop
     }
     
     # Load the Client Runtime assembly into the session
