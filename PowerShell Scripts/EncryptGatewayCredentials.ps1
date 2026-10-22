@@ -10,42 +10,43 @@
 # After this, you will only need to run the "CreateDatasource" script as it will load this in memory
 # 
 # We would recommend to save this script in a folder that is not synchronized online as it may cause some runtime issues
+# Keep the script folder trusted: dependencies are installed and loaded here, never from the caller's working directory.
 ########################################################################
 
 #region Initialize Packages
-    # Install the Power BI package into the current working directory if it's not already installed
-    if (!(Test-Path ".\Microsoft.PowerBI.Api.3.18.1" -PathType Container)) {
-        Install-Package -Name Microsoft.PowerBi.Api -ProviderName NuGet -Scope CurrentUser -RequiredVersion 3.18.1 -SkipDependencies -Destination . -Force
+    # Install the Power BI package into the script directory if it's not already installed
+    if (!(Test-Path -LiteralPath (Join-Path $PSScriptRoot "Microsoft.PowerBI.Api.3.18.1") -PathType Container -ErrorAction Stop)) {
+        Install-Package -Name Microsoft.PowerBi.Api -ProviderName NuGet -Scope CurrentUser -RequiredVersion 3.18.1 -SkipDependencies -Destination $PSScriptRoot -Force -ErrorAction Stop
     }
 
     # Install the Client Runtime package, a dependency of the Power BI package
-    if (!(Test-Path ".\Microsoft.Rest.ClientRuntime.2.3.22" -PathType Container)) {
-        Install-Package -Name Microsoft.Rest.ClientRuntime -ProviderName NuGet -Scope CurrentUser -RequiredVersion 2.3.22 -SkipDependencies -Destination . -Force
+    if (!(Test-Path -LiteralPath (Join-Path $PSScriptRoot "Microsoft.Rest.ClientRuntime.2.3.22") -PathType Container -ErrorAction Stop)) {
+        Install-Package -Name Microsoft.Rest.ClientRuntime -ProviderName NuGet -Scope CurrentUser -RequiredVersion 2.3.22 -SkipDependencies -Destination $PSScriptRoot -Force -ErrorAction Stop
     }
 
     # Install the Newtonsoft package, another dependency of the Power BI package
-    if (!(Test-Path ".\Newtonsoft.Json.11.0.2" -PathType Container)) {
-        Install-Package -Name Newtonsoft.Json -ProviderName NuGet -Scope CurrentUser -RequiredVersion 11.0.2 -SkipDependencies -Destination . -Force
+    if (!(Test-Path -LiteralPath (Join-Path $PSScriptRoot "Newtonsoft.Json.11.0.2") -PathType Container -ErrorAction Stop)) {
+        Install-Package -Name Newtonsoft.Json -ProviderName NuGet -Scope CurrentUser -RequiredVersion 11.0.2 -SkipDependencies -Destination $PSScriptRoot -Force -ErrorAction Stop
     }
     
     # Load the Client Runtime assembly into the session
-    $crpath = Resolve-Path ".\Microsoft.Rest.ClientRuntime.2.3.22\lib\netstandard2.0\Microsoft.Rest.ClientRuntime.dll"
-    Add-Type -Path $crpath
+    $crpath = Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "Microsoft.Rest.ClientRuntime.2.3.22\lib\netstandard2.0\Microsoft.Rest.ClientRuntime.dll") -ErrorAction Stop
+    Add-Type -Path $crpath -ErrorAction Stop
 
     # Load the Newtonsoft assembly into the session
-    $nwpath = Resolve-Path ".\Newtonsoft.Json.11.0.2\lib\netstandard2.0\Newtonsoft.Json.dll"
-    Add-Type -Path $nwpath
+    $nwpath = Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "Newtonsoft.Json.11.0.2\lib\netstandard2.0\Newtonsoft.Json.dll") -ErrorAction Stop
+    Add-Type -Path $nwpath -ErrorAction Stop
 
     # Conditionally choose the Power BI assembly to use, depending on whether you're using Windows PowerShell (version <= 5) or PowerShell Core (version >= 6)
     if ($PSVersionTable.PSVersion.Major -le 5) {
-        $pbipath = Resolve-Path ".\Microsoft.PowerBI.Api.3.18.1\lib\net48\Microsoft.PowerBI.Api.dll"
+        $pbipath = Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "Microsoft.PowerBI.Api.3.18.1\lib\net48\Microsoft.PowerBI.Api.dll") -ErrorAction Stop
     }
     else {
-        $pbipath = Resolve-Path ".\Microsoft.PowerBI.Api.3.18.1\lib\netstandard2.0\Microsoft.PowerBI.Api.dll"
+        $pbipath = Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "Microsoft.PowerBI.Api.3.18.1\lib\netstandard2.0\Microsoft.PowerBI.Api.dll") -ErrorAction Stop
     }
 
     # Load the Power BI assembly into the session
-    Add-Type -Path $pbipath
+    Add-Type -Path $pbipath -ErrorAction Stop
 #endregion
 
 # Basic Credentials
